@@ -8,4 +8,6 @@ dependencies:
   views: 'drupal:views'
   datetime: 'drupal:datetime'
   views_bulk_operations: 'drupal:views_bulk_operations'
+  token: 'drupal:token'
+  ctools: 'drupal:ctools'
 type: module
