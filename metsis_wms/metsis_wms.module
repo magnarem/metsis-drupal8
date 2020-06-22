@@ -132,7 +132,7 @@ function get_metsis_map_wms_markup($solr_core, $metadata_identifier) {
   }*/
   $request = \Drupal::request();
   $referer = $request->headers->get('referer');
-  var_dump($referer);
+  //var_dump($referer);
   $fields = [
     METADATA_PREFIX . "data_access_resource",
     METADATA_PREFIX . "data_access_wms_layers_wms_layer",
