@@ -27,7 +27,7 @@ function metsis_basket_insert($basket_object) {
       $dataset_id = MISSING_METADATA;
     } $solr_id = isset($dataset['solr_id']) ? $dataset['solr_id'] : MISSING_METADATA;
     $_version_ = isset($dataset['_version_']) ? $dataset['_version_'] : MISSING_METADATA;
-    $last_metadata_update = isset($dataset[METADATA_PREFIX . 'last_metadata_update']) ? $dataset[METADATA_PREFIX . 'last_metadata_update'] : MISSING_METADATA;
+    $last_metadata_update = isset($dataset[METADATA_PREFIX . 'last_metadata_update']) ? $dataset[METADATA_PREFIX . 'last_metadata_update'] : "";
     $personell_email = isset($dataset[METADATA_PREFIX . 'personnel_email']) ? $dataset[METADATA_PREFIX . 'personnel_email'] : MISSING_METADATA;
     $platform_long_name = isset($dataset[METADATA_PREFIX . 'platform_long_name']) ? $dataset[METADATA_PREFIX . 'platform_long_name'] : MISSING_METADATA;
     $data_center_contact_name = isset($dataset[METADATA_PREFIX . 'data_center_contact_name']) ? $dataset[METADATA_PREFIX . 'data_center_contact_name'] : MISSING_METADATA;
@@ -81,7 +81,9 @@ function metsis_basket_insert($basket_object) {
     $fields['solr_core'] = adc_get_solr_core(array($metadata_identifier))[$metadata_identifier];
     $fields['solr_id'] = $solr_id;
     $fields['_version_'] = $_version_;
-    $fields['last_metadata_update'] = adc_date_to_int($last_metadata_update);
+    if($last_metadata_update != "") {
+      $fields['last_metadata_update'] = adc_date_to_int($last_metadata_update);
+    }
     $fields['personell_email'] = $personell_email[0];
     $fields['platform_long_name'] = $platform_long_name[0];
     $fields['data_center_contact_name'] = $data_center_contact_name;
