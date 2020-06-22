@@ -1,0 +1,12 @@
+metsis_wms.get_custom_content:
+  path: /metsis/map/wms2
+  defaults:
+    _title: 'METSIS OL3 WMS node'
+    _controller: '\Drupal\metsis_wms\Controller\DefaultController::get_custom_content'
+  options:
+    query:
+      dataset: ""
+      solr_core: ""
+      page: ""
+  requirements:
+    _permission: 'access content'

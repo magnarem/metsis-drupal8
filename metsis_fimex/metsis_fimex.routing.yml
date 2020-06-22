@@ -1,0 +1,12 @@
+metsis_fimex.fimexform:
+  path: '/metsis_fimex'
+  defaults:
+    _form: '\Drupal\metsis_fimex\Form\MetsisFimexForm'
+    _title: 'Metsis Transformation service form'
+  options:
+    query:
+      dataset_id: ""
+      solr_core: ""
+#      calling_results_page: ""
+  requirements:
+    _permission: 'access transformation service'

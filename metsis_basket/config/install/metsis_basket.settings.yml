@@ -1,0 +1,10 @@
+constants:
+  missing_metadata: "Missing metadata"
+  metadata_prefix: "mmd_"
+  not_applicable_metadata: "NA"
+  missing_opendap: "OPeNDAP access unavailable"
+  missing_data_access_resource: "Missing data access resource information. Not added to basket."
+  basket_endpoint: "/basket"
+  transformation_endpoint: "/metsis_fimex"
+  wms_endpoint: "/metsis/map/wms"
+  ts_endpoint_: "/ts"

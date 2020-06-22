@@ -1,0 +1,11 @@
+name: 'METSIS lib'
+description: 'Provides library routines for METSIS modules.'
+core: 8.x
+version: 8.x-1.0
+package: METSIS
+dependencies:
+  entity: 'drupal:entity'
+  views: 'drupal:views'
+  datetime: 'drupal:datetime'
+  views_bulk_operations: 'drupal:views_bulk_operations'
+type: module
