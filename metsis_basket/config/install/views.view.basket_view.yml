@@ -5,6 +5,8 @@ dependencies:
   module:
     - metsis_basket
     - views_bulk_operations
+_core:
+  default_config_hash: 5rgExpXuYl9DB4Z7OOKnTMvbb7xeY3CIqTTXgYTMSMI
 id: basket_view
 label: 'Basket View'
 module: views
@@ -487,7 +489,16 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: basket-view
+      path: basket
+      menu:
+        type: tab
+        title: 'My Basket'
+        description: 'Show my basket'
+        expanded: false
+        parent: ''
+        weight: 0
+        context: '0'
+        menu_name: main
     cache_metadata:
       max-age: 0
       contexts:
