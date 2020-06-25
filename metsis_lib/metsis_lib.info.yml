@@ -10,4 +10,5 @@ dependencies:
   views_bulk_operations: 'drupal:views_bulk_operations'
   token: 'drupal:token'
   ctools: 'drupal:ctools'
+  token_views_filter: 'drupal:token_views_filter'
 type: module

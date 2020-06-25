@@ -195,6 +195,7 @@ public function q_results_tabular_form_submit($form, &$form_state) {
     \Drupal::messenger()->addMessage(t('The form has been submitted.'));
     }
 
+
 public function qsearch_get_ctable($form_state, $page_number) {
     global $metsis_conf;
     global $base_url;
@@ -208,6 +209,9 @@ public function qsearch_get_ctable($form_state, $page_number) {
     $solr_obj = q_do_search($_SESSION['qsearch']['initial_user_query'], $number_results_per_page, $start_row);
     $show_children = FALSE;
     $children = NULL;
+
+    $url = Url::fromRoute('metsis_qsearch.qsearch_results_form', [ 'page' => $page_number]);
+    $referer = $url->toString();
 
     $header = array();
     if (DATASETNAME_VISIBLE) {
@@ -306,7 +310,7 @@ public function qsearch_get_ctable($form_state, $page_number) {
           $fimex_link = "";
         }
         else {
-          $fimex_link = msb_get_fimex_link($doc[METADATA_PREFIX . 'metadata_identifier'], SOLR_CORE_PARENT);
+          $fimex_link = msb_get_fimex_link($doc[METADATA_PREFIX . 'metadata_identifier'], SOLR_CORE_PARENT, $referer);
         }
       }
       else {
@@ -353,9 +357,13 @@ public function qsearch_get_ctable($form_state, $page_number) {
       $ascii_button = "";
       $leveltwo_button = adc_get_leveltwo_links($doc[METADATA_PREFIX . 'metadata_identifier'], $page_number);
       if (adc_has_feature_type($doc[METADATA_PREFIX . 'metadata_identifier'], "timeSeries") === 1) {
+        $calling_url_obj = Url::fromRoute('metsis_qsearch.qsearch_results_form', [
+          'page' => $page_number,
+        ], ['absolute' => FALSE]);
+        $calling_url = $calling_url_obj->toString();
         $url = Url::fromRoute('metsis_timseries.tsform', [
           'metadata_identifier' => $doc[METADATA_PREFIX . 'metadata_identifier'],
-          'calling_results_page' => $page_number,
+          'calling_results_page' => $calling_url,
         ], ['absolute' => TRUE]);
         $visualize_url = $url->toString();
         //\Drupal::logger('metsis_qsearch')->debug('Url from path is: ' . $this_url);

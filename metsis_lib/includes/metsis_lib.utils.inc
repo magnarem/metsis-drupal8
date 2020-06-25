@@ -8,6 +8,9 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Core\Render\Markup;
 //use Drupal\filter\Render\FilteredMarkup;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ServerException;
 
 
 /**
@@ -564,11 +567,29 @@ function adcwps_query($protocol, $server, $service_path, $built_query) {
     // Expected result.
     // getBody() returns an instance of Psr\Http\Message\StreamInterface.
     // @see http://docs.guzzlephp.org/en/latest/psr7.html#body
-    $res = $response->getBody();
+    if($response->getStatusCode() == '200') {
+      $res = $response->getBody();
+    }
+    else {
+      \Drupal::messenger()->addError("Failed to convert dataset to CSV format");
+      //drupal_set_message();
+        $request = \Drupal::request();
+        $referer = $request->headers->get('referer');
+        $response =  new RedirectResponse($referer);
+        return $response->send();
+    }
   }
-  catch (RequestException $e) {
+  catch (RequestException | ServerException $e) {
     watchdog_exception('metsis_lib', $e);
+    \Drupal::messenger()->addError("Failed to convert dataset to CSV format");
+    //drupal_set_message();
+      $request = \Drupal::request();
+      $referer = $request->headers->get('referer');
+      $response =  new RedirectResponse($referer);
+      return $response->send();
+
   }
+
   //var_dump($res);
   $data = hack_xml_namespace($res);
   //var_dump($data);

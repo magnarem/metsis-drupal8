@@ -40,7 +40,9 @@ class MetsisBasketTransformAction extends ViewsBulkOperationsActionBase {
     /* Get the metadata identifiers */
     $metadata_identifiers = [];
     $metadata_identifiers[] = $entity->metadata_identifier->value;
-    $options = array('dataset_id' => implode(",", $metadata_identifiers),);
+    $request = \Drupal::request();
+  $referer = $request->headers->get('referer');
+    $options = array('dataset_id' => implode(",", $metadata_identifiers), 'referer' => $referer);
 
 
 
@@ -54,7 +56,7 @@ class MetsisBasketTransformAction extends ViewsBulkOperationsActionBase {
     // Don't return anything for a default completion message, otherwise return translatable markup.
     //return $this->t('Basket Item Deleted');
     $url = \Drupal::url('metsis_fimex.fimexform', $options);
-    $response = new RedirectResponse('metsis_fimex.fimexform', $options);
+    $response = new RedirectResponse($url);
     return $response->send();
 
   }
@@ -68,7 +70,9 @@ class MetsisBasketTransformAction extends ViewsBulkOperationsActionBase {
       $metadata_identifiers[] = $entity->metadata_identifier->value;
 
     }
-    $options = array('dataset_id' => implode(",", $metadata_identifiers),);
+    $request = \Drupal::request();
+  $referer = $request->headers->get('referer');
+    $options = array('dataset_id' => implode(",", $metadata_identifiers),'referer' => $referer);
     $output = print_r($options,1);
     \Drupal::logger('metsis_basket')->debug("Calling multiple transformation service with options: " . $output);
 

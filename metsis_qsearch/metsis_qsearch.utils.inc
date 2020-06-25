@@ -570,10 +570,10 @@ function msb_get_fields($solr_core, $dataset_id, $fields) {
   return json_decode($res['body'], true);
 }
 
-function msb_get_fimex_link($dataset_id, $solr_core) {
+function msb_get_fimex_link($dataset_id, $solr_core, $referer) {
   $url = '';
   $url .= '<div class="botton-wrap">';
-  $url .= '<a class="adc-button adc-sbutton" href="' . '/metsis_fimex?dataset_id=' . $dataset_id . '&solr_core=' . $solr_core . '" >Transform</a>';
+  $url .= '<a class="adc-button adc-sbutton" href="' . '/metsis_fimex?dataset_id=' . $dataset_id . '&solr_core=' . $solr_core . '&referer=' . $referer . '" >Transform</a>';
   $url .= '</div>';
   return $url;
 }

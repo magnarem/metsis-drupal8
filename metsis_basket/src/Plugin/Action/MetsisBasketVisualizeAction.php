@@ -5,6 +5,7 @@ namespace Drupal\metsis_basket\Plugin\Action;
 use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Action description.
@@ -54,7 +55,8 @@ class MetsisBasketVisualizeAction extends ViewsBulkOperationsActionBase {
         'calling_results_page' => $basket_endpoint,
       ],
     ];
-    if (count($metadata_identifiers > 1)) {
+    //var_dump($metadata_identifiers);
+    if (count($metadata_identifiers) > 1) {
       \Drupal::messenger()->addWarning('Time series plotting for basket items is not fully implemented.');
     }
     if (adc_has_feature_type($metadata_identifiers[0], 'timeSeries') === 1) {
@@ -64,8 +66,9 @@ class MetsisBasketVisualizeAction extends ViewsBulkOperationsActionBase {
       $output = print_r($options,1);
       \Drupal::logger('metsis_basket')->debug("TS Endpoint is: " . $ts_endpoint);
       \Drupal::logger('metsis_basket')->debug("Calling single visualization service with options: " . $output);
-      $url = \Drupal::url('metsis_timseries.tsform', $options);
-      $response = new RedirectResponse('metsis_timseries.tsform', $options);
+      $url = \Drupal::url('metsis_timseries.tsform', $options['query']);
+      //$response = new RedirectResponse('metsis_timseries.tsform', $options);
+      $response = new RedirectResponse($url);
       return $response->send();
     }
     else {
@@ -74,8 +77,10 @@ class MetsisBasketVisualizeAction extends ViewsBulkOperationsActionBase {
       $output = print_r($options,1);
       \Drupal::logger('metsis_basket')->debug("WMS Endpoint is: " . $wms_endpoint);
       \Drupal::logger('metsis_basket')->debug("Calling single visualization service with options: " . $output);
-      $url = \Drupal::url('metsis_qsearch.wms', $options);
-      $response = new RedirectResponse('metsis_qsearch.wms', $options);
+      $url = \Drupal::url('metsis_qsearch.wms', $options['query']);
+      //$response = new RedirectResponse('metsis_qsearch.wms', $options);
+      $response = new RedirectResponse($url);
+      //return new RedirectResponse('metsis_qsearch.wms', $options);
       return $response->send();
     }
 
@@ -108,7 +113,9 @@ class MetsisBasketVisualizeAction extends ViewsBulkOperationsActionBase {
         'calling_results_page' => $basket_endpoint,
       ],
     ];
-    if (count($metadata_identifiers > 1)) {
+
+
+    if (count($metadata_identifiers) > 1) {
       \Drupal::messenger()->addWarning('Time series plotting for basket items is not fully implemented.');
     }
     if (adc_has_feature_type($metadata_identifiers[0], 'timeSeries') === 1) {
@@ -118,8 +125,10 @@ class MetsisBasketVisualizeAction extends ViewsBulkOperationsActionBase {
       $output = print_r($options,1);
       \Drupal::logger('metsis_basket')->debug("TS Endpoint is: " . $ts_endpoint);
       \Drupal::logger('metsis_basket')->debug("Calling multiple visualization service with options: " . $output);
-      $url = \Drupal::url('metsis_timseries.tsform', $options);
-      $response = new RedirectResponse('metsis_timseries.tsform', $options);
+      //var_dump($options);
+      $url = \Drupal::url('metsis_timseries.tsform', $options['query']);
+      //$response = new RedirectResponse('metsis_timseries.tsform', $options);
+      $response = new RedirectResponse($url);
       return $response->send();
     }
     else {
@@ -128,8 +137,9 @@ class MetsisBasketVisualizeAction extends ViewsBulkOperationsActionBase {
       $output = print_r($options,1);
       \Drupal::logger('metsis_basket')->debug("WMS Endpoint is: " . $wms_endpoint);
       \Drupal::logger('metsis_basket')->debug("Calling multiple visualization service with options: " . $output);
-      $url = \Drupal::url('metsis_qsearch.wms', $options);
-      $response = new RedirectResponse('metsis_qsearch.wms', $options);
+      $url = \Drupal::url('metsis_qsearch.wms', $options['query']);
+      //$response = new RedirectResponse('metsis_qsearch.wms', $options);
+      $response = new RedirectResponse($url);
       return $response->send();
     }
   }

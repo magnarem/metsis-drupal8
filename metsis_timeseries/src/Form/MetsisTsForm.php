@@ -27,8 +27,11 @@ class MetsisTsForm extends FormBase {
     // Get the query params from the request
     $query_params = \Drupal::request()->query->all();
     $params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_params);
-    $calling_results_page = (int) $params['calling_results_page'];
+    $calling_results_page = $params['calling_results_page'];
     //$calling_results_page = isset($_GET['calling_results_page']) ? \Drupal\Component\Utility\Html::escape($_GET['calling_results_page']) : '';
+
+    $request = \Drupal::request();
+    $referer = $request->headers->get('referer');
 
     global $metsis_conf;
     $metadata_identifier = isset($_GET['metadata_identifier']) ? \Drupal\Component\Utility\Html::escape($_GET['metadata_identifier']) : '';
@@ -76,15 +79,16 @@ class MetsisTsForm extends FormBase {
 /**
  * Create back to results link
  */
+ /*if(is_int($params['calling_results_page'])) {
  $url = Url::fromRoute('metsis_qsearch.qsearch_results_form', [
-   'page' => $calling_results_page,
+   'page' => $params['calling_results_page'],
  ], ['absolute' => TRUE]);
- $target_url = $url->toString();
+ $calling_results_page = $url->toString();
     //Reender back to results button
-
+}*/
     $form['back_to_results'] = array(
       '#prefix' => '<div class="csvbox contentc">',
-      '#markup' => "<a href=" . $target_url .' class="adc-button">' . $this->t('Back to results') . "</a>",
+      '#markup' => "<a href=" . $calling_results_page .' class="adc-button">' . $this->t('Back to results') . "</a>",
       '#suffix' => '</div>'
     );
 

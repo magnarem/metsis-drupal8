@@ -42,8 +42,8 @@ class MetsisBasketDownloadAction extends ViewsBulkOperationsActionBase {
 
 
     $records = array_keys($entity);
-    $uris = get_download_action_uris("metsis_basket", $records, "http");
-    create_download_action_order($uris);
+    $uris = $this->get_download_action_uris("metsis_basket", $records, "http");
+    $this->create_download_action_order($uris);
 
   }
 
@@ -128,6 +128,6 @@ class MetsisBasketDownloadAction extends ViewsBulkOperationsActionBase {
     ->addMessage(t('Your download request has been queued for processing. An email with further instructions will be sent to:!values', array(
       '!values' => drupal_render('item_list', array('items' => array($receipt['email']),)))));
 */
-   \Drupal::messenger()->addMessage("Downloads qued for download: " . $receipt['email']);
+   \Drupal::messenger()->addMessage(t('Your download request has been queued for processing. An email with further instructions will be sent to' . $receipt['email']));
   }
 }

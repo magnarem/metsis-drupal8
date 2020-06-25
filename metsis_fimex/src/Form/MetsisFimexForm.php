@@ -4,10 +4,12 @@ namespace Drupal\metsis_fimex\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node\Entity\Node;
+//use Drupal\node\Entity\Node;
 use GuzzleHttp\Exception\RequestException;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
 /**
@@ -32,10 +34,10 @@ class MetsisFimexForm extends FormBase {
  //if ($metsis_conf['metsis_fimex_authentication_required']['boolean'] === TRUE) {
 
  if ($metsis_conf['message']['visible'] === TRUE) {
-   drupal_set_message($metsis_conf['message']['under_construction'], 'warning');
+   \Drupal::messenger()->addWarning($metsis_conf['message']['under_construction']);
  }
  if (isset($metsis_conf['warning']['transformation'])) {
-   drupal_set_message($metsis_conf['warning']['transformation'], 'warning');
+    \Drupal::messenger()->addWarning($metsis_conf['warning']['transformation']);
  }
 
 
@@ -54,7 +56,22 @@ class MetsisFimexForm extends FormBase {
  //url paramter to indicate that there is opendap (i.e. &opendap=yes or something like that)
  //this is key. we need to send in default form values or ol3 wms params.
 
+/* Store some information to keep go back link as expected */
+$query_params = \Drupal::request()->query->all();
+$params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_params);
+$referer = $params['referer'];
+/*
+  $request = \Drupal::request();
+$referer = $request->headers->get('referer');
+ $tempstore = \Drupal::service('tempstore.private')->get('metsis_fimex');
+ if( null !== $tempstore->get('isSubmitted')) {
+   $referer = $tempstore->get('referer');
+ }
+ else {
 
+   $tempstore->set('referer', $referer);
+ }
+ var_dump($referer); */
  /*
   * get the data from search form and OpeNDAP and/or SOLR
   */
@@ -62,12 +79,12 @@ class MetsisFimexForm extends FormBase {
   /**
    * TODO: Maybe this is better approache than $_GET
    */
-   /*
+
  $query_params = \Drupal::request()->query->all();
  $page_inputs = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_params);
- var_dump($page_inputs);
-*/
- $dataset_id = isset($_GET['dataset_id']) ? $_GET['dataset_id'] : '';
+ //var_dump($page_inputs);
+ $dataset_id = $page_inputs['dataset_id'];
+// $dataset_id = isset($_GET['dataset_id']) ? $_GET['dataset_id'] : '';
  $dataset_ids = explode(",", $dataset_id);
  //var_dump($dataset_ids);
  $opendap_global_attributes = adc_get_od_global_attributes($dataset_id, SOLR_CORE_PARENT)['data']['findAllAttributes'];
@@ -155,17 +172,18 @@ class MetsisFimexForm extends FormBase {
  $dar = [];
  foreach ($solr_data as $sd) {
    if ($sd['response']['numFound'] == 0) {
-     drupal_set_message("Invalid dataset ID", 'error');
+    \Drupal::messenger()->addError("Invalid dataset ID");
    }
 
    $dar[] = msb_concat_data_access_resource($sd['response']['docs'][0][METADATA_PREFIX . 'data_access_resource']);
  }
-
+//var_dump($sd['response']['docs'][0][METADATA_PREFIX . 'data_access_resource']);
  //todo
  //use metadata from the first dataset in URL is used
-
+if(isset($dar[0]['OPeNDAP']['url'])) {
  $opendap_ddx = $dar[0]['OPeNDAP']['url'] . ".ddx";
- //var_dump($opendap_ddx);
+ //$opendap_ddx = $dar[0]['OPeNDAP']['url'];
+ //var_dump($dar[0]['OPeNDAP']['url']);
  //test{
  //    $feature_types = adc_get_od_feature_type($opendap_ddx);
  //    foreach ($feature_types['Attribute'] as $a) {
@@ -182,6 +200,23 @@ class MetsisFimexForm extends FormBase {
  //$opendap_ddx ="http://super-monitor.met.no/thredds/dodsC/lustreMntB/users/heikok/Meteorology/ecdiss-internet.met.no/ecdiss/NBS/S2A_MSIL1C_20170126T105321_N0204_R051_T32VNL_20170126T105315.nc.ddx";
  //test}
  $jod_data = adc_get_od_data($opendap_ddx);
+}
+else {
+  \Drupal::messenger()->addError("Selected datasets does not contain OPeNDAP resource");
+/*  $form_state->setRedirectUrl(Url::fromUri($referer));
+
+  $form['error_message'] = [
+    '#weight' => 10,
+    '#markup' => 'Selected datasets does not contain OPeNDAP resource',
+  ];
+ $form['back_to_search'] = [
+   '#weight' => 14,
+   '#markup' => '<a href="' .$referer . '" class="adc-button adc-back">Back to results</a>',
+ ];
+  return $form;*/
+  //return new RedirectResponse(Url::fromUri($referer));
+  return new RedirectResponse($referer);
+}
  //$od_temporal_extent = adc_get_od_temporal_extent($jod_data);
  /**
   * test{
@@ -825,7 +860,7 @@ class MetsisFimexForm extends FormBase {
   */
  $form['back_to_search'] = [
    '#weight' => 14,
-   '#markup' => '<a href="#" class="adc-button adc-back">Back to results</a>',
+   '#markup' => '<a href="' . $referer . '" class="adc-button adc-back">Back to results</a>',
  ];
 
  /**
@@ -858,8 +893,11 @@ class MetsisFimexForm extends FormBase {
      * {@inheritdoc}
      */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $tempstore = \Drupal::service('tempstore.private')->get('metsis_fimex');
+    $tempstore->set('isSubmitted', true);
     $receipt = $this->adc_get_fimex_query($form_state);
     adc_set_message($receipt);
+    $form_state->setRebuild();
   }
 
   function metsis_fimex_extra_submit($form, &$form_state) {
@@ -902,14 +940,7 @@ class MetsisFimexForm extends FormBase {
     }
 
     function get_wps_fimex_info($wps_fimex_url) {
-      // @FIXME
-    // drupal_http_request() has been replaced by the Guzzle HTTP client, which is bundled
-    // with Drupal core.
-    //
-    //
-    // @see https://www.drupal.org/node/1862446
-    // @see http://docs.guzzlephp.org/en/latest
-    // $res = drupal_http_request($wps_fimex_url);
+
     $res = null;
     try {
       $res = \Drupal::httpClient()->get($wps_fimex_url);
@@ -1001,7 +1032,7 @@ class MetsisFimexForm extends FormBase {
         'fiReducetimeEnd' => get_metsis_date($form_state->getValue('stop_date'), $basket_wps_date_format),
         'fiOutputType' => $form_state->getValue('selected_output_format'),
       ];
-      var_dump($req_params_mandatory);
+      //var_dump($req_params_mandatory);
       $req_params_mandatory['fiReduceboxNorth'] = $form_state->getValue('north');
       $req_params_mandatory['fiReduceboxSouth'] = $form_state->getValue('south');
       $req_params_mandatory['fiReduceboxEast'] = $form_state->getValue('east');

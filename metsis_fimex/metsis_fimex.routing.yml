@@ -7,6 +7,7 @@ metsis_fimex.fimexform:
     query:
       dataset_id: ""
       solr_core: ""
-#      calling_results_page: ""
+      calling_results_page: ""
+      referer: ""
   requirements:
     _permission: 'access transformation service'

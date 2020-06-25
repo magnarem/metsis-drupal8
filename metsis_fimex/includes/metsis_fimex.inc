@@ -145,23 +145,47 @@ function adc_get_od_data($opendap_ddx) {
  $ddx = null;
   try {
     $ddx = \Drupal::httpClient()->get($opendap_ddx);
-
+    //var_dump($ddx);
+    //$ddx = drupal_http_request($opendap_ddx);
+    if ($ddx->getStatusCode() == '200') {
+      $od_data = new SimpleXMLElement($ddx->getBody());
+      return Json::decode(Json::encode($od_data));
+    }
   }
   catch (RequestException $e) {
-
-  }
-  //$ddx = drupal_http_request($opendap_ddx);
-  if ($ddx->getStatusCode() == '200') {
-    $od_data = new SimpleXMLElement($ddx->getBody());
-    return Json::decode(Json::encode($od_data));
-  }
-  else {
     //todo refactor
+  /*  $ddx = null;
+     try {
+       $ddx = \Drupal::httpClient()->get($opendap_ddx);
+       var_dump($ddx);
+       //$ddx = drupal_http_request($opendap_ddx);
+       if ($ddx->getStatusCode() == '200') {
+         $od_data = new SimpleXMLElement($ddx->getBody());
+         return Json::decode(Json::encode($od_data));
+       }
+     }
+     catch (RequestException $e) {
+       //todo refactor
+       \Drupal::messenger()->addError("Failed to fetch (OPeNDAP) data from data server");
+       //drupal_set_message();
+         $request = \Drupal::request();
+         $referer = $request->headers->get('referer');
+         return new RedirectResponse($referer);
+         //$response = newRedirectResponse(Url::fromRoute('metsis_qsearch.metsis_qsearch_form'));
+         //$response->send();
+     } */
     \Drupal::messenger()->addError("Failed to fetch (OPeNDAP) data from data server");
-    drupal_set_message();
-      $response = new RedirectResponse(Url::fromRoute('metsis_qsearch.metsis_qsearch_form'));
-      $response->send();
+    //drupal_set_message();
+      $request = \Drupal::request();
+      $referer = $request->headers->get('referer');
+      $response =  new RedirectResponse($referer);
+      return $response->send();
+      //$response = newRedirectResponse(Url::fromRoute('metsis_qsearch.metsis_qsearch_form'));
+      //$response->send();
   }
+
+
+
   return;
 }
 
@@ -199,7 +223,7 @@ function adc_get_od_temporal_extent($jod_data) {
 
     if (defined('SITE_STATUS')) {
       if (SITE_STATUS === 'dev' || SITE_STATUS === 'test') {
-        drupal_set_message("Could not find all \"temporal extent\" data", 'warning');
+          \Drupal::messenger()->addWarning("Could not find all \"temporal extent\" data", 'warning');
       }
     }
   }

@@ -1,5 +1,6 @@
 <?php
 namespace Drupal\metsis_lib;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Example:
@@ -80,7 +81,7 @@ class HttpConnection {
     }
     else {
 
-      throw new Exception("could not establish connection with $host");
+      throw new RequestException("could not establish connection with $host");
     }
 
 
