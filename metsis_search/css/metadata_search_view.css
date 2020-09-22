@@ -1,0 +1,11 @@
+.dataset {
+-webkit-box-shadow: 0px 0px 10px 6px rgba(49,65,95,0.22);
+box-shadow: 0px 0px 6px 6px rgba(49,65,95,0.22);
+background: #FAF8F8;
+}
+
+.numberOfResults {
+text-shadow: 2px 2px 4px rgba(26,121,54,0.2), 2px 2px 4px rgba(26,121,54,0.2);
+color: #FFFFFF;
+background: #10CF1B;
+}

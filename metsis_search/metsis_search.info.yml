@@ -1,0 +1,10 @@
+name: 'Metsis Search'
+type: module
+description: 'METSIS Metadata Search'
+core: 8.x
+package: 'METSIS'
+dependencies:
+#  metsis_basket: 'drupal:metsis_basket'
+  search_api: 'drupal:search_api'
+  search_api_solr: 'drupal:search_api_solr'
+  facets: 'drupal:facets'

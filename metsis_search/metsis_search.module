@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * @file
+ * Contains metsis_search.module for drupal8.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+
+
+/**
+ * Implements hook_help().
+ */
+function metsis_search_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the metsis_search module.
+    case 'help.page.metsis_search':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('METSIS Metadata Search') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+* Implements hook_views_pre_render().
+*
+* Adding  our custom css to the search view
+*/
+function metsis_search_views_pre_render(ViewExecutable $view) {
+  if (isset($view) && ($view->storage->id() == 'metsis_search_view')) {
+    $view->element['#attached']['library'][] = 'metsis_search/metadata_search_view';
+  }
+}
+
+/**
+ * Implemets hook_theme()
+ */
+function metsis_search_theme() {
+  $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+  $bboxFilter = $tempstore->get('bboxFilter');
+  $tllat = "";
+  $tllon = "";
+  $brlat = "";
+  $brlon = "";
+  if ($bboxFilter != NULL) {
+    $tllat = $tempstore->get('tllat');
+    $tllon = $tempstore->get('tllon');
+    $brlat = $tempstore->get('brlat');
+    $brlon = $tempstore->get('brlon');
+  }
+  return [
+    'block__exposedformmetsis_search_viewresults' => [
+      'render element' => 'elements',
+      'base hook' => 'block',
+    ],
+    'views_view_fields__metsis_search_view__results' => [
+      'render element' => 'elements',
+      'base hook' => 'views field',
+    ],
+    'views_view__metsis_search_view__results' => [
+      'render element' => 'elements',
+      'base hook' => 'views view',
+    ],
+    'block__mapblockformetsissearch' => [
+      'render element' => 'elements',
+      'base hook' => 'block',
+      'variables' => [
+        'tllat' => $tllat,
+        'tllon' => $tllon,
+        'brlat' => $brlat,
+        'brlon' => $brlon,
+      ],
+      #'template' =>   'block--mapblockformetsissearch',
+    ],
+  ];
+}
+
+/**
+ * Implments hook_views_query_alter
+ */
+function metsis_search_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+
+  if( $view->id() == 'metsis_search_view') {
+    //var_dump($view);
+      $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+      $bboxFilter = $tempstore->get('bboxFilter');
+      \Drupal::logger('metsis_search')->debug("bboxFilter: " . $bboxFilter);
+      if($bboxFilter != NULL && $bboxFilter != "") {
+         $conditions = $query->createConditionGroup('AND');
+         //$testStr = 'Intersects(ENVELOPE(80.72589497828484,11.381460937500002,70.09112935328484,29.4869296875))';
+         $conditions->addCondition('bbox', $bboxFilter , '');
+         $query->addConditionGroup($conditions);
+       }
+      //$conditions = $query->createConditionGroup('AND');
+       //$testStr = 'Intersects(ENVELOPE(80.72589497828484,11.381460937500002,70.09112935328484,29.4869296875))';
+       //$conditions->addCondition('rpts_bbox', 'facet.heatmap=rpts_bbox' , '');
+       //$query->addConditionGroup($conditions);
+  }
+}
+
+function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInterface $solarium_query, \Drupal\search_api\Query\QueryInterface $query) {
+  var_dump($solarium_query);
+  var_dump($query);
+}
+/*
+ * Implements hook_preprocess().
+
+function metsis_search_preprocess(&$variables, $hook, &$info) {
+
+        $info['theme path'] = 'modules/metsis_search';
+        $info['path'] = 'modules/metsis_search/templates';
+
+}
+*/

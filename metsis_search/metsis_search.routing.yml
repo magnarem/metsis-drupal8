@@ -1,0 +1,13 @@
+metsis_search.map:
+  path: /metsis/search/map
+  defaults:
+    _controller: \Drupal\metsis_search\Controller\MapSearchController::ajaxCallback
+    _title: "Ajax Callback for SearchMap"
+  options:
+    query:
+      tllat: ""
+      tllon: ""
+      brlat: ""
+      brlon: ""
+  requirements:
+    _permission: 'accsess content'
