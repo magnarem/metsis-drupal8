@@ -1,4 +1,5 @@
 ###This tree is development ONLY. Do not use for production.
+## New search api based version
 ## Initial working commit
 # Todo:
 - Replace all $_SESSION calls with private tempstore
