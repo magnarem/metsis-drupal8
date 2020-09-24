@@ -1,0 +1,23 @@
+uuid: cbb47252-f1cf-4f7b-ab3b-ec921330e34d
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.organisation
+  module:
+    - facets
+  theme:
+    - bartik
+id: organisation
+theme: bartik
+region: sidebar_first
+weight: -6
+provider: null
+plugin: 'facet_block:organisation'
+settings:
+  id: 'facet_block:organisation'
+  label: Organisation
+  provider: facets
+  label_display: visible
+  block_id: organisation
+visibility: {  }

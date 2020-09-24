@@ -1,0 +1,23 @@
+uuid: a382633a-cfa5-4597-a000-f8d7fa4ae681
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.metsis_search
+  module:
+    - views
+  theme:
+    - bartik
+id: exposedformmetsis_searchresults
+theme: bartik
+region: sidebar_first
+weight: -11
+provider: null
+plugin: 'views_exposed_filter_block:metsis_search-results'
+settings:
+  id: 'views_exposed_filter_block:metsis_search-results'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+visibility: {  }

@@ -1,0 +1,493 @@
+uuid: 5d2ef418-6c39-466d-af21-7346649258a7
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_solr
+    - search_api
+  config:
+    - search_api.server.local
+third_party_settings:
+  search_api_solr:
+    finalize: false
+    commit_before_finalize: false
+    commit_after_finalize: false
+    multilingual:
+      limit_to_content_language: false
+      include_language_independent: true
+    highlighter:
+      maxAnalyzedChars: 51200
+      fragmenter: gap
+      regex:
+        slop: 0.5
+        pattern: blank
+        maxAnalyzedChars: 10000
+      usePhraseHighlighter: true
+      highlightMultiTerm: true
+      preserveMulti: false
+      highlight:
+        mergeContiguous: false
+        requireFieldMatch: false
+        snippets: 3
+        fragsize: 0
+    mlt:
+      mintf: 1
+      mindf: 1
+      maxdf: 0
+      maxdfpct: 0
+      minwl: 0
+      maxwl: 0
+      maxqt: 100
+      maxntp: 2000
+      boost: false
+      interestingTerms: details
+    advanced:
+      index_prefix: ''
+      collection: ''
+      timezone: ''
+id: drupal8
+name: drupal8
+description: ''
+read_only: true
+field_settings:
+  abstract:
+    label: Abstract
+    datasource_id: solr_document
+    property_path: abstract
+    type: text
+    boost: !!float 2
+  access_constraint:
+    label: 'Access constraint'
+    datasource_id: solr_document
+    property_path: access_constraint
+    type: string
+  activity_type:
+    label: 'Activity type'
+    datasource_id: solr_document
+    property_path: activity_type
+    type: string
+  bbox:
+    label: Bbox
+    datasource_id: solr_document
+    property_path: bbox
+    type: string
+  collection:
+    label: Collection
+    datasource_id: solr_document
+    property_path: collection
+    type: string
+  data_access_description:
+    label: 'Data access_description'
+    datasource_id: solr_document
+    property_path: data_access_description
+    type: text
+  data_access_resource:
+    label: 'Data access_resource'
+    datasource_id: solr_document
+    property_path: data_access_resource
+    type: string
+  data_access_type:
+    label: 'Data access_type'
+    datasource_id: solr_document
+    property_path: data_access_type
+    type: string
+  data_access_url_http:
+    label: 'Data access url http'
+    datasource_id: solr_document
+    property_path: data_access_url_http
+    type: string
+  data_access_url_ogc_wfs:
+    label: 'Data access url ogc wfs'
+    datasource_id: solr_document
+    property_path: data_access_url_ogc_wfs
+    type: string
+  data_access_url_ogc_wms:
+    label: 'Data access url ogc wms'
+    datasource_id: solr_document
+    property_path: data_access_url_ogc_wms
+    type: string
+  data_access_url_opendap:
+    label: 'Data access url opendap'
+    datasource_id: solr_document
+    property_path: data_access_url_opendap
+    type: string
+  data_access_wms_layers:
+    label: 'Data access_wms layers'
+    datasource_id: solr_document
+    property_path: data_access_wms_layers
+    type: string
+  data_center_long_name:
+    label: 'Data center_long name'
+    datasource_id: solr_document
+    property_path: data_center_long_name
+    type: text
+  data_center_short_name:
+    label: 'Data center_short name'
+    datasource_id: solr_document
+    property_path: data_center_short_name
+    type: string
+  data_center_url:
+    label: 'Data center_url'
+    datasource_id: solr_document
+    property_path: data_center_url
+    type: string
+  dataset_citation_publisher:
+    label: 'Dataset citation_publisher'
+    datasource_id: solr_document
+    property_path: dataset_citation_publisher
+    type: text
+  dataset_citation_series:
+    label: 'Dataset citation_series'
+    datasource_id: solr_document
+    property_path: dataset_citation_series
+    type: string
+  dataset_citation_title:
+    label: 'Dataset citation_title'
+    datasource_id: solr_document
+    property_path: dataset_citation_title
+    type: string
+  dataset_production_status:
+    label: 'Dataset production status'
+    datasource_id: solr_document
+    property_path: dataset_production_status
+    type: string
+  dataset_type:
+    label: 'Dataset type'
+    datasource_id: solr_document
+    property_path: dataset_type
+    type: string
+  feature_type:
+    label: 'Feature type'
+    datasource_id: solr_document
+    property_path: feature_type
+    type: string
+  full_text:
+    label: 'Full text'
+    datasource_id: solr_document
+    property_path: full_text
+    type: text
+  geographic_extent_ectangle_east:
+    label: 'Geographic extent_rectangle_east'
+    datasource_id: solr_document
+    property_path: geographic_extent_rectangle_east
+    type: decimal
+  geographic_extent_rectangle_north:
+    label: 'Geographic extent_rectangle_north'
+    datasource_id: solr_document
+    property_path: geographic_extent_rectangle_north
+    type: decimal
+  geographic_extent_rectangle_south:
+    label: 'Geographic extent_rectangle_south'
+    datasource_id: solr_document
+    property_path: geographic_extent_rectangle_south
+    type: decimal
+  geographic_extent_rectangle_west:
+    label: 'Geographic extent_rectangle_west'
+    datasource_id: solr_document
+    property_path: geographic_extent_rectangle_west
+    type: decimal
+  id:
+    label: Id
+    datasource_id: solr_document
+    property_path: id
+    type: string
+  iso_topic_category:
+    label: 'Iso topic category'
+    datasource_id: solr_document
+    property_path: iso_topic_category
+    type: string
+  keywords_bread:
+    label: 'Keywords bread'
+    datasource_id: solr_document
+    property_path: keywords_bread
+    type: string
+  keywords_keyword:
+    label: Keywords_keyword
+    datasource_id: solr_document
+    property_path: keywords_keyword
+    type: string
+  keywords_level1:
+    label: 'Keywords level1'
+    datasource_id: solr_document
+    property_path: keywords_level1
+    type: string
+  keywords_level2:
+    label: 'Keywords level2'
+    datasource_id: solr_document
+    property_path: keywords_level2
+    type: string
+  keywords_level3:
+    label: 'Keywords level3'
+    datasource_id: solr_document
+    property_path: keywords_level3
+    type: string
+  keywords_level4:
+    label: 'Keywords level4'
+    datasource_id: solr_document
+    property_path: keywords_level4
+    type: string
+  keywords_level5:
+    label: 'Keywords level5'
+    datasource_id: solr_document
+    property_path: keywords_level5
+    type: string
+  keywords_level6:
+    label: 'Keywords level6'
+    datasource_id: solr_document
+    property_path: keywords_level6
+    type: string
+  keywords_level7:
+    label: 'Keywords level7'
+    datasource_id: solr_document
+    property_path: keywords_level7
+    type: string
+  last_metadata_update_datetime:
+    label: 'Last metadata update_datetime'
+    datasource_id: solr_document
+    property_path: last_metadata_update_datetime
+    type: date
+  metadata_identifier:
+    label: 'Metadata identifier'
+    datasource_id: solr_document
+    property_path: metadata_identifier
+    type: string
+  metadata_status:
+    label: 'Metadata status'
+    datasource_id: solr_document
+    property_path: metadata_status
+    type: string
+  mmd_data_center_contact_email:
+    label: 'Mmd data center contact email'
+    datasource_id: solr_document
+    property_path: mmd_data_center_contact_email
+    type: string
+  mmd_data_center_contact_fax:
+    label: 'Mmd data center contact fax'
+    datasource_id: solr_document
+    property_path: mmd_data_center_contact_fax
+    type: string
+  mmd_data_center_contact_name:
+    label: 'Mmd data center contact name'
+    datasource_id: solr_document
+    property_path: mmd_data_center_contact_name
+    type: string
+  mmd_data_center_contact_phone:
+    label: 'Mmd data center contact phone'
+    datasource_id: solr_document
+    property_path: mmd_data_center_contact_phone
+    type: string
+  mmd_data_center_contact_role:
+    label: 'Mmd data center contact role'
+    datasource_id: solr_document
+    property_path: mmd_data_center_contact_role
+    type: string
+  mmd_data_center_dataset_id:
+    label: 'Mmd data center dataset id'
+    datasource_id: solr_document
+    property_path: mmd_data_center_dataset_id
+    type: string
+  mmd_dataset_citation_dataset_creator:
+    label: 'Mmd dataset citation dataset creator'
+    datasource_id: solr_document
+    property_path: mmd_dataset_citation_dataset_creator
+    type: string
+  mmd_dataset_citation_dataset_release_date:
+    label: 'Mmd dataset citation dataset release date'
+    datasource_id: solr_document
+    property_path: mmd_dataset_citation_dataset_release_date
+    type: string
+  mmd_dataset_citation_dataset_release_place:
+    label: 'Mmd dataset citation dataset release place'
+    datasource_id: solr_document
+    property_path: mmd_dataset_citation_dataset_release_place
+    type: string
+  mmd_dataset_citation_version:
+    label: 'Mmd dataset citation version'
+    datasource_id: solr_document
+    property_path: mmd_dataset_citation_version
+    type: string
+  personnel_email:
+    label: Personnel_email
+    datasource_id: solr_document
+    property_path: personnel_email
+    type: string
+  personnel_name:
+    label: Personnel_name
+    datasource_id: solr_document
+    property_path: personnel_name
+    type: text
+  personnel_organisation:
+    label: Personnel_organisation
+    datasource_id: solr_document
+    property_path: personnel_organisation
+    type: string
+  personnel_role:
+    label: Personnel_role
+    datasource_id: solr_document
+    property_path: personnel_role
+    type: string
+  platform_long_name:
+    label: 'Platform_long name'
+    datasource_id: solr_document
+    property_path: platform_long_name
+    type: text
+  project_long_name:
+    label: 'Project_long name'
+    datasource_id: solr_document
+    property_path: project_long_name
+    type: text
+  project_short_name:
+    label: 'Project_short name'
+    datasource_id: solr_document
+    property_path: project_short_name
+    type: string
+  related_dataset:
+    label: 'Related dataset'
+    datasource_id: solr_document
+    property_path: related_dataset
+    type: string
+  related_information_description:
+    label: 'Related information_description'
+    datasource_id: solr_document
+    property_path: related_information_description
+    type: text
+  related_information_resource:
+    label: 'Related information_resource'
+    datasource_id: solr_document
+    property_path: related_information_resource
+    type: string
+  related_information_type:
+    label: 'Related information_type'
+    datasource_id: solr_document
+    property_path: related_information_type
+    type: string
+  related_url_landing_page:
+    label: 'Related url landing page'
+    datasource_id: solr_document
+    property_path: related_url_landing_page
+    type: string
+  related_url_user_guide:
+    label: 'Related url user guide'
+    datasource_id: solr_document
+    property_path: related_url_user_guide
+    type: string
+  sm_citation_publisher:
+    label: 'Sm citation publisher'
+    datasource_id: solr_document
+    property_path: sm_citation_publisher
+    type: string
+  sm_data_center_short_name:
+    label: 'Sm data center short name'
+    datasource_id: solr_document
+    property_path: sm_data_center_short_name
+    type: string
+  sm_keywords:
+    label: 'Sm keywords'
+    datasource_id: solr_document
+    property_path: sm_keywords
+    type: string
+  sm_keywords_strip:
+    label: 'Sm keywords strip'
+    datasource_id: solr_document
+    property_path: sm_keywords_strip
+    type: string
+  sm_personnel_name:
+    label: 'Sm personnel name'
+    datasource_id: solr_document
+    property_path: sm_personnel_name
+    type: string
+  sm_personnel_organisation:
+    label: 'Sm personnel organisation'
+    datasource_id: solr_document
+    property_path: sm_personnel_organisation
+    type: string
+  sm_personnel_role:
+    label: 'Sm personnel role'
+    datasource_id: solr_document
+    property_path: sm_personnel_role
+    type: string
+  sm_project_long_name:
+    label: 'Sm project long name'
+    datasource_id: solr_document
+    property_path: sm_project_long_name
+    type: string
+  ss_access:
+    label: 'Ss access'
+    datasource_id: solr_document
+    property_path: ss_access
+    type: string
+  temporal_extent_end_date:
+    label: 'Temporal extent_end date'
+    datasource_id: solr_document
+    property_path: temporal_extent_end_date
+    type: date
+  temporal_extent_period_dr:
+    label: 'Temporal extent period dr'
+    datasource_id: solr_document
+    property_path: temporal_extent_period_dr
+    type: solr_date_range
+  temporal_extent_start_date:
+    label: 'Temporal extent_start date'
+    datasource_id: solr_document
+    property_path: temporal_extent_start_date
+    type: date
+  text_suggester:
+    label: 'Text suggester'
+    datasource_id: solr_document
+    property_path: text_suggester
+    type: solr_text_suggester
+  thumbnail_data:
+    label: 'Thumbnail data'
+    datasource_id: solr_document
+    property_path: thumbnail_data
+    type: solr_string_storage
+  timestamp:
+    label: Timestamp
+    datasource_id: solr_document
+    property_path: timestamp
+    type: date
+  title:
+    label: Title
+    datasource_id: solr_document
+    property_path: title
+    type: text
+    boost: !!float 3
+  use_constraint_identifier:
+    label: 'Use constraint_identifier'
+    datasource_id: solr_document
+    property_path: use_constraint_identifier
+    type: string
+datasource_settings:
+  solr_document:
+    id_field: id
+    request_handler: ''
+    default_query: '*:*'
+    label_field: ''
+    language_field: ''
+    url_field: ''
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  highlight:
+    highlight: always
+    highlight_partial: true
+    excerpt: true
+    excerpt_length: 256
+    exclude_fields:
+      - text_suggester
+    prefix: '<mark>'
+    suffix: '</mark>'
+    weights:
+      postprocess_query: 0
+  language_with_fallback: {  }
+  rendered_item: {  }
+  solr_date_range:
+    weights:
+      preprocess_index: 0
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+server: local

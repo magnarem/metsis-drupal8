@@ -1,0 +1,23 @@
+uuid: 267bd2d6-9e98-4aa4-b632-2ac33e18d667
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.publisher
+  module:
+    - facets
+  theme:
+    - bartik
+id: publisher
+theme: bartik
+region: sidebar_first
+weight: -5
+provider: null
+plugin: 'facet_block:publisher'
+settings:
+  id: 'facet_block:publisher'
+  label: Publisher
+  provider: facets
+  label_display: visible
+  block_id: publisher
+visibility: {  }

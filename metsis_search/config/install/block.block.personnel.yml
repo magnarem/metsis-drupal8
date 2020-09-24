@@ -1,0 +1,23 @@
+uuid: 68b37c0e-bfef-4ab5-802a-f65ed23c5545
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.personnel
+  module:
+    - facets
+  theme:
+    - bartik
+id: personnel
+theme: bartik
+region: sidebar_first
+weight: -7
+provider: null
+plugin: 'facet_block:personnel'
+settings:
+  id: 'facet_block:personnel'
+  label: Personnel
+  provider: facets
+  label_display: visible
+  block_id: personnel
+visibility: {  }

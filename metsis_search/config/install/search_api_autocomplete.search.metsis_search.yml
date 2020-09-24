@@ -1,0 +1,40 @@
+uuid: 1a2660d7-5beb-4679-bd49-d55f75b29e05
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.drupal8
+    - views.view.metsis_search
+  module:
+    - views
+    - search_api_autocomplete
+    - search_api_solr
+id: metsis_search
+label: 'Metsis Search'
+index_id: drupal8
+suggester_settings:
+  live_results:
+    fields: {  }
+    view_modes:
+      solr_document:
+        solr_document: ''
+  search_api_solr_terms:
+    fields:
+      - full_text
+suggester_weights:
+  live_results: 0
+  search_api_solr_terms: 0
+suggester_limits:
+  search_api_solr_terms: 5
+search_settings:
+  'views:metsis_search':
+    displays:
+      default: true
+      selected: {  }
+options:
+  limit: 10
+  min_length: 1
+  show_count: false
+  autosubmit: true
+  submit_button_selector: ':submit'
+  delay: 500
