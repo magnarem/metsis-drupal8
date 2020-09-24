@@ -8,6 +8,7 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
 
 
 /**
@@ -32,8 +33,10 @@ function metsis_search_help($route_name, RouteMatchInterface $route_match) {
 * Adding  our custom css to the search view
 */
 function metsis_search_views_pre_render(ViewExecutable $view) {
-  if (isset($view) && ($view->storage->id() == 'metsis_search_view')) {
+  if (isset($view) && ($view->storage->id() == 'metsis_search')) {
     $view->element['#attached']['library'][] = 'metsis_search/metadata_search_view';
+      $view->element['#attached']['library'][] = 'metsis_search/children_count';
+    $view->element['#attached']['library'][] = 'blazy/load';
   }
 }
 
@@ -41,6 +44,7 @@ function metsis_search_views_pre_render(ViewExecutable $view) {
  * Implemets hook_theme()
  */
 function metsis_search_theme() {
+    \Drupal::logger('metsis_search')->debug("Enter: hook_theme");
   $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
   $bboxFilter = $tempstore->get('bboxFilter');
   $tllat = "";
@@ -85,35 +89,57 @@ function metsis_search_theme() {
  */
 function metsis_search_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
 
-  if( $view->id() == 'metsis_search_view') {
-    //var_dump($view);
-      $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
-      $bboxFilter = $tempstore->get('bboxFilter');
-      \Drupal::logger('metsis_search')->debug("bboxFilter: " . $bboxFilter);
-      if($bboxFilter != NULL && $bboxFilter != "") {
-         $conditions = $query->createConditionGroup('AND');
-         //$testStr = 'Intersects(ENVELOPE(80.72589497828484,11.381460937500002,70.09112935328484,29.4869296875))';
-         $conditions->addCondition('bbox', $bboxFilter , '');
-         $query->addConditionGroup($conditions);
-       }
-      //$conditions = $query->createConditionGroup('AND');
-       //$testStr = 'Intersects(ENVELOPE(80.72589497828484,11.381460937500002,70.09112935328484,29.4869296875))';
-       //$conditions->addCondition('rpts_bbox', 'facet.heatmap=rpts_bbox' , '');
-       //$query->addConditionGroup($conditions);
+  if( $view->id() == 'metsis_search') {
+  //Do something withe the veiws query here
+
   }
 }
 
 function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInterface $solarium_query, \Drupal\search_api\Query\QueryInterface $query) {
-  var_dump($solarium_query);
-  var_dump($query);
+  $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+  $bboxFilter = $tempstore->get('bboxFilter');
+
+//Add bbox filter query if drawn bbox on map
+  \Drupal::logger('metsis_search-hook_solr_qyery_alter')->debug("bboxFilter: " . $bboxFilter);
+ if($bboxFilter != NULL && $bboxFilter != "") {
+   $solarium_query->createFilterQuery('bbox')->setQuery('{!field f=bbox score=overlapRatio}IsWithin(' . $bboxFilter . ')');
+  }
+
+  //var_dump($query);
 }
 /*
- * Implements hook_preprocess().
-
-function metsis_search_preprocess(&$variables, $hook, &$info) {
-
-        $info['theme path'] = 'modules/metsis_search';
-        $info['path'] = 'modules/metsis_search/templates';
+ * Implements hook_views_post_render.
+*/
+function metsis_search_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  if( $view->id() == 'metsis_search') {
+  //  \Drupal::logger('metsis_search')->debug("Entering hook_views_post_render");
+  }
 
 }
-*/
+
+function metsis_search_views_pre_build(ViewExecutable $view) {
+  if( $view->id() == 'metsis_search') {
+    $request = \Drupal::request();
+    $query_from_request = $request->query->all();
+  //Check if operator op is set in query and op=Reset to reset boundingbox
+    if(isset($query_from_request['op'])) {
+      if($query_from_request['op'] == "Reset") {
+        $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+        $tempstore->delete('bboxFilter');
+      }
+    }
+
+  }
+}
+/**
+ * Implements hook_form_alter().
+ */
+function metsis_search_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+//  \Drupal::logger('metsis_search')->debug("Entering hook_form_alter: form_id=" .$form_id );
+//if ($form_id == 'views_exposed_form') {
+//  $form['actions']['reset']['#ajax'] = [
+//    'callback' => '\Drupal\metsis_search\Controller\MapSearchController::resetCallback',
+//  ];
+//var_dump($form);
+//}
+}

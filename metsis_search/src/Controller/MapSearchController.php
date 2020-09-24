@@ -19,7 +19,7 @@ class MapSearchController extends ControllerBase {
       $brlat = $params['brlat'];
       $brlon = $params['brlon'];
       \Drupal::logger('metsis_search')->debug("Got boundingbox with ENVELOPE(" . $tllat . ',' . $tllon . ',' . $brlat . ',' . $brlon . ')');
-      $bboxFilter = 'Intersects(ENVELOPE(' . $tllat . ',' . $tllon . ',' . $brlat . ',' . $brlon . '))';
+      $bboxFilter = 'ENVELOPE(' . $tllon . ',' . $brlon . ',' . $tllat . ',' . $brlat . ')';
       $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
       $tempstore->set('bboxFilter', $bboxFilter);
       $tempstore->set('tllat', $tllat);
@@ -30,5 +30,8 @@ class MapSearchController extends ControllerBase {
 
       return new \Drupal\Core\Ajax\AjaxResponse("{ success: true }");
 
+ }
+ public function resetCallback() {
+     \Drupal::logger('metsis_search')->debug("MapSearchController::resetCallback");
  }
 }

@@ -11,3 +11,13 @@ metsis_search.map:
       brlon: ""
   requirements:
     _permission: 'accsess content'
+metsis_search.children_count:
+  path: /metsis/elements/count
+  defaults:
+    _controller: \Drupal\metsis_search\Controller\MetsisSearchController::getChildrenCount
+    _title: "Ajax Search Reset callback"
+  options:
+    query:
+      metadata_identifier: ""
+  requirements:
+    _permission: 'accsess content'

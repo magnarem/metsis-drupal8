@@ -245,7 +245,7 @@ function build_draw(proj) {
     jQuery(brlat).attr('value', bottomRight[1]);
     jQuery(brlon).attr('value', bottomRight[0]);
 
-    var myurl = '/metsis/search/map?tllat='+topLeft[1]+'&tllon='+topLeft[0]+'&brlat='+ bottomRight[1]+'&brlon='+ bottomRight[0];
+    var myurl = '/metsis/search/map?tllat='+topLeft[1]+'&tllon='+topLeft[0]+'&brlat='+bottomRight[1]+'&brlon='+bottomRight[0];
     $.ajax({
       url: myurl
     });

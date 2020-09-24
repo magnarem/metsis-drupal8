@@ -122,7 +122,7 @@ EOM;
 }
 
 function get_metsis_map_wms_markup($solr_core, $metadata_identifier) {
-  global $metsis_conf;
+  //global $metsis_conf;
   global $base_url;
   /*if (is_array($metadata_identifier) && (count($metadata_identifier) > 1)) {
     adc_require_login(drupal_get_destination(), $metsis_conf['authentication_default_message']);
