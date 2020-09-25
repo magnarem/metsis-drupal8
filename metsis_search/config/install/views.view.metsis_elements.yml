@@ -7,9 +7,11 @@ dependencies:
     - user.role.administrator
     - user.role.anonymous
     - user.role.authenticated
+    - views.view.metsis_metadata_details
   module:
     - search_api
     - user
+    - views_fieldsets
 id: metsis_elements
 label: 'Metsis Elements'
 module: views
@@ -47,7 +49,7 @@ display:
           reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
-          expose_sort_order: false
+          expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
@@ -351,59 +353,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: custom
-        last_metadata_update_datetime:
-          id: last_metadata_update_datetime
-          table: search_api_index_drupal8
-          field: last_metadata_update_datetime
-          relationship: none
-          group_type: group
-          admin_label: 'Last Metadata Update'
-          label: ''
-          exclude: false
-          alter:
-            alter_text: true
-            text: '<strong>Last Updated</strong>: {{last_metadata_update_datetime | date(''U'') | format_date(''short'') }}'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          link_to_item: false
-          use_highlighting: false
-          multi_type: separator
-          multi_separator: ', '
-          plugin_id: search_api
         search_api_excerpt:
           id: search_api_excerpt
           table: search_api_index_drupal8
@@ -512,6 +461,169 @@ display:
           entity_type: null
           entity_field: null
           plugin_id: search_api
+        fieldset:
+          id: fieldset
+          table: views
+          field: fieldset
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          fields:
+            - temporal_extent_start_date
+            - temporal_extent_end_date
+          wrapper: fieldset
+          legend: 'Temporal Extent'
+          classes: ''
+          collapsible: 1
+          collapsed: 0
+          plugin_id: fieldset
+        temporal_extent_start_date:
+          id: temporal_extent_start_date
+          table: search_api_index_drupal8
+          field: temporal_extent_start_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Start date'
+          exclude: false
+          alter:
+            alter_text: true
+            text: '{{temporal_extent_start_date  | date(''U'') | format_date(''solr_format'') }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: strong
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_item: false
+          use_highlighting: false
+          multi_type: separator
+          multi_separator: ', '
+          plugin_id: search_api
+        temporal_extent_end_date:
+          id: temporal_extent_end_date
+          table: search_api_index_drupal8
+          field: temporal_extent_end_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'End date'
+          exclude: false
+          alter:
+            alter_text: true
+            text: '{{temporal_extent_end_date  | date(''U'') | format_date(''solr_format'') }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: strong
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_item: false
+          use_highlighting: false
+          multi_type: separator
+          multi_separator: ', '
+          plugin_id: search_api
         related_url_landing_page:
           id: related_url_landing_page
           table: search_api_index_drupal8
@@ -619,100 +731,6 @@ display:
           multi_separator: ', '
           plugin_id: search_api
       filters:
-        search_api_fulltext:
-          id: search_api_fulltext
-          table: search_api_index_drupal8
-          field: search_api_fulltext
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: or
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: search_api_fulltext_op
-            label: Search
-            description: ''
-            use_operator: false
-            operator: search_api_fulltext_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: fulltext
-            required: false
-            remember: false
-            multiple: true
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            placeholder: 'Enter your search here'
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          parse_mode: terms
-          min_length: null
-          fields:
-            - abstract
-            - full_text
-            - title
-          plugin_id: search_api_fulltext
-        temporal_extent_start_date:
-          id: temporal_extent_start_date
-          table: search_api_index_drupal8
-          field: temporal_extent_start_date
-          relationship: none
-          group_type: group
-          admin_label: 'Start date'
-          operator: '>='
-          value:
-            min: ''
-            max: ''
-            value: ''
-            type: date
-          group: 1
-          exposed: true
-          expose:
-            operator_id: temporal_extent_start_date_op
-            label: 'Start Date'
-            description: ''
-            use_operator: false
-            operator: temporal_extent_start_date_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: start_date
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: search_api_date
         temporal_extent_end_date:
           id: temporal_extent_end_date
           table: search_api_index_drupal8
@@ -761,13 +779,13 @@ display:
             group_items: {  }
           plugin_id: search_api_date
       sorts:
-        last_metadata_update_datetime:
-          id: last_metadata_update_datetime
+        temporal_extent_end_date:
+          id: temporal_extent_end_date
           table: search_api_index_drupal8
-          field: last_metadata_update_datetime
+          field: temporal_extent_end_date
           relationship: none
           group_type: group
-          admin_label: 'Last Metadata Update'
+          admin_label: ''
           order: DESC
           exposed: false
           expose:
@@ -775,6 +793,28 @@ display:
           plugin_id: search_api
       title: ''
       header:
+        view:
+          id: view
+          table: views
+          field: view
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          view_to_insert: 'metsis_metadata_details:page_2'
+          inherit_arguments: true
+          plugin_id: view
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          tokenize: false
+          content: "<div id=\"goback\" class=\"goback\">\r\n <a class=\"button button--small\"  href=\"javascript:history.back()\">Go Back </a>\r\n</div>"
+          plugin_id: text_custom
         result:
           id: result
           table: views
@@ -847,7 +887,7 @@ display:
           geocluster_options: {  }
         metatag_display_extender: {  }
         library_in_views_display_extender: {  }
-      path: metsis/elements
+      path: metsis/elements/%
       menu:
         type: none
         title: 'Metsis Search'
