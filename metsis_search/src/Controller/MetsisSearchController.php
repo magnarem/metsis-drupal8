@@ -11,6 +11,10 @@ use Solarium\QueryType\Select\Query\Query;
 use Drupal\search_api_solr\Plugin\search_api\backend\SearchApiSolrBackend;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
+
+
 
 class MetsisSearchController extends ControllerBase {
 
@@ -48,11 +52,22 @@ class MetsisSearchController extends ControllerBase {
       //$documents = $result->getDocuments();
 
 
-      $data = [
-        'success' => true,
-        'count' => $found,
-      ];
-      \Drupal::logger('metsis_search')->debug("MetsisSearchController::getChildrenCount: " .$count . ", found: ". $found );
-       return new \Drupal\Core\Ajax\AjaxResponse(Json::encode($data));
+      $response = new AjaxResponse();
+      if ($found > 0 ) {
+        $selector = '#metachildlink';
+        //$markup = '<a href="/metsis/elements?metadata_identifier="'. $id .'"/>Child data..['. $found .']</a>';
+        $markup = 'Child data..['. $found .']';
+          \Drupal::logger('metsis_search')->debug("MetsisSearchController::getChildrenCount: markup: ". $markup );
+        $response->addCommand(new HtmlCommand($selector,$markup));
+      }
+      else {
+        $data = [
+          'success' => true,
+          //'count' => $found,
+        ];
+        $response->setData($data);
+      }
+
+       return $response;
    }
 }

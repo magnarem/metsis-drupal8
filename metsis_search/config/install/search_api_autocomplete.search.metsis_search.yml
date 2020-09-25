@@ -13,17 +13,20 @@ id: metsis_search
 label: 'Metsis Search'
 index_id: drupal8
 suggester_settings:
-  live_results:
-    fields: {  }
-    view_modes:
-      solr_document:
-        solr_document: ''
+  server:
+    fields:
+      - text_suggester
+  search_api_solr_suggester:
+    search_api_solr/site_hash: 1
+    search_api/index: drupal8
+    drupal/langcode: any
   search_api_solr_terms:
     fields:
       - full_text
 suggester_weights:
-  live_results: 0
-  search_api_solr_terms: 0
+  server: -49
+  search_api_solr_suggester: -47
+  search_api_solr_terms: -46
 suggester_limits:
   search_api_solr_terms: 5
 search_settings:

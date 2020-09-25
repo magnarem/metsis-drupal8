@@ -36,7 +36,7 @@ search_map:
   dependencies:
     - core/jquery
 #    - core/jquery.ui
-#    - core/jquery.once
+    - core/jquery.once
     - core/drupal
     - core/drupalSettings
     - core/drupal.ajax
@@ -50,3 +50,4 @@ children_count:
     - core/jquery
     - core/jquery.once
     - core/drupal
+    - core/drupal.ajax

@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - metsis_search
+    - system
   theme:
     - bartik
 id: mapblockformetsissearch
@@ -17,4 +18,9 @@ settings:
   label: 'Map Block for METSIS Search'
   provider: metsis_search
   label_display: '0'
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: /metsis/search
+    negate: false
+    context_mapping: {  }

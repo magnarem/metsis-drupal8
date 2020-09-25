@@ -36,7 +36,13 @@ function metsis_search_views_pre_render(ViewExecutable $view) {
   if (isset($view) && ($view->storage->id() == 'metsis_search')) {
     $view->element['#attached']['library'][] = 'metsis_search/metadata_search_view';
       $view->element['#attached']['library'][] = 'metsis_search/children_count';
-    $view->element['#attached']['library'][] = 'blazy/load';
+      $view->element['#attached']['library'][] = 'blazy/load';
+      //$view->element['#attributes']['id'][] = 'children';
+  }
+  if (isset($view) && ($view->storage->id() == 'metsis_search')) {
+      $view->element['#attached']['library'][] = 'metsis_search/metadata_search_view';
+      $view->element['#attached']['library'][] = 'metsis_search/children_count';
+      $view->element['#attached']['library'][] = 'blazy/load';
   }
 }
 
@@ -74,6 +80,10 @@ function metsis_search_theme() {
       'render element' => 'elements',
       'base hook' => 'block',
       'variables' => [
+      /*  'tllat' => NULL,
+        'tllon' => NULL,
+        'brlat' => NULL,
+        'brlon' => NULL,*/
         'tllat' => $tllat,
         'tllon' => $tllon,
         'brlat' => $brlat,
@@ -99,10 +109,10 @@ function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInt
   $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
   $bboxFilter = $tempstore->get('bboxFilter');
 
-//Add bbox filter query if drawn bbox on map
+  //Add bbox filter query if drawn bbox on map
   \Drupal::logger('metsis_search-hook_solr_qyery_alter')->debug("bboxFilter: " . $bboxFilter);
  if($bboxFilter != NULL && $bboxFilter != "") {
-   $solarium_query->createFilterQuery('bbox')->setQuery('{!field f=bbox score=overlapRatio}IsWithin(' . $bboxFilter . ')');
+   $solarium_query->createFilterQuery('bbox')->setQuery('{!field f=bbox score=overlapRatio}Contains(' . $bboxFilter . ')');
   }
 
   //var_dump($query);
@@ -124,12 +134,24 @@ function metsis_search_views_pre_build(ViewExecutable $view) {
   //Check if operator op is set in query and op=Reset to reset boundingbox
     if(isset($query_from_request['op'])) {
       if($query_from_request['op'] == "Reset") {
+        \Drupal::logger('metsis_search')->debug("Got reset event..resetting bbox");
         $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
         $tempstore->delete('bboxFilter');
+        $tempstore->delete('tllat');
+        $tempstore->delete('tllon');
+        $tempstore->delete('brlat');
+        $tempstore->delete('brlon');
+
       }
     }
 
   }
+}
+
+function metsis_search_block_view_alter(array &$build, Drupal\Core\Block\BlockPluginInterface $block) {
+//  if( $block->id() == 'metsis_search_map_block') {
+  //  \Drupal::logger('metsis_search')->debug("Entering hook_block_alter for MapSearchBlock");
+  //}
 }
 /**
  * Implements hook_form_alter().

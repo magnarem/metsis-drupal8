@@ -191,6 +191,16 @@ field_settings:
     datasource_id: solr_document
     property_path: id
     type: string
+  is_child:
+    label: IsChild
+    datasource_id: solr_document
+    property_path: isChild
+    type: boolean
+  is_parent:
+    label: IsParent
+    datasource_id: solr_document
+    property_path: isParent
+    type: boolean
   iso_topic_category:
     label: 'Iso topic category'
     datasource_id: solr_document
@@ -457,9 +467,14 @@ field_settings:
     datasource_id: solr_document
     property_path: use_constraint_identifier
     type: string
+  uuid:
+    label: Uuid
+    datasource_id: solr_document
+    property_path: uuid
+    type: string
 datasource_settings:
   solr_document:
-    id_field: id
+    id_field: uuid
     request_handler: ''
     default_query: '*:*'
     label_field: ''
