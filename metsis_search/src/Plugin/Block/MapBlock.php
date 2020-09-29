@@ -53,6 +53,12 @@ class MapBlock extends BlockBase implements BlockPluginInterface {
         '#tllon' => $tllon,
         '#brlat' => $brlat,
         '#brlon' => $brlon,
+        '#cache' => [
+          'contexts' => [
+            'url.path',
+            'url.query_args',
+          ],
+        ],
         '#attached' => [
           'library' => [
             'metsis_search/search_map'

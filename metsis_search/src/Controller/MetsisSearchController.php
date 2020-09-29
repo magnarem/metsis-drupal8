@@ -23,7 +23,7 @@ class MetsisSearchController extends ControllerBase {
       $params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
       $id = $params['metadata_identifier'];
 
-      /** @var Index $index  TODO: Get the index name from some config */
+      /** @var Index $index  TODO: Change to metsis when prepeare for release */
       $index = Index::load('drupal8');
 
       /** @var SearchApiSolrBackend $backend */

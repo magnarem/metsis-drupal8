@@ -9,7 +9,7 @@
  * Attaches the behaviors for the Overlay parent pages.
  */
 
-(function ($) {
+(function ($,Drupal) {
 
 /**
  * Open the overlay, or load content into it, when an admin link is clicked.
@@ -1023,4 +1023,4 @@ Drupal.theme.prototype.overlayElement = function (url) {
   return '<iframe class="overlay-element" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>';
 };
 
-})(jQuery);
+})(jQuery,Drupal);

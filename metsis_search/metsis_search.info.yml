@@ -2,6 +2,7 @@ name: 'Metsis Search'
 type: module
 description: 'METSIS Metadata Search'
 core: 8.x
+version: 8.x-2.0
 package: 'METSIS'
 dependencies:
 #  metsis_basket: 'drupal:metsis_basket'

@@ -26,11 +26,17 @@ replace.jquery_bbq:
 
 replace.misc_overlay:
   version: 1.0
-#  header: TRUE
+  #header: TRUE
   js:
     js/jquery_update/replace/misc/1.9/overlay-parent.js: { weight: -20 }
   dependencies:
+    - core/jquery
     - core/drupal
+  libraries-override:
+    core/jquery: metsis_wms/jquery
+    core/jquery.ui: metsis_wms/jquery.ui
+    core/drupal: metsis_wms/drupal
+
 
 replace.jquery_cookie:
   version: 67fb34f6a866c40d0570
@@ -38,19 +44,80 @@ replace.jquery_cookie:
   js:
     js/jquery_update/replace/ui/external/jquery.cookie.js: { weight: -20 }
 
+drupal:
+  version: 1.2.0
+  header: TRUE
+  js:
+    js/misc/drupal.js: {}
+
+jquery:
+  version: 1.12.1
+  header: true
+  remote:  https://code.jquery.com/
+  version: "1.12.0"
+  license:
+    name: MIT
+    url:   https://code.jquery.com//LICENSE.txt
+    gpl-compatible: true
+  js:
+    https://code.jquery.com/jquery-1.12.1.min.js: { external: true, weight: -2 }
+jquery.ui:
+  version: 1.12.1
+  header: true
+  remote:  https://code.jquery.com/
+  version: "1.12.0"
+  license:
+    name: MIT
+    url:   https://code.jquery.com//LICENSE.txt
+    gpl-compatible: true
+  js:
+    https://code.jquery.com/ui/1.12.1/jquery-ui.min.js: { external: true, weight: -2 }
+
+jquery.cycle:
+  version: 1.x
+  header: TRUE
+  js:
+    https://malsup.github.io/jquery.cycle.all.js: { external: true }
+
 bundle:
   version: 1.x
-#  header: true
+##  header: true
   css:
     theme:
       css/style.min.css: {}
       css/map.css: {}
   js:
-    js/bundle.js: {}
+    js/bundle.js: { weight: -2 }
 #    js/getWMS.js: {}
   dependencies:
-#    - core/jquery
+    - core/jquery
+    - core/jquery.ui
     - core/drupal
 #    - openlayers/openlayers
   libraries-override:
-    core/jquery: metsis_wms/replace.jquery_min
+    core/jquery: metsis_wms/jquery
+    core/jquery.ui: metsis_wms/jquery.ui
+    core/drupal: metsis_wms/drupal
+dropdown:
+  version: 1.2.2
+  js:
+    js/misc/jquery.dropdown.js: {}
+wmsmap:
+  version: 1.x
+  #footer: true
+  css:
+    theme:
+      css/mapstyle.css: {}
+  js:
+#    js/wmsMap.js: {}
+     js/wmsSlider.js: { weight: -2 }
+  dependencies:
+    - core/jquery
+    - core/jquery.ui
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+
+  libraries-override:
+    core/jquery: metsis_wms/jquery
+    core/jquery.ui: metsis_wms/jquery.ui
