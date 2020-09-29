@@ -3,9 +3,15 @@ type: module
 description: 'METSIS Metadata Search'
 core: 8.x
 version: 8.x-2.0
-package: 'METSIS'
+package: METSIS
 dependencies:
-#  metsis_basket: 'drupal:metsis_basket'
-  search_api: 'drupal:search_api'
-  search_api_solr: 'drupal:search_api_solr'
-  facets: 'drupal:facets'
+  - search_api
+  - user
+  - views_fieldsets
+  - better_exposed_filters
+  - search_api_solr
+  - views
+  - search_api_autocomplete
+  - facets
+  - system
+  - metsis_search
