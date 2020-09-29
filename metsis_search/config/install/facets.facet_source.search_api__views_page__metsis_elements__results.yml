@@ -1,9 +1,9 @@
 langcode: en
 status: true
 dependencies: {  }
-id: search_api__views_page__metsis_search__results
-name: 'search_api:views_page__metsis_search__results'
-filter_key: ''
+id: search_api__views_page__metsis_elements__results
+name: 'search_api:views_page__metsis_elements__results'
+filter_key: elements
 url_processor: query_string
 breadcrumb:
   active: true

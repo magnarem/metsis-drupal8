@@ -1,4 +1,3 @@
-uuid: 5d2ef418-6c39-466d-af21-7346649258a7
 langcode: en
 status: true
 dependencies:
@@ -46,7 +45,7 @@ third_party_settings:
       collection: ''
       timezone: ''
 id: drupal8
-name: drupal8
+name: metsis
 description: ''
 read_only: true
 field_settings:

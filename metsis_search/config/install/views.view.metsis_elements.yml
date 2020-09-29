@@ -1,4 +1,3 @@
-uuid: 68d31d6e-4775-45c3-9357-a4370e0dc272
 langcode: en
 status: true
 dependencies:
@@ -34,7 +33,7 @@ display:
             authenticated: authenticated
             administrator: administrator
       cache:
-        type: search_api_tag
+        type: none
         options: {  }
       query:
         type: views_query
@@ -89,7 +88,7 @@ display:
           inline:
             project_long_name: project_long_name
             project_short_name: project_short_name
-          separator: '<p>'
+          separator: ','
           hide_empty: true
       fields:
         id:
@@ -243,7 +242,7 @@ display:
           element_wrapper_class: project-name
           element_default_classes: true
           empty: ''
-          hide_empty: false
+          hide_empty: true
           empty_zero: false
           hide_alter_empty: true
           link_to_item: false
@@ -296,7 +295,7 @@ display:
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
-          hide_empty: false
+          hide_empty: true
           empty_zero: false
           hide_alter_empty: true
           link_to_item: false
@@ -688,7 +687,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"media media--blazy media--loading media--image\">\r\n<a href=\"/metsis/wms?{{ id}}\"><img  class=\"b-lazy media__image media__element img-responsive\" alt=\"Embedded Thumbnail\" data-src={{thumbnail_data}}\r\n src=\"/modules/metsis/metsis_search/images/Blank.gif\" typeof=\"Image\"/>\r\n</a></div>"
+            text: "<div class=\"media media--blazy media--loading media--image\">\r\n<a href=\"/metsis/map/wms?{{ id}}\"><img  class=\"b-lazy media__image media__element img-responsive\" alt=\"Embedded Thumbnail\" data-src={{thumbnail_data}}\r\n src=\"/modules/metsis/metsis_search/images/Blank.gif\" typeof=\"Image\"/>\r\n</a></div>"
             make_link: false
             path: ''
             absolute: false
@@ -887,7 +886,7 @@ display:
           geocluster_options: {  }
         metatag_display_extender: {  }
         library_in_views_display_extender: {  }
-      path: metsis/elements/%
+      path: metsis/elements/%/search
       menu:
         type: none
         title: 'Metsis Search'
@@ -898,10 +897,8 @@ display:
         context: '0'
         menu_name: main
       exposed_block: true
-      cache:
-        type: none
       defaults:
-        cache: false
+        cache: true
     cache_metadata:
       max-age: -1
       contexts:
