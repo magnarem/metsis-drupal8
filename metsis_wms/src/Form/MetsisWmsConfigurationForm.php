@@ -47,21 +47,79 @@ class MetsisWmsConfigurationForm extends ConfigFormBase {
 
 
 // Choose view_mode for display landing page draft
-$form['draft'] = [
+
+$form['wmsmap'] = [
   '#type' => 'fieldset',
-  '#title' => 'Configure View mode for landing page draft',
+  '#title' => 'Configure WMS map',
   '#tree' => TRUE,
 ];
-$form['draft']['view_mode'] = array(
+$form['wmsmap']['base_layer'] = [
+  '#type' => 'textfield',
+  '#title' => t('Enter name of base layer'),
+  '#description' => t("the name of the base layer"),
+  '#default_value' => $config->get('wms_base_layer'),
+];
+
+$form['wmsmap']['overlay_border'] = [
   '#type' => 'select',
-  '#options' => array(
-  'default' => t('default'),
-  'teaser' => t('teaser'),
-  ),
-  '#title' => t('Landing page draft view mode'),
-  '#description' => t("Select which content type view mode to use for displaying landing page draft"),
-  '#default_value' => $config->get('view_mode'),
-);
+  '#title' => t('Draw overlay border'),
+  '#description' => t("draw the overlay border or not"),
+  '#options' => [
+    'true' => t('Yes'),
+    'false' => t('No'),
+  ],
+  '#default_value' => $config->get('wms_overlay_border'),
+];
+$form['wmsmap']['product_select'] = [
+  '#type' => 'select',
+  '#title' => t('Posibility to select products?'),
+  '#description' => t("Posibility to select products or not"),
+  '#options' => [
+    'true' => t('Yes'),
+    'false' => t('No'),
+  ],
+  '#default_value' => $config->get('wms_product_select'),
+];
+/*
+$form['wmsmap']['init_proj'] = [
+  '#type' => 'select',
+  '#title' => t('Select map projection'),
+  '#description' => t("Select map projection"),
+  '#options' => [
+    'EPSG:4326' => t('EPSG:4326'),
+    'EPSG:32661' => t('UPS North'),
+    'EPSG:32761' => t('UPS South'),
+  ]
+  '#default_value' => $config->get('wms_init_proj'),
+];
+*/
+$form['wmsmap']['additional_layers'] = [
+  '#type' => 'select',
+  '#title' => t('Use additional layers'),
+  '#description' => t("Select whethever to use additional layers"),
+  '#options' => [
+    'true' => t('Yes'),
+    'false' => t('No'),
+  ],
+  '#default_value' => $config->get('wms_additional_layers'),
+];
+
+$form['wmsmap']['zoom'] = [
+  '#type' => 'textfield',
+  '#title' => t('Enter the initial zoom value of map'),
+  '#description' => t("the initial zoom of the map "),
+  '#default_value' => $config->get('wms_zoom'),
+];
+$form['wmsmap']['location'] = [
+  '#type' => 'select',
+  '#title' => t('Initial map location'),
+  '#description' => t("Select initial map location "),
+  '#options' => array_keys($config->get('wms_locations')),
+
+  '#default_value' => 'longyearbyen',
+];
+
+//var_dump($config->get('wms_locations'));
 
 
     //$form['#attached']['library'][] = 'landing_page_creator/landing_page_creator';
@@ -90,8 +148,12 @@ $form['draft']['view_mode'] = array(
     $values = $form_state->getValues();
 
     $this->configFactory->getEditable('metsis_wms.settings')
-      ->set('username_datacite', $values['datacite']['username_datacite'])
-
+      ->set('wms_base_layer', $values['wmsmap']['base_layer'])
+      ->set('wms_overlay_border', $values['wmsmap']['overlay_border'])
+      ->set('wms_product_select', $values['wmsmap']['product_select'])
+      //->set('wms_init_proj', $values['init_proj'])
+      ->set('wms_additional_layers', $values['wmsmap']['additional_layers'])
+      ->set('wms_zoom', $values['wmsmap']['zoom'])
       ->save();
     parent::submitForm($form, $form_state);
   }

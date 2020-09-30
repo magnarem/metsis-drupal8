@@ -1,6 +1,6 @@
 <?php /**
  * @file
- * Contains \Drupal\metsis_wms\Controller\WmsController.
+ * Con/getains \Drupal\metsis_wms\Controller\WmsController.
  */
 
 namespace Drupal\metsis_wms\Controller;
@@ -131,8 +131,9 @@ class WmsController extends ControllerBase {
         foreach($fields['data_access_wms_layers'] as $wms_layer) {
           $wms_data[$mi]['layers'][] = $wms_layer;
         }
-        $layers = implode('","', $wms_data[$mi]['layers'][]);
-        //$layers = '"' . $layers . '"';
+        //var_dump()
+        $layers = implode('","', $wms_data[$mi]['layers']);
+        $layers = '"' . $layers . '"';
       }
       if ($wms_restrict_layers === 1 && isset($wms_data[$mi]['layers'])) {
 
