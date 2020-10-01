@@ -15,6 +15,7 @@ metsis_wms.wms:
   defaults:
     _controller: '\Drupal\metsis_wms\Controller\WmsController::getWmsMap'
     _title: 'METSIS OL3 WMS'
+    _title_callback: '\Drupal\metsis_wms\Controller\WmsController::getTitle'
   options:
     query:
       dataset: ""

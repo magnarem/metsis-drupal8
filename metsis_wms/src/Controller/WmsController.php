@@ -30,18 +30,20 @@ class WmsController extends ControllerBase {
     $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
     $request = \Drupal::request();
     $referer = $request->headers->get('referer');
-    //var_dump($query);
-    //var_dump($referer);
 
-    /** Variables to be read from configuratuon
-    * TODO: The followin variables need to come from module config
+
+    /** Variables from configuration
+    *
     */
-    $wms_which_base_layer = 'north';
-    $wms_overlay_border = 'true';
-    $wms_product_select = 'false';
-    $wms_lat =  78.22314167;
-    $wms_lon = 15.64685556;
-    $wms_zoom = 3.5;
+    $config = \Drupal::config('metsis_wms.settings');
+    $wms_which_base_layer = $config->get('wms_base_layer');
+    $wms_overlay_border = $config->get('wms_overlay_border');
+    $wms_product_select = $config->get('wms_product_select');
+    $wms_location = $config->get('wms_selected_location');
+    $wms_lat =  $config->get('wms_locations')[$wms_location]['lat'];
+    $wms_lon = $config->get('wms_locations')[$wms_location]['lon'];
+    $wms_zoom = $config->get('wms_zoom');
+    $additional_layers = $config->get('additional_layers');
 
     $markup = 'No Data Found!';
     $webMapServers = [];
@@ -55,7 +57,8 @@ class WmsController extends ControllerBase {
                                     $wms_which_base_layer,
                                     $wms_overlay_border,
                                     $webMapServers,
-                                    $wms_product_select);
+                                    $wms_product_select,
+                                    $additional_layers);
       }
 
     //Return $page as renderarray
@@ -65,19 +68,14 @@ class WmsController extends ControllerBase {
       '#attached' => [
         'library' => [
           'metsis_wms/replace.css',
-          #'metsis_wms/replace.jquery_min',
-          #'metsis_wms/replace.jquery_core',
-          #'metsis_wms/replace.jquery_bbq',
-          #'metsis_wms/replace.misc_overlay',
-          #'metsis_wms/replace.jquery_cookie',
-          #'metsis_lib/utils',
+          'metsis_lib/utils',
           'metsis_wms/jquery',
           'metsis_wms/jquery.ui',
           'metsis_wms/jquery.cycle',
           'metsis_wms/dropdown',
           'metsis_wms/bundle',
           'metsis_wms/wmsmap',
-          #'metsis_lib/adc_buttons'
+          'metsis_lib/adc_buttons'
         ],
         'drupalSettings' => [
           'metsis_wms' => [
@@ -89,7 +87,7 @@ class WmsController extends ControllerBase {
             'productSelect' => $wms_product_select,
             'webMapServers' => $webMapServers,
             'init_proj' => 'EPSG:4326', //to be replaced with configuration variables
-            'additional_layers' => FALSE, //to be replaced with configuration variables
+            'additional_layers' => $additional_layers, //to be replaced with configuration variables
 
             ],
           ],
@@ -145,38 +143,7 @@ class WmsController extends ControllerBase {
     }
     $webMapServers = implode(',', $web_map_servers);
 
-    //$wms_data[$mi]['dar'] = msb_concat_data_access_resource($ldar['response']['docs'][0][$fields[0]]);
-  /*  if(isset( $ldar['response']['docs'][0][$fields[1]])) {
-      $wms_data[$mi]['layers'] = $ldar['response']['docs'][0][$fields[1]];
-      //var_dump($wms_data);
-      $layers = implode('","', $wms_data[$mi]['layers'] = $ldar['response']['docs'][0][$fields[1]]);
-      //var_dump($layers);
-      $layers = '"' . $layers . '"';
-    }
-    else {
-      $layers = [];
-    }
-    if(isset($wms_data[$mi]['dar']['OGC_WMS'])) {
-    if ($metsis_conf['wms_restrict_layers'] === 1) {
-      $web_map_servers[$mi] = '{capabilitiesUrl: "' . $wms_url_lhs . $wms_data[$mi]['dar']['OGC_WMS']['url'] . CAPDOC_POSTFIX . '",activeLayer:"' . $wms_data[$mi]['layers'][0] . '",layers: [' . $layers . ']}';
-    }
-    else {
-      $web_map_servers[$mi] = '{capabilitiesUrl: "' . $wms_url_lhs . $wms_data[$mi]['dar']['OGC_WMS']['url'] . CAPDOC_POSTFIX . '",activeLayer:"",layers: []}';
-    }
-  }
-  else { return Markup::create('Cannot visualise item. Missing OGC WMS resource </br> <a class="adc-button adc-sbutton adc-back" href="' . $referer . '">Back to results</a>');}
-  }
-  $webMapServers = implode(',', $web_map_servers);
-  if (is_array($metadata_identifier)) {
-    $wms_urls = [];
-    foreach ($metadata_identifier as $eu) {
-      $wms_urls[] = $eu . CAPDOC_POSTFIX;
-    }
-    $wms_url_rhs = implode(",", $wms_urls);
-  }
-  else {
-    $wms_url_rhs = $metadata_identifier . CAPDOC_POSTFIX;
-  }*/
+
 return $webMapServers;
 
 
@@ -188,7 +155,8 @@ return $webMapServers;
                                 $wms_which_base_layer,
                                 $wms_overlay_border,
                                 $webMapServers,
-                                $wms_product_select
+                                $wms_product_select,
+                                $additional_layers
                             ) {
     //Get the referer uri
     $request = \Drupal::request();
@@ -231,9 +199,9 @@ return $webMapServers;
         <div class="center">
             <div class="botton-wrap">
               <br><br>
-               <a class="button button--small adc-back" href="$referer">Back to results</a>
-               <a class="button button--small" href="/basket">Basket</a>
-               <a class="button button--small" onclick="reloadPage()">Reset</a>
+               <a class="adc-button adc-sbutton adc-back" href="$referer">Back to results</a>
+               <a class="adc-button adc-sbutton" href="/basket">Basket</a>
+               <a class="adc-button adc-sbutton" onclick="reloadPage()">Reset</a>
             </div>
         </div>
       </div>
@@ -243,24 +211,7 @@ return $webMapServers;
   </script>
 EOM;
 
-/*
-<!--
-        $(document).ready(function () {
-            var wms = mapClient
-                    .wms({
-                        lon: $wms_map_center_lon,
-                        lat: $wms_map_center_lat,
-                        zoom: $wms_map_init_zoom,
-                        whichBaseLayer: '$wms_which_base_layer',
-                        overlayBorder: $wms_overlay_border,
-                        webMapServers: [
-                          $webMapServers
-                        ],
-                       productSelect: $wms_product_select});
-        });
-    }); -->
 
-*/
   return Markup::create($string);
   }
 
@@ -299,6 +250,14 @@ EOM;
     return $result;
 
 
+  }
+  /**
+   * Title callback for dynamic title
+   */
+  public function getTitle() {
+      $query_from_request = \Drupal::request()->query->all();
+      $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
+      return $query['dataset'];
   }
 
 }

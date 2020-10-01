@@ -57,6 +57,7 @@ $form['wmsmap']['base_layer'] = [
   '#type' => 'textfield',
   '#title' => t('Enter name of base layer'),
   '#description' => t("the name of the base layer"),
+  '#size' => 20,
   '#default_value' => $config->get('wms_base_layer'),
 ];
 
@@ -93,6 +94,7 @@ $form['wmsmap']['init_proj'] = [
   '#default_value' => $config->get('wms_init_proj'),
 ];
 */
+/*
 $form['wmsmap']['additional_layers'] = [
   '#type' => 'select',
   '#title' => t('Use additional layers'),
@@ -103,18 +105,21 @@ $form['wmsmap']['additional_layers'] = [
   ],
   '#default_value' => $config->get('wms_additional_layers'),
 ];
-
+*/
 $form['wmsmap']['zoom'] = [
   '#type' => 'textfield',
   '#title' => t('Enter the initial zoom value of map'),
   '#description' => t("the initial zoom of the map "),
+  '#size' => 20,
   '#default_value' => $config->get('wms_zoom'),
 ];
 $form['wmsmap']['location'] = [
   '#type' => 'select',
   '#title' => t('Initial map location'),
   '#description' => t("Select initial map location "),
-  '#options' => array_keys($config->get('wms_locations')),
+  '#options' =>
+    array_combine(array_keys($config->get('wms_locations')),array_keys($config->get('wms_locations'))),
+
 
   '#default_value' => 'longyearbyen',
 ];
@@ -152,8 +157,9 @@ $form['wmsmap']['location'] = [
       ->set('wms_overlay_border', $values['wmsmap']['overlay_border'])
       ->set('wms_product_select', $values['wmsmap']['product_select'])
       //->set('wms_init_proj', $values['init_proj'])
-      ->set('wms_additional_layers', $values['wmsmap']['additional_layers'])
+      //->set('wms_additional_layers', $values['wmsmap']['additional_layers'])
       ->set('wms_zoom', $values['wmsmap']['zoom'])
+      ->set('wms_selected_location', $values['wmsmap']['location'])
       ->save();
     parent::submitForm($form, $form_state);
   }

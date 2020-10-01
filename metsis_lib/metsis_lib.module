@@ -3,7 +3,7 @@
 use Drupal\Core\Url;
 use Drual\metsis_lib;
 
-require_once 'includes/metsis_lib.utils.inc';
+//require_once 'includes/metsis_lib.utils.inc';
 
 function metsis_lib_init() {
 
