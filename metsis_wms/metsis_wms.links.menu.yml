@@ -3,7 +3,7 @@ metsis_wms.get_custom_content:
   title: 'METSIS OL3 WMS node'
 
 metsis_wms.admin_config_form:
-  title: 'METSIS WMS configuration'
+  title: 'METSIS WMS Configuration'
   description: 'Configure METSIS WMS'
   route_name: metsis_wms.admin_config_form
   parent: metsis.group.admin

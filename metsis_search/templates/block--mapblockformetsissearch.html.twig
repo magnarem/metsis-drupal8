@@ -43,40 +43,26 @@
   {% endif %}
   {{ title_suffix }}
   <div{{ content_attributes.addClass('content') }}>
-  {% block content %}
-    {{ content }}
-  {% endblock %}
+
+
   <div id="map-search" class="map-search ajax-wrapper">
-  <br>
-  <input type="radio" id="EPSG:4326" name="map-search-projection" value="EPSG:4326"/>WGS:84
-   <input type="radio" id="EPSG:32661" name="map-search-projection" value="EPSG:32661">UPS North
-   <input type="radio" id="EPSG:32761" name="map-search-projection" value="EPSG:32761">UPS South
+    <input type="radio" id="EPSG:4326" name="map-search-projection" value="EPSG:4326"/>WGS:84
+    <input type="radio" id="EPSG:32661" name="map-search-projection" value="EPSG:32661"/>UPS North
+    <input type="radio" id="EPSG:32761" name="map-search-projection" value="EPSG:32761"/>UPS South
+
      <div id="droplayers">
        <button type="button" onclick="document.getElementById('lrs').classList.toggle('show')" class="layers-button">Layers</button>
        <div id="lrs" class="panel dropdown-lrs-content">
-          <ul id="lrslist">
-          <li class="addl"><input type="checkbox" value="europaveg">europaveg</li>
-          <li class="addl"><input type="checkbox" value="riksveg">riksveg</li>
-          <li class="addl"><input type="checkbox" value="fylkesveg">fylkesveg</li>
+         <ul id="lrslist">
+               <li class="addl"><input type="checkbox" value="europaveg"/>europaveg</li>
+               <li class="addl"><input type="checkbox" value="riksveg"/>riksveg</li>
+               <li class="addl"><input type="checkbox" value="fylkesveg"/>fylkesveg</li>
           </ul>
        </div>
      </div>
-
-
-  </div>
-  <br>
-     <br>
+      {{ content }}
+  <br><br>
     <div id="map-search-message">Click on the map to draw a selection box. Boxes in UPS are transfomed into 4-edge polygons</div>
-    <div class="form-item form-type-textfield form-item-bbox-top-left-lon">
-      <input type="hidden" placeholder="" title="Top left longitude"  id="edit-bbox-top-left-lon" name="bbox_top_left_lon" value="{{ tllon }}" size="60" maxlength="128" class="form-text" />
-    </div>
-    <div class="form-item form-type-textfield form-item-bbox-top-left-lat">
-      <input type="hidden" placeholder="" title="Top left latitude"  id="edit-bbox-top-left-lat" name="bbox_top_left_lat" value="{{ tllat }}" size="60" maxlength="128" class="form-text" />
-    </div>
-    <div class="form-item form-type-textfield form-item-bbox-bottom-right-lon|">
-      <input type="hidden" placeholder="" title="Bottom right longitude" id="edit-bbox-bottom-right-lon" name="bbox_bottom_right_lon" value="{{ brlon }}" size="60" maxlength="128" class="form-text" />
-    </div>
-    <div class="form-item form-type-textfield form-item-bbox-bottom-right-lat">
-      <input type="hidden" placeholder="" title="Bottom right latitude"  id="edit-bbox-bottom-right-lat" name="bbox_bottom_right_lat" value="{{ brlat }}" size="60" maxlength="128" class="form-text" />
-    </div>
-  </div>
+</div>
+</div>
+</div>

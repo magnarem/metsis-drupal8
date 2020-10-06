@@ -9,3 +9,8 @@ text-shadow: 2px 2px 4px rgba(26,121,54,0.2), 2px 2px 4px rgba(26,121,54,0.2);
 color: #FFFFFF;
 background: #10CF1B;
 }
+
+fieldset.datasetops {
+    display: flex;
+    flex-wrap: wrap;
+}

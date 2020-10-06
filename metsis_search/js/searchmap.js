@@ -15,8 +15,10 @@
     var tllon = drupalSettings.metsis_search.tllon;
     var brlat = drupalSettings.metsis_search.brlat;
     var brlon = drupalSettings.metsis_search.brlon;
+    var base_layer_wms_north = drupalSettings.metsis_search.base_layer_wms_north;
+    var base_layer_wms_south = drupalSettings.metsis_search.base_layer_wms_south;
 
-    console.log("Start of searchmap.js script: "+tllat);
+    console.log("Start of searchmap.js script: "+additional_layers);
 
     // 32661
     proj4.defs('EPSG:32661', '+proj=stere +lat_0=90 +lat_ts=90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs');
@@ -112,7 +114,7 @@
       type: 'base',
       title: 'bgN',
       source: new ol.source.TileWMS({
-        url: 'https://public-wms.met.no/backgroundmaps/northpole.map',
+        url: base_layer_wms_north,
         params: {
           'LAYERS': 'world',
           'TRANSPARENT': 'false',
@@ -128,7 +130,7 @@
       type: 'base',
       title: 'bgS',
       source: new ol.source.TileWMS({
-        url: 'https://public-wms.met.no/backgroundmaps/southpole.map',
+        url: base_layer_wms_south,
         params: {
           'LAYERS': 'world',
           'TRANSPARENT': 'false',

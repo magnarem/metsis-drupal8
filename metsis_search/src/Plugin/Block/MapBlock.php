@@ -31,6 +31,8 @@ class MapBlock extends BlockBase implements BlockPluginInterface {
    */
   public function build() {
     \Drupal::logger('metsis_search')->debug("Building MapSearchForm");
+
+    //Check if we already have an active bboxFilter
     $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
     $bboxFilter = $tempstore->get('bboxFilter');
     $tllat = "";
@@ -43,16 +45,30 @@ class MapBlock extends BlockBase implements BlockPluginInterface {
       $brlat = $tempstore->get('brlat');
       $brlon = $tempstore->get('brlon');
       \Drupal::logger('metsis_search')->debug("Got input filter vars: " .$tllat .','. $tllon .','.$brlat.','.$brlon);
-
-
     }
 
+    //Get saved configuration
+    $config = \Drupal::config('metsis_search.settings');
+    $map_location = $config->get('map_selected_location');
+    $map_lat =  $config->get('map_locations')[$map_location]['lat'];
+    $map_lon = $config->get('map_locations')[$map_location]['lon'];
+    $map_zoom = $config->get('map_zoom');
+    $map_additional_layers = $config->get('map_additional_layers');
+    $map_init_proj = $config->get('map_init_proj');
+    $map_base_layer_wms_north =  $config->get('map_base_layer_wms_north');
+    $map_base_layer_wms_south =  $config->get('map_base_layer_wms_south');
+    $map_search_text =  $config->get('map_search_text');
+
+    $map_projections = $config->get('map_projections');
+    $map_init_proj =  $config->get('map_init_proj');
+    $map_search_text =  $config->get('map_search_text');
+    $map_layers_list =  $config->get('map_layers');
+
+
+ //Return render array
     return [
-        '#markup' => '',
-        '#tllat' => $tllat,
-        '#tllon' => $tllon,
-        '#brlat' => $brlat,
-        '#brlon' => $brlon,
+       '#markup' => '',
+        //'#theme' => 'block__mapblockformetsissearch',
         '#cache' => [
           'contexts' => [
             'url.path',
@@ -65,11 +81,13 @@ class MapBlock extends BlockBase implements BlockPluginInterface {
           ],
           'drupalSettings' => [
             'metsis_search' => [
-              'mapLat' => 78.22314167, //to be replaced with configuration variables
-              'mapLon' => 15.64685556, //to be replaced with configuration variables
-              'mapZoom' => 3.5, //to be replaced with configuration variables
-              'init_proj' => 'EPSG:4326', //to be replaced with configuration variables
-              'additional_layers' => FALSE, //to be replaced with configuration variables
+              'mapLat' => $map_lat, //to be replaced with configuration variables
+              'mapLon' => $map_lon, //to be replaced with configuration variables
+              'mapZoom' => $map_zoom, //to be replaced with configuration variables
+              'init_proj' => $map_init_proj, //to be replaced with configuration variables
+              'additional_layers' => $map_additional_layers,
+              'base_layer_wms_north' => $map_base_layer_wms_north,
+              'base_layer_wms_south' => $map_base_layer_wms_south,
               'tllat' => $tllat,
               'tllon' => $tllon,
               'brlon' => $brlon,

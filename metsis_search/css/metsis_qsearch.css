@@ -190,7 +190,7 @@ div.clear {
   font-size: 11px;
   margin: 2px 1px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s; //Safari
   transition-duration: 0.4s;
   border-radius: 6px;
 }

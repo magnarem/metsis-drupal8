@@ -4,15 +4,24 @@
 //    $('.map-search', context).once('example-behavior').each(function() {
 $(document).ready(function () {
 //initialize projection
-var defzoom = 2;
+//var defzoom = 2;
 
 // Import variables from php: array(address, id, layers)
-var extracted_info = Drupal.settings.extracted_info;
-var path = Drupal.settings.path;
-var pins = Drupal.settings.pins;
-var site_name = Drupal.settings.site_name;
-var init_proj = Drupal.settings.init_proj_res_map;
+var extracted_info = drupalSettings.metsis_search_results.extracted_info;
+var path =drupalSettings.metsis_search_results.path;
+var pins =drupalSettings.metsis_search_results.pins;
+var site_name = drupalSettings.metsis_search_results.site_name;
+var init_proj = drupalSettings.metsis_search_results.init_proj_res_map;
 
+
+var init_proj = drupalSettings.metsis_search_results.init_proj;
+var additional_layers = drupalSettings.metsis_search.additional_layers;
+var tllat = drupalSettings.metsis_search_results.tllat;
+var tllon = drupalSettings.metsis_search_results.tllon;
+var brlat = drupalSettings.metsis_search_results.brlat;
+var brlon = drupalSettings.metsis_search_results.brlon;
+var base_layer_wms_north = drupalSettings.metsis_search_results.base_layer_wms_north;
+var base_layer_wms_south = drupalSettings.metsis_search_results.base_layer_wms_south;
 // two projections will be possible
 // 32661
 proj4.defs('EPSG:32661', '+proj=stere +lat_0=90 +lat_ts=90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs');
@@ -158,7 +167,7 @@ layer['baseN'] = new ol.layer.Tile({
   type: 'base',
   title: 'bgN',
   source: new ol.source.TileWMS({
-    url: 'https://public-wms.met.no/backgroundmaps/northpole.map',
+    url: base_layer_wms_north
     params: {
       'LAYERS': 'world',
       'TRANSPARENT': 'false',
@@ -174,7 +183,7 @@ layer['baseS'] = new ol.layer.Tile({
   type: 'base',
   title: 'bgS',
   source: new ol.source.TileWMS({
-    url: 'https://public-wms.met.no/backgroundmaps/southpole.map',
+    url: base_layer_wms_south
     params: {
       'LAYERS': 'world',
       'TRANSPARENT': 'false',

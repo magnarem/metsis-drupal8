@@ -105,6 +105,7 @@ class WmsController extends ControllerBase {
       "id",
       "data_access_url_ogc_wms",
       "data_access_wms_layers",
+      "metadata_identifier"
     ];
     $wms_url_lhs = $base_url . "/" . "metsis/map/getcap?dataset=";  //TODO: Read this from routing config
     $wms_data = [];
@@ -120,7 +121,7 @@ class WmsController extends ControllerBase {
 
     foreach($resultset as $document) {
       $fields = $document->getFields();
-      $mi = $fields['id'][0];
+      $mi = $fields['metadata_identifier'];
       foreach($fields['data_access_url_ogc_wms'] as $wms_url) {
           $wms_data[$mi]['dar'][] = $wms_url;
       }
