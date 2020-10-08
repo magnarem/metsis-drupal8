@@ -10,7 +10,26 @@ color: #FFFFFF;
 background: #10CF1B;
 }
 
+/*
+ * Order buttons inline and wrap in fieldset
+*/
 fieldset.datasetops {
     display: flex;
     flex-wrap: wrap;
+}
+/*
+* Remove bullets from facet checkboxes
+*/
+ul.js-facets-checkbox-links {
+  list-style-type: none;
+
+
+}
+
+/*
+ * Display checkbox labels inline for facets
+ * TODO: NOT WORKING
+ */
+  label {
+    display: inline-block;
 }

@@ -49,15 +49,15 @@ class Searchutils
             $geographical_extent_east = $fields['geographic_extent_rectangle_east'];
             $geographical_extent_west = $fields['geographic_extent_rectangle_west'];
             $geographical_extent = [
-        $geographical_extent_north,
-        $geographical_extent_south,
-        $geographical_extent_east,
-        $geographical_extent_west,
-      ];
-            $latlon = [
-        ($geographical_extent_south + $geographical_extent_north) / 2,
-        ($geographical_extent_east + $geographical_extent_west) / 2,
-      ];
+                      $geographical_extent_north,
+                      $geographical_extent_south,
+                      $geographical_extent_east,
+                      $geographical_extent_west,
+                    ];
+                          $latlon = [
+                      ($geographical_extent_south + $geographical_extent_north) / 2,
+                      ($geographical_extent_east + $geographical_extent_west) / 2,
+            ];
 
             $address_o = isset($fields['data_access_url_opendap']) ? $fields['data_access_url_opendap'][0] : '';
             $address_w = isset($fields['data_access_url_ogc_wms']) ? $fields['data_access_url_ogc_wms'][0] : '';
@@ -98,8 +98,10 @@ class Searchutils
             if (isset($fields['thumbnail_data'])) {
                 $mapthumb = SearchUtils::get_map_thumb_divs($fields['thumbnail_data'], $fields['metadata_identifier']);
             }
-            $target_url = '/metsis/map/wms?dataset='.$fields['metadata_identifier'];
-
+            $target_url = '';
+            if(isset($fields['data_access_url_ogc_wms'])) {
+              $target_url = '/metsis/map/wms?dataset='.$fields['metadata_identifier'];
+            }
             $related_lp = "";
             if ($related_lp_url != null &&  $related_lp_url != "") {
                 $button_var = $config->get('lp_button_var');

@@ -16,53 +16,58 @@ use Solarium\QueryType\Select\Result\Document;
 use Solarium\Core\Query\DocumentInterface;
 use Solarium\Core\Query\Result\ResultInterface;
 use Drupal\Core\Render\Markup;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
 use Drupal\search_api_solr\Plugin\search_api\backend\SearchApiSolrBackend;
+
 //use Drupal\metsis_wms\WmsUtils;
 /**
  * Default controller for the metsis_qsearch module.
  */
-class WmsController extends ControllerBase {
+class WmsController extends ControllerBase
+{
+    public function getWmsMap()
+    {
+        $query_from_request = \Drupal::request()->query->all();
+        $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
+        $request = \Drupal::request();
+        $referer = $request->headers->get('referer');
 
-  public function getWmsMap() {
-    $query_from_request = \Drupal::request()->query->all();
-    $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
-    $request = \Drupal::request();
-    $referer = $request->headers->get('referer');
 
+        /** Variables from configuration
+        *
+        */
+        $config = \Drupal::config('metsis_wms.settings');
+        $wms_which_base_layer = $config->get('wms_base_layer');
+        $wms_overlay_border = $config->get('wms_overlay_border');
+        $wms_product_select = $config->get('wms_product_select');
+        $wms_location = $config->get('wms_selected_location');
+        $wms_lat =  $config->get('wms_locations')[$wms_location]['lat'];
+        $wms_lon = $config->get('wms_locations')[$wms_location]['lon'];
+        $wms_zoom = $config->get('wms_zoom');
+        $additional_layers = $config->get('additional_layers');
 
-    /** Variables from configuration
-    *
-    */
-    $config = \Drupal::config('metsis_wms.settings');
-    $wms_which_base_layer = $config->get('wms_base_layer');
-    $wms_overlay_border = $config->get('wms_overlay_border');
-    $wms_product_select = $config->get('wms_product_select');
-    $wms_location = $config->get('wms_selected_location');
-    $wms_lat =  $config->get('wms_locations')[$wms_location]['lat'];
-    $wms_lon = $config->get('wms_locations')[$wms_location]['lon'];
-    $wms_zoom = $config->get('wms_zoom');
-    $additional_layers = $config->get('additional_layers');
+        $markup = 'No Data Found!';
+        $webMapServers = [];
+        \Drupal::logger('metsis_wms')->debug("Got query parameters: " . count($query));
+        if (count($query) > 0) {
+            $datasets = explode(",", $query['dataset']);
+            $webMapServers = $this->getWebMapServers($datasets);
+            $markup = $this->prepareWmsMarkup(
+                $wms_lon,
+                $wms_lat,
+                $wms_zoom,
+                $wms_which_base_layer,
+                $wms_overlay_border,
+                $webMapServers,
+                $wms_product_select,
+                $additional_layers
+            );
+        }
 
-    $markup = 'No Data Found!';
-    $webMapServers = [];
-    \Drupal::logger('metsis_wms')->debug("Got query parameters: " . count($query));
-    if (count($query) > 0) {
-      $datasets = explode(",", $query['dataset']);
-      $webMapServers = $this->getWebMapServers($datasets);
-      $markup = $this->prepareWmsMarkup($wms_lon,
-                                    $wms_lat,
-                                    $wms_zoom,
-                                    $wms_which_base_layer,
-                                    $wms_overlay_border,
-                                    $webMapServers,
-                                    $wms_product_select,
-                                    $additional_layers);
-      }
-
-    //Return $page as renderarray
-    return [
+        //Return $page as renderarray
+        return [
       '#type' => '#markup',
       '#markup' => $markup,
       '#attached' => [
@@ -94,76 +99,87 @@ class WmsController extends ControllerBase {
       ],
     '#allowed_tags' => ['div','script', 'a'],
     ];
-  }
+    }
 
-  public function getWebMapServers($datasets) {
+    public function getWebMapServers($datasets)
+    {
+        global $base_url;
+        //Get the referer uri
+        $request = \Drupal::request();
+        $referer = $request->headers->get('referer');
 
-    global $base_url;
-
-
-    $fields = [
+        $fields = [
       "id",
       "data_access_url_ogc_wms",
       "data_access_wms_layers",
       "metadata_identifier"
     ];
-    $wms_url_lhs = $base_url . "/" . "metsis/map/getcap?dataset=";  //TODO: Read this from routing config
-    $wms_data = [];
-    $layers = [];
-    $web_map_servers = [];
-    $wms_restrict_layers = 1;  //TODO: Read this from WMS Config
+        $wms_url_lhs = $base_url . "/" . "metsis/map/getcap?dataset=";  //TODO: Read this from routing config
+        $wms_data = [];
+        $layers = [];
+        $web_map_servers = [];
+        $wms_restrict_layers = 1;  //TODO: Read this from WMS Config
 
-    $capdoc_postfix = "?SERVICE=WMS&REQUEST=GetCapabilities"; //TODO: Read this from config
+        $capdoc_postfix = "?SERVICE=WMS&REQUEST=GetCapabilities"; //TODO: Read this from config
 
-    \Drupal::logger('metsis_wms')->debug("Calling getFields");
-    $resultset = $this->getFields($datasets,$fields);
-    //$documents = $result->getDocuments());
+        \Drupal::logger('metsis_wms')->debug("Calling getFields");
+        $resultset = $this->getFields($datasets, $fields);
+        //$documents = $result->getDocuments());
 
-    foreach($resultset as $document) {
-      $fields = $document->getFields();
-      $mi = $fields['metadata_identifier'];
-      foreach($fields['data_access_url_ogc_wms'] as $wms_url) {
-          $wms_data[$mi]['dar'][] = $wms_url;
-      }
 
-      if(isset($fields['data_access_wms_layers'])) {
-        foreach($fields['data_access_wms_layers'] as $wms_layer) {
-          $wms_data[$mi]['layers'][] = $wms_layer;
+            foreach ($resultset as $document) {
+              $fields = $document->getFields();
+              if (isset($fields['data_access_url_ogc_wms'])) {
+
+                $mi = $fields['metadata_identifier'];
+
+                foreach ($fields['data_access_url_ogc_wms'] as $wms_url) {
+                    $wms_data[$mi]['dar'][] = $wms_url;
+                }
+
+                if (isset($fields['data_access_wms_layers'])) {
+                    foreach ($fields['data_access_wms_layers'] as $wms_layer) {
+                        $wms_data[$mi]['layers'][] = $wms_layer;
+                    }
+                    //var_dump()
+                    $layers = implode('","', $wms_data[$mi]['layers']);
+                    $layers = '"' . $layers . '"';
+                }
+                if ($wms_restrict_layers === 1 && isset($wms_data[$mi]['layers'])) {
+                    $web_map_servers[$mi] = '{capabilitiesUrl: "' . $wms_url_lhs . $wms_data[$mi]['dar'][0] . $capdoc_postfix . '",activeLayer:"' . $wms_data[$mi]['layers'][0] . '",layers: [' . $layers . ']}';
+                } else {
+                    $web_map_servers[$mi] = '{capabilitiesUrl: "' . $wms_url_lhs . $wms_data[$mi]['dar'][0] . $capdoc_postfix . '",activeLayer:"",layers: []}';
+                }
+            }
+           else {
+              \Drupal::messenger()->addError(t("Selected datasets does not contain any WMS resource.<br> Visualization not possible"));
+              return new RedirectResponse($referer);
+          }
         }
-        //var_dump()
-        $layers = implode('","', $wms_data[$mi]['layers']);
-        $layers = '"' . $layers . '"';
-      }
-      if ($wms_restrict_layers === 1 && isset($wms_data[$mi]['layers'])) {
+        $webMapServers = implode(',', $web_map_servers);
+        return $webMapServers;
 
-        $web_map_servers[$mi] = '{capabilitiesUrl: "' . $wms_url_lhs . $wms_data[$mi]['dar'][0] . $capdoc_postfix . '",activeLayer:"' . $wms_data[$mi]['layers'][0] . '",layers: [' . $layers . ']}';
-      }
-      else {
-        $web_map_servers[$mi] = '{capabilitiesUrl: "' . $wms_url_lhs . $wms_data[$mi]['dar'][0] . $capdoc_postfix . '",activeLayer:"",layers: []}';
-      }
     }
-    $webMapServers = implode(',', $web_map_servers);
 
 
-return $webMapServers;
 
 
-  }
 
-  public function prepareWmsMarkup($wms_map_center_lon,
-                                $wms_map_center_lat,
-                                $wms_map_init_zoom,
-                                $wms_which_base_layer,
-                                $wms_overlay_border,
-                                $webMapServers,
-                                $wms_product_select,
-                                $additional_layers
-                            ) {
-    //Get the referer uri
-    $request = \Drupal::request();
-    $referer = $request->headers->get('referer');
+    public function prepareWmsMarkup(
+        $wms_map_center_lon,
+        $wms_map_center_lat,
+        $wms_map_init_zoom,
+        $wms_which_base_layer,
+        $wms_overlay_border,
+        $webMapServers,
+        $wms_product_select,
+        $additional_layers
+    ) {
+        //Get the referer uri
+        $request = \Drupal::request();
+        $referer = $request->headers->get('referer');
 
-    $string = <<<EOM
+        $string = <<<EOM
       <div class="ajax">
         <div class="map container ajax">
             <div id="map"></div>
@@ -213,52 +229,51 @@ return $webMapServers;
 EOM;
 
 
-  return Markup::create($string);
-  }
-
-  public function getFields($metadata_identifier, $fields) {
-    /** @var Index $index  TODO: Change to metsis when prepeare for release */
-    $index = Index::load('drupal8');
-
-    /** @var SearchApiSolrBackend $backend */
-    $backend = $index->getServerInstance()->getBackend();
-
-    $connector = $backend->getSolrConnector();
-
-    $solarium_query = $connector->getSelectQuery();
-
-    foreach($metadata_identifier as $id) {
-      \Drupal::logger('metsis_wms')->debug("setQuery: metadata_identifier: " .$id);
-      $solarium_query->setQuery('metadata_identifier:'.$id);
+        return Markup::create($string);
     }
-    //$solarium_query->addSort('sequence_id', Query::SORT_ASC);
-    $solarium_query->setRows(2);
-    $solarium_query->setFields($fields);
 
-    $result = $connector->execute($solarium_query);
+    public function getFields($metadata_identifier, $fields)
+    {
+        /** @var Index $index  TODO: Change to metsis when prepeare for release */
+        $index = Index::load('drupal8');
 
-    // The total number of documents found by Solr.
-    $found = $result->getNumFound();
-    \Drupal::logger('metsis_wms')->debug("found :" .$found);
-    // The total number of documents returned from the query.
-    //$count = $result->count();
+        /** @var SearchApiSolrBackend $backend */
+        $backend = $index->getServerInstance()->getBackend();
 
-    // Check the Solr response status (not the HTTP status).
-    // Can't find much documentation for this apart from https://lucene.472066.n3.nabble.com/Response-status-td490876.html#a3703172.
-    //$status = $result->getStatus();
+        $connector = $backend->getSolrConnector();
 
-    // An array of documents. Can also iterate directly on $result.
-    return $result;
+        $solarium_query = $connector->getSelectQuery();
 
+        foreach ($metadata_identifier as $id) {
+            \Drupal::logger('metsis_wms')->debug("setQuery: metadata_identifier: " .$id);
+            $solarium_query->setQuery('metadata_identifier:'.$id);
+        }
+        //$solarium_query->addSort('sequence_id', Query::SORT_ASC);
+        $solarium_query->setRows(2);
+        $solarium_query->setFields($fields);
 
-  }
-  /**
-   * Title callback for dynamic title
-   */
-  public function getTitle() {
-      $query_from_request = \Drupal::request()->query->all();
-      $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
-      return $query['dataset'];
-  }
+        $result = $connector->execute($solarium_query);
 
+        // The total number of documents found by Solr.
+        $found = $result->getNumFound();
+        \Drupal::logger('metsis_wms')->debug("found :" .$found);
+        // The total number of documents returned from the query.
+        //$count = $result->count();
+
+        // Check the Solr response status (not the HTTP status).
+        // Can't find much documentation for this apart from https://lucene.472066.n3.nabble.com/Response-status-td490876.html#a3703172.
+        //$status = $result->getStatus();
+
+        // An array of documents. Can also iterate directly on $result.
+        return $result;
+    }
+    /**
+     * Title callback for dynamic title
+     */
+    public function getTitle()
+    {
+        $query_from_request = \Drupal::request()->query->all();
+        $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
+        return $query['dataset'];
+    }
 }

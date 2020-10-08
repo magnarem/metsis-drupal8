@@ -1,5 +1,5 @@
 metsis_ts_bokeh.metsis_ts_bokeh_admin_settings_form:
-  title: 'METSIS Timeseries Bokeh Admin Settings'
+  title: 'METSIS Timeseries Bokeh Configuration'
   description: 'Set the timeseries server backend to be used'
   route_name: metsis_ts_bokeh.metsis_ts_bokeh_admin_settings_form
   parent: metsis.group.admin
