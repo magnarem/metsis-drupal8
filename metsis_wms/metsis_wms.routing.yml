@@ -36,7 +36,7 @@ metsis_qsearch.map_getcap:
     _permission: 'access wms'
 
 metsis_wms.admin_config_form:
-  path: '/admin/config/metsis/metsis_wms'
+  path: '/admin/config/metsis/wms'
   defaults:
     _form: '\Drupal\metsis_wms\Form\MetsisWmsConfigurationForm'
     _title: 'METSIS WMS Configuration'

@@ -24,7 +24,7 @@ metsis_search.children_count:
     _permission: 'accsess content'
 
 metsis_search.admin_config_form:
-  path: '/admin/config/metsis/metsis_search'
+  path: '/admin/config/metsis/search'
   defaults:
     _form: '\Drupal\metsis_search\Form\MetsisSearchConfigurationForm'
     _title: 'METSIS Search Configuration'

@@ -15,7 +15,7 @@ metsis_ts_bokeh.formplot:
     _permission: 'access metsis ts bokeh'
 
 metsis_ts_bokeh.metsis_ts_bokeh_admin_settings_form:
-    path: '/admin/config/metsis_ts_bokeh/configuration'
+    path: '/admin/config/metsis/ts_bokeh/'
     defaults:
       _form: '\Drupal\metsis_ts_bokeh\Form\MetsisTsBokehConfigurationForm'
       _title: 'TS Bokeh Configuration Form'

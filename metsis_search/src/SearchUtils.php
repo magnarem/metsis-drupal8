@@ -15,7 +15,7 @@ use Solarium\QueryType\Select\Result\Document;
 use Solarium\Core\Query\DocumentInterface;
 use Solarium\Core\Query\Result\ResultInterface;
 
-class Searchutils
+class SearchUtils
 {
 
   /**

@@ -10,6 +10,7 @@ use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use \Drupal\metsis_lib\MetsisUtils;
 
 
 /**
@@ -29,15 +30,13 @@ class MetsisFimexForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $user = \Drupal::currentUser();
- global $metsis_conf;
- global $epsg;
+    $config = \Drupal::config('metsis_fimex.settings');
+    global $epsg;
  //if ($metsis_conf['metsis_fimex_authentication_required']['boolean'] === TRUE) {
 
- if ($metsis_conf['message']['visible'] === TRUE) {
-   \Drupal::messenger()->addWarning($metsis_conf['message']['under_construction']);
- }
- if (isset($metsis_conf['warning']['transformation'])) {
-    \Drupal::messenger()->addWarning($metsis_conf['warning']['transformation']);
+
+ if ($config->get('transformation_message_visible')) {
+    \Drupal::messenger()->addWarning(t($config->get('transformation_warning_msg')));
  }
 
 
@@ -60,18 +59,7 @@ class MetsisFimexForm extends FormBase {
 $query_params = \Drupal::request()->query->all();
 $params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_params);
 $referer = $params['referer'];
-/*
-  $request = \Drupal::request();
-$referer = $request->headers->get('referer');
- $tempstore = \Drupal::service('tempstore.private')->get('metsis_fimex');
- if( null !== $tempstore->get('isSubmitted')) {
-   $referer = $tempstore->get('referer');
- }
- else {
 
-   $tempstore->set('referer', $referer);
- }
- var_dump($referer); */
  /*
   * get the data from search form and OpeNDAP and/or SOLR
   */
@@ -87,10 +75,13 @@ $referer = $request->headers->get('referer');
 // $dataset_id = isset($_GET['dataset_id']) ? $_GET['dataset_id'] : '';
  $dataset_ids = explode(",", $dataset_id);
  //var_dump($dataset_ids);
- $opendap_global_attributes = adc_get_od_global_attributes($dataset_id, SOLR_CORE_PARENT)['data']['findAllAttributes'];
- $opendap_variables = adc_get_od_variables($dataset_id, SOLR_CORE_PARENT)['data']['findAllVariables'];
- $opendap_start_time_strings = $metsis_conf['opendap_start_time_strings'];
- $opendap_stop_time_strings = $metsis_conf['opendap_stop_time_strings'];
+
+//TODO: SOLR CORE (od service uses this)
+ $opendap_global_attributes = MetsisUtils::adc_get_od_global_attributes($dataset_id, 'adc-l1')['data']['findAllAttributes'];
+ $opendap_variables = MetsisUtils::adc_get_od_variables($dataset_id, 'adc-l1')['data']['findAllVariables'];
+
+ $opendap_start_time_strings = '';
+ $opendap_stop_time_strings = '';
  //var_dump($opendap_global_attributes,$opendap_variables);
  /*
   * you MUST initialize $start_time and $stop_time to have them in scope!!!
@@ -130,20 +121,20 @@ $referer = $request->headers->get('referer');
  }
  if (empty($dataset_ids)) {
    //no dataset_id was sent in
-   $this->redirect('metsis_qsearch.metsis_qsearch_form');
+   $this->setRedirectUrl($referer);
  }
 
  // these are SOLR data. They should probably be replaced with OpeNDAP data
  $fields = [
-   METADATA_PREFIX . "geographic_extent_rectangle_east",
-   METADATA_PREFIX . "geographic_extent_rectangle_west",
-   METADATA_PREFIX . "geographic_extent_rectangle_north",
-   METADATA_PREFIX . "geographic_extent_rectangle_south",
-   METADATA_PREFIX . "temporal_extent_start_date",
-   METADATA_PREFIX . "temporal_extent_end_date",
-   METADATA_PREFIX . "title",
-   METADATA_PREFIX . "abstract",
-   METADATA_PREFIX . "data_access_resource",
+  "geographic_extent_rectangle_east",
+  "geographic_extent_rectangle_west",
+  "geographic_extent_rectangle_north",
+  "geographic_extent_rectangle_south",
+  "temporal_extent_start_date",
+  "temporal_extent_end_date",
+  "title",
+  "abstract",
+  "data_access_resource",
  ];
  //we set up the variables form based on the first dataset in the list submitted.
  //ideally we need to use the common subset of the variables from ALL the submitted datasets
@@ -151,12 +142,12 @@ $referer = $request->headers->get('referer');
  // see scratchpad on phab
  //need to loop through all the datasets that were sent inn.
  $solr_data = [];
- $solr_cores = adc_get_solr_core($dataset_ids);
+ //$solr_cores = adc_get_solr_core($dataset_ids);
  for ($i = 0; $i < count($dataset_ids); $i++) {
    //todo
    //may need to use $dataset_ids as $solr_data[] keys...
    //$solr_data[] = msb_get_fields(SOLR_CORE_PARENT, $dataset_ids[$i], $fields);
-   $solr_data[] = msb_get_fields($solr_cores[$dataset_ids[$i]], $dataset_ids[$i], $fields);
+   $solr_data[] = MetsisUtils::msb_get_fields($dataset_ids[$i], $fields);
  }
  //$solr_data = msb_get_fields(SOLR_CORE_PARENT, $dataset_ids[0], $fields);
  //    foreach ($solr_data as $sd) {
