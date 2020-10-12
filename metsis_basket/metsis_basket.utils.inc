@@ -159,7 +159,7 @@ function adc_basket_query($server, $port, $service, $req_params) {
   $con = new \Drupal\metsis_lib\HttpConnection($server, $port);
   $res = $con->get($service, $req_params);
   //var_dump($res);
-  $res_body = new SimpleXMLElement($res['body']);
+  $res_body = new \SimpleXMLElement($res['body']);
   $jres_body = \Drupal\Component\Serialization\Json::decode(\Drupal\Component\Serialization\Json::encode($res_body));
   return $jres_body;
 }

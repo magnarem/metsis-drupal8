@@ -87,6 +87,7 @@ class MetsisFimexConfigurationForm extends ConfigFormBase {
       '#size' => 200,
       '#default_value' => $config->get('transformation_exclude_variables'),
     ];
+    
 
     $form['fimex']['transformation_output_format_visible'] = [
       '#type' => 'select',

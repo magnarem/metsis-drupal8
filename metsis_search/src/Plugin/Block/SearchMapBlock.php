@@ -84,6 +84,12 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
     ];
 
 
+    //Panel button
+    $build['search-map']['panel'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="panel"><button id="testButton" class="adc-button adc-sbutton">Bbox Search</button></div>',
+      '#allowed_tags' => ['div','label','button'],
+    ];
 
         //Message to be displayed under the map
         $build['search-map']['projection'] = [
@@ -115,7 +121,8 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         // Add CSS and JS libraries and drupalSettings JS variables
         $build['#attached'] = [
     'library' => [
-    'metsis_search/search_map_block'
+    'metsis_search/search_map_block',
+    'metsis_lib/adc-button'
     ],
     'drupalSettings' => [
     'metsis_search_map_block' => [

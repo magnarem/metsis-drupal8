@@ -9,7 +9,7 @@
  **/
 namespace Drupal\metsis_lib;
 
-
+use \Drupal\metsis_lib\HttpConnection;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ use Drupal\Core\Render\Markup;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
-class Searchutils
+class MetsisUtils
 {
 
   /**
@@ -37,47 +37,54 @@ class Searchutils
      */
     public function __construct(ConfigEntityInterface $config)
     {
-        $this->config = $config->get('metsis_lib.settings');
+        $this->$config = $config->get('metsis_lib.settings');
     }
 
+    public function getConfig() {
+      return $this->$config;
+    }
 
     /**
      * Get OD variables from OPeNDAP parser service
      */
-    public function adc_get_od_global_attributes($metadata_identifier, $collection_core)
+    public static function adc_get_od_global_attributes($metadata_identifier, $collection_core)
     {
         /**
          * Get the OPeNDAP parser service config
          */
-         $od_server_ip = $this->config->get('metsis_opendap_parser_ip');
-         $od_server_port = $this->config->get('metsis_opendap_parser_port');
-         $od_server_service = $this->config->get('metsis_opendap_parser_service');
+         $config = \Drupal::config('metsis_lib.settings');
+         $od_server_ip = $config->get('metsis_opendap_parser_ip');
+         $od_server_port = $config->get('metsis_opendap_parser_port');
+         $od_server_service = $config->get('metsis_opendap_parser_service');
 
          //Create uri from config:
-         $uri = $od_server_ip . ':' . $od_server_port . $od_server_ip;
-
+         $uri = $od_server_ip . ':' . $od_server_port . $od_server_service;
+         //var_dump($uri);
 
          //Get the referer:
          $request = \Drupal::request();
          $referer = $request->headers->get('referer');
 
-        $odquery = '{
-                  findAllAttributes(
-                    datasetId: "' . $metadata_identifier . '", collection: "' . $collection_core . '"
-                      ) {
-                          name value
+         $odquery = '{
+                findAllAttributes(
+                  datasetId: "' . $metadata_identifier . '", collection: "' . $collection_core . '"
+                    ) {
+                        name value
+                    }
+               }';
 
-                      }
-                 }';
-
-
+         $con = new HttpConnection($od_server_ip, $od_server_port);
+         $res = $con->get($od_server_service, array("query" => $odquery,));
+         $jres = \Drupal\Component\Serialization\Json::decode($res['body'], true);
+         return $jres;
+/**
         try {
             $client = \Drupal::httpClient();
             $request = $client->request('GET', $uri, [
                        'query' =>$odquery,
 
                      ],
-                   ]);
+                   );
 
             $responseStatus = $request->getStatusCode();
             $data = $request->getBody();
@@ -95,16 +102,17 @@ class Searchutils
             ));
             $response =  new RedirectResponse($referer);
             $response->send();
-        }
+        } */
       }
 
-    public function adc_get_od_variables($metadata_identifier, $collection_core) {
+    public static function adc_get_od_variables($metadata_identifier, $collection_core) {
       /**
        * Get the OPeNDAP parser service config
        */
-       $od_server_ip = $this->config->get('metsis_opendap_parser_ip');
-       $od_server_port = $this->config->get('metsis_opendap_parser_port');
-       $od_server_service = $this->config->get('metsis_opendap_parser_service');
+       $config = \Drupal::config('metsis_lib.settings');
+       $od_server_ip = $config->get('metsis_opendap_parser_ip');
+       $od_server_port = $config->get('metsis_opendap_parser_port');
+       $od_server_service = $config->get('metsis_opendap_parser_service');
 
        //Create uri from config:
        $uri = $od_server_ip . ':' . $od_server_port . $od_server_ip;
@@ -113,6 +121,7 @@ class Searchutils
        //Get the referer:
        $request = \Drupal::request();
        $referer = $request->headers->get('referer');
+
 
         $odquery = '{
                       findAllVariables(
@@ -125,13 +134,18 @@ class Searchutils
                           }
                      }';
 
+                     $con = new HttpConnection($od_server_ip, $od_server_port);
+                     $res = $con->get($od_server_service, array("query" => $odquery,));
+                     $jres = \Drupal\Component\Serialization\Json::decode($res['body'], true);
+                     return $jres;
+/**
        try {
            $client = \Drupal::httpClient();
            $request = $client->request('GET', $uri, [
                       'query' =>$odquery,
 
                     ],
-                  ]);
+                  );
 
            $responseStatus = $request->getStatusCode();
            $data = $request->getBody();
@@ -150,10 +164,11 @@ class Searchutils
            $response =  new RedirectResponse($referer);
            $response->send();
        }
+*/
 
       }
 
-      public function msb_get_fields($metadata_identifier, $fields)
+      public static function msb_get_fields($metadata_identifier, $fields)
       {
           /** @var Index $index  TODO: Change to metsis when prepeare for release */
           $index = Index::load('drupal8');
@@ -166,18 +181,18 @@ class Searchutils
           $solarium_query = $connector->getSelectQuery();
 
           foreach ($metadata_identifier as $id) {
-              \Drupal::logger('metsis_wms')->debug("setQuery: metadata_identifier: " .$id);
+              \Drupal::logger('metsis_lib')->debug("setQuery: metadata_identifier: " .$id);
               $solarium_query->setQuery('metadata_identifier:'.$id);
           }
           //$solarium_query->addSort('sequence_id', Query::SORT_ASC);
-          $solarium_query->setRows(2);
+          //$solarium_query->setRows(2);
           $solarium_query->setFields($fields);
 
           $result = $connector->execute($solarium_query);
 
           // The total number of documents found by Solr.
           $found = $result->getNumFound();
-          \Drupal::logger('metsis_wms')->debug("found :" .$found);
+          \Drupal::logger('metsis_lib')->debug("found :" .$found);
           // The total number of documents returned from the query.
           //$count = $result->count();
 
@@ -188,5 +203,10 @@ class Searchutils
           // An array of documents. Can also iterate directly on $result.
           return $result;
       }
+
+      public static function get_metsis_date($date_string, $format) {
+        $d = new \DateTime($date_string);
+        return $d->format($format);
+}
 
 }

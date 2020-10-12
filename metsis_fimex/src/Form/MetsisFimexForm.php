@@ -11,7 +11,12 @@ use Drupal\Component\Serialization\Json;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Drupal\metsis_lib\MetsisUtils;
-
+use \Drupal\metsis_fimex\FimexUtils;
+use Solarium\QueryType\Select\Query\Query;
+use Solarium\QueryType\Select\Result\Result;
+use Solarium\QueryType\Select\Result\Document;
+use Solarium\Core\Query\DocumentInterface;
+use Solarium\Core\Query\Result\ResultInterface;
 
 /**
  * Class MetsisFimexForm.
@@ -40,7 +45,6 @@ class MetsisFimexForm extends FormBase {
  }
 
 
-
  /*
   * service call parameter, user info etc. {
   */
@@ -55,10 +59,9 @@ class MetsisFimexForm extends FormBase {
  //url paramter to indicate that there is opendap (i.e. &opendap=yes or something like that)
  //this is key. we need to send in default form values or ol3 wms params.
 
-/* Store some information to keep go back link as expected */
-$query_params = \Drupal::request()->query->all();
-$params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_params);
-$referer = $params['referer'];
+//Get http referer for go back
+$request = \Drupal::request();
+$referer = $request->headers->get('referer');
 
  /*
   * get the data from search form and OpeNDAP and/or SOLR
@@ -72,6 +75,10 @@ $referer = $params['referer'];
  $page_inputs = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_params);
  //var_dump($page_inputs);
  $dataset_id = $page_inputs['dataset_id'];
+ if (empty($dataset_id)) {
+   //no dataset_id was sent in
+   $form_state->setRedirect($referer);
+ }
 // $dataset_id = isset($_GET['dataset_id']) ? $_GET['dataset_id'] : '';
  $dataset_ids = explode(",", $dataset_id);
  //var_dump($dataset_ids);
@@ -80,9 +87,9 @@ $referer = $params['referer'];
  $opendap_global_attributes = MetsisUtils::adc_get_od_global_attributes($dataset_id, 'adc-l1')['data']['findAllAttributes'];
  $opendap_variables = MetsisUtils::adc_get_od_variables($dataset_id, 'adc-l1')['data']['findAllVariables'];
 
- $opendap_start_time_strings = '';
- $opendap_stop_time_strings = '';
- //var_dump($opendap_global_attributes,$opendap_variables);
+ $opendap_start_time_strings = $config->get('opendap_start_time_strings');
+ $opendap_stop_time_strings = $config->get('opendap_stop_time_strings');
+ //dpm($opendap_global_attributes,$opendap_variables);
  /*
   * you MUST initialize $start_time and $stop_time to have them in scope!!!
   *
@@ -119,13 +126,12 @@ $referer = $params['referer'];
      //            }
    }
  }
- if (empty($dataset_ids)) {
-   //no dataset_id was sent in
-   $this->setRedirectUrl($referer);
- }
+
 
  // these are SOLR data. They should probably be replaced with OpeNDAP data
  $fields = [
+  "id",
+  "metadata_identifier",
   "geographic_extent_rectangle_east",
   "geographic_extent_rectangle_west",
   "geographic_extent_rectangle_north",
@@ -134,7 +140,7 @@ $referer = $params['referer'];
   "temporal_extent_end_date",
   "title",
   "abstract",
-  "data_access_resource",
+  "data_access_url_opendap",
  ];
  //we set up the variables form based on the first dataset in the list submitted.
  //ideally we need to use the common subset of the variables from ALL the submitted datasets
@@ -143,12 +149,12 @@ $referer = $params['referer'];
  //need to loop through all the datasets that were sent inn.
  $solr_data = [];
  //$solr_cores = adc_get_solr_core($dataset_ids);
- for ($i = 0; $i < count($dataset_ids); $i++) {
+ //for ($i = 0; $i < count($dataset_ids); $i++) {
    //todo
    //may need to use $dataset_ids as $solr_data[] keys...
    //$solr_data[] = msb_get_fields(SOLR_CORE_PARENT, $dataset_ids[$i], $fields);
-   $solr_data[] = MetsisUtils::msb_get_fields($dataset_ids[$i], $fields);
- }
+   $solr_data = MetsisUtils::msb_get_fields($dataset_ids, $fields);
+ //}
  //$solr_data = msb_get_fields(SOLR_CORE_PARENT, $dataset_ids[0], $fields);
  //    foreach ($solr_data as $sd) {
  //        if ($sd['response']['numFound'] == 0) {
@@ -160,19 +166,37 @@ $referer = $params['referer'];
  //        drupal_goto("/metadata_search");
  //    }
  //$dar = msb_concat_data_access_resource($solr_data['response']['docs'][0][METADATA_PREFIX . 'data_access_resource']);
+//var_dump($solr_data);
+ if ($solr_data->getNumFound() == 0) {
+  \Drupal::messenger()->addError("Invalid dataset ID");
+ }
  $dar = [];
- foreach ($solr_data as $sd) {
-   if ($sd['response']['numFound'] == 0) {
-    \Drupal::messenger()->addError("Invalid dataset ID");
-   }
+ $dtitle = [];
+ $dabstract = [];
+ $d_geo_north = [];
+ $d_geo_south = [];
+ $d_geo_east = [];
+ $d_geo_west = [];
+ foreach ($solr_data as $doc) {
+  $fields = $doc->getFields();
 
-   $dar[] = msb_concat_data_access_resource($sd['response']['docs'][0][METADATA_PREFIX . 'data_access_resource']);
+   $dar = $fields['data_access_url_opendap'];
+   $dtitle = $fields['title'];
+   $dabstract = $fields['abstract'];
+   $d_geo_north = $fields['geographic_extent_rectangle_north'];
+   $d_geo_south = $fields['geographic_extent_rectangle_south'];
+   $d_geo_east = $fields['geographic_extent_rectangle_east'];
+   $d_geo_west = $fields['geographic_extent_rectangle_west'];
+
+
+
  }
 //var_dump($sd['response']['docs'][0][METADATA_PREFIX . 'data_access_resource']);
  //todo
  //use metadata from the first dataset in URL is used
-if(isset($dar[0]['OPeNDAP']['url'])) {
- $opendap_ddx = $dar[0]['OPeNDAP']['url'] . ".ddx";
+//var_dump($d_geo_north);
+if(isset($dar[0])) {
+ $opendap_ddx = $dar[0] . ".ddx";
  //$opendap_ddx = $dar[0]['OPeNDAP']['url'];
  //var_dump($dar[0]['OPeNDAP']['url']);
  //test{
@@ -190,7 +214,7 @@ if(isset($dar[0]['OPeNDAP']['url'])) {
  //$feature_types['Attribute'][0]['Attribute'][24]['value']
  //$opendap_ddx ="http://super-monitor.met.no/thredds/dodsC/lustreMntB/users/heikok/Meteorology/ecdiss-internet.met.no/ecdiss/NBS/S2A_MSIL1C_20170126T105321_N0204_R051_T32VNL_20170126T105315.nc.ddx";
  //test}
- $jod_data = adc_get_od_data($opendap_ddx);
+ $jod_data = FimexUtils::adc_get_od_data($opendap_ddx);
 }
 else {
   \Drupal::messenger()->addError("Selected datasets does not contain OPeNDAP resource");
@@ -206,7 +230,8 @@ else {
  ];
   return $form;*/
   //return new RedirectResponse(Url::fromUri($referer));
-  return new RedirectResponse($referer);
+  //var_dump($referer);
+  //return new RedirectResponse($referer);
 }
  //$od_temporal_extent = adc_get_od_temporal_extent($jod_data);
  /**
@@ -229,8 +254,8 @@ else {
  /**
   * test}
   */
- $epsg = get_proj4_strings();
- $od_proj4 = adc_get_od_proj4($jod_data);
+ $epsg = FimexUtils::get_proj4_strings();
+ $od_proj4 = FimexUtils::adc_get_od_proj4($jod_data);
 
 
  /**
@@ -283,10 +308,10 @@ else {
   * test}
   */
  if (!array_key_exists('title', $od_global_attributes)) {
-   $od_global_attributes['title'] = "Title (discovery metadata): " . implode(",", $solr_data[0]['response']['docs'][0][METADATA_PREFIX . 'title']);
+   $od_global_attributes['title'] = "Title (discovery metadata): " . implode(",", $dtitle);
  }
  if (!array_key_exists('abstract', $od_global_attributes)) {
-   $od_global_attributes['abstract'] = "Abstract (discovery metadata): " . implode(",", $solr_data[0]['response']['docs'][0][METADATA_PREFIX . 'abstract']);
+   $od_global_attributes['abstract'] = "Abstract (discovery metadata): " . implode(",", $dabstract);
  }
  if (!array_key_exists('description', $od_global_attributes)) {
    $od_global_attributes['description'] = "Description: MISSING";
@@ -297,7 +322,7 @@ else {
  //need to construct the final url in a better way as base_url + data_ids[]
  $opendap_urls = [];
  foreach ($dar as $dd) {
-   $opendap_urls[] = $dd['OPeNDAP']['url'];
+   $opendap_urls[] = $dd;
  }
 
  $form['opendap'] = [
@@ -421,7 +446,7 @@ else {
      '#title' => t('Degrees north'),
      '#type' => 'textfield',
      //'#required' => TRUE,
-     '#default_value' => $solr_data[0]['response']['docs'][0][METADATA_PREFIX . 'geographic_extent_rectangle_north'],
+     '#default_value' => $d_geo_north,
      '#element_validate' => $this->geographical_region_validate(),
      //'#element_validate' => ['geographical_region_validate'],
      '#attributes' => [
@@ -437,7 +462,7 @@ else {
      '#title' => t('Degrees south'),
      '#type' => 'textfield',
      //'#required' => TRUE,
-     '#default_value' => $solr_data[0]['response']['docs'][0][METADATA_PREFIX . 'geographic_extent_rectangle_south'],
+     '#default_value' => $d_geo_south,
      '#element_validate' => $this->geographical_region_validate(),
      '#attributes' => [
        //'placeholder' => t('Degrees relative to zero meridian/equator'),
@@ -452,7 +477,7 @@ else {
      '#title' => t('Degrees east'),
      '#type' => 'textfield',
      //'#required' => TRUE,
-     '#default_value' => $solr_data[0]['response']['docs'][0][METADATA_PREFIX . 'geographic_extent_rectangle_east'],
+     '#default_value' => $d_geo_east,
      '#element_validate' => $this->geographical_region_validate(),
      '#attributes' => [
        //'placeholder' => t('Degrees relative to zero meridian/equator'),
@@ -467,7 +492,7 @@ else {
      '#title' => t('Degrees west'),
      '#type' => 'textfield',
      //'#required' => TRUE,
-     '#default_value' => $solr_data[0]['response']['docs'][0][METADATA_PREFIX . 'geographic_extent_rectangle_west'],
+     '#default_value' => $d_geo_west,
      '#element_validate' => $this->geographical_region_validate(),
      '#attributes' => [
        //'placeholder' => t('Degrees relative to zero meridian/equator'),
@@ -778,7 +803,7 @@ else {
  /**
   * test{
   */
- if (TRANSFORMATION_OUTPUT_FORMAT_VISIBLE) {
+ if ($config->get('transformation_output_format_visible')) {
    $form['output_format'] = [
      '#type' => 'fieldset',
      '#title' => t('Select output format'),
@@ -862,6 +887,7 @@ else {
   * TODO
   */
  $form['#attached']['library'][] = 'metsis_lib/adc_buttons';
+  $form['#attached']['library'][] = 'metsis_lib/tables';
  $form['#attached']['library'][] = 'metsis_fimex/fimex';
  /*
   * theme the form}
@@ -887,7 +913,7 @@ else {
     $tempstore = \Drupal::service('tempstore.private')->get('metsis_fimex');
     $tempstore->set('isSubmitted', true);
     $receipt = $this->adc_get_fimex_query($form_state);
-    adc_set_message($receipt);
+    FimexUtils::adc_set_message($receipt);
     $form_state->setRebuild();
   }
 
@@ -1002,11 +1028,12 @@ else {
     function adc_get_fimex_query($form_state) {
       $user = \Drupal::currentUser();
       global $base_url;
+      $config = \Drupal::config('metsis_fimex.settings');
       global $metsis_conf;
       global $epsg;
       $basket_wps_date_format = "Y-m-d H:i:s";
-      if (defined('TRANSFORMATION_SERVER_GETCAPABILITIES')) {
-        $transformation_server_getcapabilities = TRANSFORMATION_SERVER_GETCAPABILITIES;
+      if ($config->get('transformation_server_getcapabilities')) {
+        $transformation_server_getcapabilities = $config->get('transformation_server_getcapabilities');
       }
       else {
         $transformation_server_getcapabilities = "";
@@ -1015,12 +1042,12 @@ else {
         'wpsUrl' => $transformation_server_getcapabilities,
         'userId' => $user->getAccountName(),
         'email' => $form_state->getValue('email'),
-        'site' => $metsis_conf['drupal_site_data_center_desc'] ? $metsis_conf['drupal_site_data_center_desc'] : $base_url,
-        'format' => $metsis_conf['default_data_archive_format'] ? $metsis_conf['default_data_archive_format'] : 'tgz',
+        'site' =>  $base_url, //TODO: Should get this from config
+        'format' => 'tgz', //TODO: Should get this from config
         'uri' => $form_state->getValue('opendap'),
         'fiSelectVariables' => implode(",", array_filter($form_state->getValue('selected_variables'))),
-        'fiReducetimeStart' => get_metsis_date($form_state->getValue('start_date'), $basket_wps_date_format),
-        'fiReducetimeEnd' => get_metsis_date($form_state->getValue('stop_date'), $basket_wps_date_format),
+        'fiReducetimeStart' => MetsisUtils::get_metsis_date($form_state->getValue('start_date'), $basket_wps_date_format),
+        'fiReducetimeEnd' => MetsisUtils::get_metsis_date($form_state->getValue('stop_date'), $basket_wps_date_format),
         'fiOutputType' => $form_state->getValue('selected_output_format'),
       ];
       //var_dump($req_params_mandatory);

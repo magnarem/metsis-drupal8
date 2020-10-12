@@ -1,7 +1,7 @@
 <?php
 
-require_once 'metsis_fimex.constants.inc';
-include_once drupal_get_path('module', 'metsis_fimex') . '/includes/metsis_fimex.inc';
+//require_once 'metsis_fimex.constants.inc';
+//include_once drupal_get_path('module', 'metsis_fimex') . '/includes/metsis_fimex.inc';
 $epsg = [];
 
 function metsis_fimex_init() {
