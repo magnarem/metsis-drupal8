@@ -531,7 +531,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: basket
+      path: metsis/basket
     cache_metadata:
       max-age: 0
       contexts:

@@ -7,8 +7,10 @@
 namespace Drupal\metsis_basket\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-//use Drupal\metsis_basket\Entity\MetsisBasket;
-//use Drupal\Core\Entity\Controller\EntityListController;
+use Drupal\metsis_lib\MetsisUtils;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\metsis_basket\Entity\MetsisBasket;
+use Drupal\Core\Entity\Controller\EntityListController;
 /**
  * Default controller for the metsis_basket module.
  * {@inheritdoc}
@@ -42,8 +44,20 @@ class MetsisBasketController extends ControllerBase  {
 
   public function add($metaid) {
     \Drupal::logger('metsis_basket')->debug("Calling add to basket function");
+    $user_id = (int) \Drupal::currentUser()->id();
+    $user_name = \Drupal::currentUser()->getAccountName();
+    $title = MetsisUtils::msb_get_title($metaid);
+      $fields = [
+        'uid' => $user_id,
+        'user_name' => $user_name,
+        'session_id' => session_id(),
+        'basket_timestamp' => time(),
+        'metadata_identifier' => $metaid,
+      ];
+      $query = \Drupal::database()->insert('metsis_basket')->fields($fields)->execute();
     //$objects = \Drupal::entityTypeManager()->getStorage('metsis_basket', array($iid));
     \Drupal::messenger()->addMessage("Dataset added to basket:  " . $metaid);
-    return \Drupal::routeMatch()->getRouteName();
+    $response = new AjaxResponse();
+    return $response;
   }
 }

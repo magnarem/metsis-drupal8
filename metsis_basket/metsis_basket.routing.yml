@@ -1,5 +1,5 @@
 metsis_basket.view:
-  path: '/basket'
+  path: '/metsis/basket'
   defaults:
     _title: 'My Basket'
     _route: 'view.basket_view.page_1'
