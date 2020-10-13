@@ -239,6 +239,7 @@ function metsis_search_views_pre_build(ViewExecutable $view)
                 $tempstore->delete('tllon');
                 $tempstore->delete('brlat');
                 $tempstore->delete('brlon');
+                \Drupal::cache()->invalidate('metsis_search_map');
             }
         }
     }

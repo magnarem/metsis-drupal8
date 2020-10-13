@@ -13,8 +13,8 @@ metsis_ts_bokeh.init_form:
   weight: 0
 
 metsis.group.admin:
-    title: 'METSIS'
-    route_name: system.admin_config_metsis
-    parent: system.admin_config
-    description: 'METSIS Configuration'
-    weight: -999
+  title: 'METSIS'
+  route_name: system.admin_config_metsis
+  parent: system.admin_config
+  description: 'METSIS Configuration'
+  weight: -999

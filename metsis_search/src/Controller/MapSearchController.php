@@ -28,6 +28,7 @@ class MapSearchController extends ControllerBase {
       $tempstore->set('tllon', $tllon);
       $tempstore->set('brlat', $brlat);
       $tempstore->set('brlon', $brlon);
+        \Drupal::cache()->invalidate('metsis_search_map');
 
       $data = [
         'drupalSettings' => [

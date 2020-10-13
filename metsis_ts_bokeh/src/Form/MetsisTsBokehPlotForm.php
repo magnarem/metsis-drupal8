@@ -58,7 +58,19 @@ class MetsisTsBokehPlotForm extends FormBase {
   \Drupal::logger('metsis_ts_bokeh')->debug('buildForm: yaxis form_state is: ' . $form_state->getValue('y_axis'));
   $isinit = $tempstore->get('isinit');
 
-  //$element['hello'] = '<p>hello</p>';
+// Get the request referer for go back button
+  $request = \Drupal::request();
+  $referer = $request->headers->get('referer');
+
+  /**
+   * Check if we got opendap urls from http request. then overwite
+   * data_uri variable
+   */
+   $query_from_request = \Drupal::request()->query->all();
+   $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
+   if(isset($query['opendap_urls'])) {
+     $tempstore->set('data_uri', $query['opendap_urls']);
+   }
 
 
  /*
@@ -69,6 +81,7 @@ class MetsisTsBokehPlotForm extends FormBase {
   $form['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_widgets';
   $form['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_tables';
   $form['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_api';
+  $form['#attached']['library'][] = 'metsis_lib/adc_buttons';
 
 
 /* We display the form above the plot with subit button on top */
@@ -125,6 +138,12 @@ $form['items'] = [
 
 
   $tempstore->set('isinit', false);
+
+  //Add go back putton
+  $form['go_back'] = [
+    '#type' => 'markup',
+    '#markup' => '<a class="adc-button adc-sbutton" href="' .$referer .'">Go back to search</a>'
+  ];
 
   return $form;
 }

@@ -78,10 +78,10 @@ class SearchUtils
             $dc_cn = isset($fields['personnel_datacenter_name']) ? $fields['personnel_datacenter_name'][0] : '';
             $dc_ce = isset($fields['personnel_datacenter_email']) ? $fields['personnel_datacenter_email'][0] : '';
             $related_lp_url = isset($fields['related_url_landing_page']) ? $fields['related_url_landing_page'] : '';
-            $personnel_name = isset($fields['personnel_name'][0]) ? trim($fields['personnel_name'][0]) : '';
+            $personnel_name = isset($fields['personnel_investigator_name'][0]) ? trim($fields['personnel_name'][0]) : '';
 
             $dataset_name = $fields['metadata_identifier'];
-            $institutions = !empty($fields['personnel_organisation'][0]) ? $fields['personnel_organisation'][0] : ' ';
+            $institutions = !empty($fields['personnel_investigator_organisation'][0]) ? $fields['personnel_organisation'][0] : ' ';
             // get_data_access_markup('Button Text', url)
             $netcdf_download ="";
             $odata_download  = "";

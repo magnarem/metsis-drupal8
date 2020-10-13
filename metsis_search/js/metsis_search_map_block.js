@@ -16,7 +16,8 @@
         var lat = drupalSettings.metsis_search_map_block.mapLat;
         var lon = drupalSettings.metsis_search_map_block.mapLon;
         var mapZoom = drupalSettings.metsis_search_map_block.mapZoom;
-
+        var bboxFilter = drupalSettings.metsis_search_map_block.bboxFilter;
+        var mapFilter = drupalSettings.metsis_search_map_block.mapFilter;
 
         var init_proj = drupalSettings.metsis_search_map_block.init_proj;
         var projections = drupalSettings.metsis_search_map_block.projections;
@@ -122,6 +123,14 @@
             "vertical-align": "middle",
             "padding-right" : "5px",
           });
+
+        }
+
+        //display current bbox search filter
+        if(bboxFilter != null) {
+          $('.current-bbox-filter').append('Current filter: '+mapFilter).append(
+            document.createElement('br')).append(bboxFilter);
+
 
         }
         // two projections will be possible
@@ -700,7 +709,7 @@
         map.addControl(zoomToExtentControl);
 
 
-        // Search bbox
+        // Search bbox filter
         $('#testButton').click(function(){
           console.log('click for bbox filter');
   //        var tllat;
@@ -708,6 +717,21 @@
   //        var brlat;
   //        var brlon;
 
+          // clear pins and polygons
+          map.getLayers().getArray()[2].getSource().clear(true);
+          map.getLayers().getArray()[1].getSource().clear(true);
+
+          //clear id_tooltip
+          map.on('click', function(evt) {});
+          map.on('pointermove', function(evt) {});
+
+          //remove overlay
+          map.removeControl(mousePositionControl);
+          map.removeOverlay(overlay);
+          map.removeOverlay(overlayh);
+          //map = null;
+
+//
          proj4.defs('EPSG:32661', '+proj=stere +lat_0=90 +lat_ts=90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs');
           ol.proj.proj4.register(proj4);
           var ext32661 = [-4e+06, -3e+06, 8e+06, 8e+06];
@@ -755,7 +779,7 @@
           };
 
 
-          var ch = document.getElementsByName('map-search-projection');
+          var ch = document.getElementsByName('map-res-projection');
 
           //document.getElementById(init_proj).checked = true;
 
@@ -774,9 +798,7 @@
               }
 
               //remove pins and polygons
-              map.getLayers().getArray()[1].getSource().clear(true);
-              map.getLayers().getArray()[2].getSource().clear(true);
-//              layer['pins'].getSource().refresh();
+              //  layer['pins'].getSource().refresh();
 //              layer['polygons'].getSource().refresh();
 
               map.setView(new ol.View({
@@ -799,14 +821,14 @@
               addExtraLayers(projObjectforCode[prj].projection['code_']);
             }
           }
-          
-          map.getLayers().getArray()[1].getSource().clear(true);
-          map.getLayers().getArray()[2].getSource().clear(true);
+
+          //map.getLayers().getArray()[1].getSource().clear(true);
+          //map.getLayers().getArray()[2].getSource().clear(true);
           //layer['pins'].getSource().refresh();
           //layer['polygons'].getSource().refresh();
           // Define all layers
-          //var layer = {};
-/*
+          var layer = {};
+
           // Base layer WMS north
           layer['baseN'] = new ol.layer.Tile({
             type: 'base',
@@ -838,11 +860,12 @@
               crossOrigin: 'anonymous'
             })
           });
-*/
-//          var map = new ol.Map({
-//            target: 'map-search',
-//            layers: [layer['baseN']],
-//            view: new ol.View({
+
+          //   map = new ol.Map({
+        //    target: 'map-res',
+      //      layers: [layer['baseN']],
+      //      view: new ol.View({
+      //map.layers(layer['baseN']);
       map.setView(new ol.View({
               zoom: mapZoom,
               minZoom: 0,
@@ -851,7 +874,7 @@
               extent: projObjectforCode[init_proj].extent,
               projection: projObjectforCode[init_proj].projection['code_'],
             }));
-    //      });
+      //    });
 
           //Mouseposition
           var mousePositionControl = new ol.control.MousePosition({
@@ -860,6 +883,7 @@
             },
             projection: 'EPSG:4326',
           });
+
           map.addControl(mousePositionControl);
 
 
@@ -997,7 +1021,7 @@
 
           }
 
-          build_draw(init_proj);
+          build_draw(proj);
 
           function addExtraLayers(proj) {
 

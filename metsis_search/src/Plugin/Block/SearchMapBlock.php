@@ -65,6 +65,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         $map_search_text =  $config->get('map_search_text');
         $map_layers_list =  $config->get('map_layers');
         $map_pins = $config->get('map_pins_b');
+        $map_filter = $config->get('map_bbox_filter');
 
         //Get the extracted info from tempstore
         $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
@@ -87,7 +88,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
     //Panel button
     $build['search-map']['panel'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="panel"><button id="testButton" class="adc-button adc-sbutton">Bbox Search</button></div>',
+      '#markup' => '<div id="panel"><button id="testButton" class="adc-button adc-sbutton">Bbox Filter</button><div class="current-bbox-filter"></div></div>',
       '#allowed_tags' => ['div','label','button'],
     ];
 
@@ -139,6 +140,8 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
       'tllon' => $tllon,
       'brlon' => $brlon,
       'brlat' => $brlat,
+      'bboxFilter' => $bboxFilter,
+      'mapFilter' => $map_filter,
       'pins' => $map_pins,
       'path' => $module_path,
       'extracted_info' => $extracted_info,

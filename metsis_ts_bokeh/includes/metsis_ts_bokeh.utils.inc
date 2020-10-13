@@ -21,11 +21,13 @@ function adc_get_ts_bokeh_plot_vars($data_uri) {
   //Get the backend service url from configuration
   $config = \Drupal::config('metsis_ts_bokeh.configuration');
   $backend_uri = $config->get('ts_bokeh_plot_service');
+  \Drupal::logger('metsis_ts_bokeh')->debug('Got backend ur config: ' . $backend_uri );
   try {
       $client = \Drupal::httpClient();
       $request = $client->request('GET', $backend_uri, [
-        'query' => ['get' => 'param',
-        'resource_url' => $data_uri
+        'query' => [
+        'get' => 'param',
+        'resource_url' => $data_uri,
       ],
     ]);
 
@@ -40,7 +42,8 @@ function adc_get_ts_bokeh_plot_vars($data_uri) {
     \Drupal::messenger()->addError(t("If the dataset resource URL is correct, the @link is wrong. Please check.",
       array('@link' => \Drupal\Core\Link::fromTextAndUrl('backend service URL',
         \Drupal\Core\Url::fromRoute('metsis_ts_bokeh.metsis_ts_bokeh_admin_settings_form'))->toString())));
-    $response =  new RedirectResponse('/metsis_ts_bokeh_init');
+
+    $response =  new RedirectResponse('/metsis/bokeh/init');
     $response->send();
 
   }
@@ -92,6 +95,7 @@ function adc_get_ts_bokeh_plot_y_vars() {
 
   $tempstore = \Drupal::service('tempstore.private')->get('metsis_ts_bokeh');
   $data_uri = $tempstore->get('data_uri');
+  \Drupal::logger('metsis_ts_bokeh')->debug('adc_get_plot_y_vars data uri: ' . $data_uri );
 
   $ts_bokeh_plot_vars = adc_get_ts_bokeh_plot_vars($data_uri);
   $y_vars = $ts_bokeh_plot_vars['y_axis'];
