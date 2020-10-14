@@ -22,26 +22,54 @@ class MapSearchController extends ControllerBase {
       $brlon = $params['brlon'];
       \Drupal::logger('metsis_search_map_search_controller')->debug("Got boundingbox with ENVELOPE(" .  $tllon . ',' . $brlon . ',' . $tllat . ',' . $brlat . ')');
       $bboxFilter = 'ENVELOPE(' . $tllon . ',' . $brlon . ',' . $tllat . ',' . $brlat . ')';
+
+      $session = \Drupal::request()->getSession();
+      $session->set('bboxFilter', $bboxFilter);
+      $session->set('tllat', $tllat);
+      $session->set('tllon', $tllon);
+      $session->set('brlat', $brlat);
+      $session->set('brlon', $brlon);
+      /*
       $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
       $tempstore->set('bboxFilter', $bboxFilter);
       $tempstore->set('tllat', $tllat);
       $tempstore->set('tllon', $tllon);
       $tempstore->set('brlat', $brlat);
       $tempstore->set('brlon', $brlon);
+      */
         \Drupal::cache()->invalidate('metsis_search_map');
+        //Get saved configuration
+        $config = \Drupal::config('metsis_search.settings');
+        $map_location = $config->get('map_selected_location');
+        $map_lat =  $config->get('map_locations')[$map_location]['lat'];
+        $map_lon = $config->get('map_locations')[$map_location]['lon'];
+        $map_zoom = $config->get('map_zoom');
+        $map_additional_layers = $config->get('map_additional_layers_b');
+        $map_projections = $config->get('map_projections');
+        $map_init_proj =  $config->get('map_init_proj');
+        $map_base_layer_wms_north =  $config->get('map_base_layer_wms_north');
+        $map_base_layer_wms_south =  $config->get('map_base_layer_wms_south');
+        $map_layers_list =  $config->get('map_layers');
+        $map_filter = $config->get('map_bbox_filter');
 
       $data = [
         'drupalSettings' => [
         'metsis_search' => [
-          'mapLat' => 78.22314167, //to be replaced with configuration variables
-          'mapLon' => 15.64685556, //to be replaced with configuration variables
-          'mapZoom' => 3.5, //to be replaced with configuration variables
-          'init_proj' => 'EPSG:4326', //to be replaced with configuration variables
-          'additional_layers' => FALSE, //to be replaced with configuration variables
+          'mapLat' => $map_lat, //to be replaced with configuration variables
+          'mapLon' => $map_lon, //to be replaced with configuration variables
+          'mapZoom' => $map_zoom, //to be replaced with configuration variables
+          'init_proj' => $map_init_proj, //to be replaced with configuration variables
+          'additional_layers' => $map_additional_layers, //to be replaced with configuration variables
           'tllat' => $tllat,
           'tllon' => $tllon,
           'brlon' => $brlon,
           'brlat' => $brlat,
+          'base_layer_wms_north' => $map_base_layer_wms_north,
+          'base_layer_wms_south' => $map_base_layer_wms_south,
+          'projections' => $map_projections,
+          'layers_list' => $map_layers_list,
+          'bboxFilter' => $bboxFilter,
+          'mapFilter' => $map_filter,
         ],
       ]];
       $response = new AjaxResponse();

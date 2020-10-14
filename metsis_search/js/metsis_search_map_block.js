@@ -30,8 +30,8 @@
         var base_layer_wms_north = drupalSettings.metsis_search_map_block.base_layer_wms_north;
         var base_layer_wms_south = drupalSettings.metsis_search_map_block.base_layer_wms_south;
 
-        console.log('pins :'+pins);
-        console.log('layers: '+additional_layers);
+        console.log('pins :' + pins);
+        console.log('layers: ' + additional_layers);
 
         // Create the projections input boxes
         for (var key in projections) {
@@ -101,12 +101,12 @@
                   value: value,
                   name: "layers"
                 }))
-                .append(
-                  $(document.createElement('label')).prop({
-                    class: "layer-labels",
-                    for: value
-                  }).html(value))
-              );
+              .append(
+                $(document.createElement('label')).prop({
+                  class: "layer-labels",
+                  for: value
+                }).html(value))
+            );
           }
           //Add event listener to layers button
           $(".layers-button").click(function() {
@@ -121,14 +121,14 @@
           });
           $('.check-layers').css({
             "vertical-align": "middle",
-            "padding-right" : "5px",
+            "padding-right": "5px",
           });
 
         }
 
         //display current bbox search filter
-        if(bboxFilter != null) {
-          $('.current-bbox-filter').append('Current filter: '+mapFilter).append(
+        if (bboxFilter != null) {
+          $('.current-bbox-filter').append('Current filter: ' + mapFilter).append(
             document.createElement('br')).append(bboxFilter);
 
 
@@ -163,10 +163,22 @@
           extent: ext4326
         });
 
-    var    projObjectforCode = {
-          'EPSG:4326': {extent: ext4326, center: center4326, projection: proj4326},
-          'EPSG:32661': {extent: ext32661, center: center32661, projection: proj32661},
-          'EPSG:32761': {extent: ext32761, center: center32761, projection: proj32761}
+        var projObjectforCode = {
+          'EPSG:4326': {
+            extent: ext4326,
+            center: center4326,
+            projection: proj4326
+          },
+          'EPSG:32661': {
+            extent: ext32661,
+            center: center32661,
+            projection: proj32661
+          },
+          'EPSG:32761': {
+            extent: ext32761,
+            center: center32761,
+            projection: proj32761
+          }
         };
 
         //Conitue script here
@@ -183,8 +195,7 @@
               map.getLayers().removeAt(1, layer['polygons']);
               map.getLayers().removeAt(0, layer['baseN']);
               map.getLayers().insertAt(0, layer['baseS']);
-            }
-            else {
+            } else {
               if (pins) {
                 map.getLayers().removeAt(2, layer['pins']);
               }
@@ -213,6 +224,7 @@
             //rebuild vector source
             buildFeatures(projObjectforCode[prj].projection);
           }
+          var chosen_proj = proj;
         }
 
         //in nbs s1-ew
@@ -306,8 +318,7 @@
 
         var map = new ol.Map({
           target: 'map-res',
-          layers: [layer['baseN']
-          ],
+          layers: [layer['baseN']],
           view: new ol.View({
             zoom: defzoom,
             minZoom: 0,
@@ -328,10 +339,10 @@
         map.addOverlay(overlayh);
 
         function id_tooltip_h() {
-          map.on('pointermove', function (evt) {
+          map.on('pointermove', function(evt) {
             var coordinate = evt.coordinate;
             var feature_ids = {};
-            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+            map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
               //console.log(feature);
               feature_ids[feature.get('id')] = {
                 title: feature.get('title'),
@@ -347,13 +358,11 @@
                 overlayh.setOffset([0, 20]);
                 if (pins) {
                   tlphovMapRes.innerHTML += feature_ids[id].title + '<br>';
-                }
-                else {
+                } else {
                   tlphovMapRes.innerHTML += feature_ids[id].id + '<br>';
                 }
               }
-            }
-            else {
+            } else {
               tlphovMapRes.style.display = 'hidden';
             }
           });
@@ -383,7 +392,7 @@
         function id_tooltip() {
           //var tooltip = document.getElementById('tlp-map-res');
 
-          map.on('click', function (evt) {
+          map.on('click', function(evt) {
 
             var coordinate = evt.coordinate;
             overlay.setPosition([coordinate[0] + coordinate[0] * 20 / 100, coordinate[1] + coordinate[1] * 20 / 100]);
@@ -391,7 +400,7 @@
 
             var feature_ids = {};
 
-            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+            map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
               feature_ids[feature.get('id')] = {
                 url_o: feature.get('url')[0],
                 url_w: feature.get('url')[1],
@@ -544,8 +553,7 @@
                 if (feature_ids[id].thumb !== '') {
                   if (pins) {
                     content.innerHTML += '<button type="button" class="adc-button" data-toggle="collapse" data-target="#md-more-' + id + '">Show info: ' + feature_ids[id].title + '</button>' + feature_ids[id].thumb + "<br>";
-                  }
-                  else {
+                  } else {
                     content.innerHTML += ' <button type="button" class="adc-button" data-toggle="collapse" data-target="#md-more-' + id + '">Show info: ' + feature_ids[id].id + '</button>' + feature_ids[id].thumb + "<br>";
                   }
                 }
@@ -566,7 +574,9 @@
               box_tr = ol.proj.transform([extracted_info[i12][2][2], extracted_info[i12][2][0]], 'EPSG:4326', prj);
               box_bl = ol.proj.transform([extracted_info[i12][2][3], extracted_info[i12][2][1]], 'EPSG:4326', prj);
               box_br = ol.proj.transform([extracted_info[i12][2][2], extracted_info[i12][2][1]], 'EPSG:4326', prj);
-              geom = new ol.geom.Polygon([[box_tl, box_tr, box_br, box_bl, box_tl]]);
+              geom = new ol.geom.Polygon([
+                [box_tl, box_tr, box_br, box_bl, box_tl]
+              ]);
               var iconFeaturePol = new ol.Feature({
                 url: extracted_info[i12][0],
                 id: extracted_info[i12][1],
@@ -592,19 +602,19 @@
             }
           }
 
-        //create a vector source with all points
+          //create a vector source with all points
           var vectorSourcePol = new ol.source.Vector({
             features: iconFeaturesPol
           });
 
-        //create a vector layer with all points from the vector source and pins
+          //create a vector layer with all points from the vector source and pins
           var vectorLayerPol = new ol.layer.Vector({
             title: 'polygons',
             source: vectorSourcePol,
           });
           map.addLayer(vectorLayerPol);
 
-        //all points
+          //all points
           if (pins) {
             var iconFeaturesPin = [];
             for (var i12 = 0; i12 <= extracted_info.length - 1; i12++) {
@@ -632,18 +642,17 @@
               iconFeaturesPin.push(iconFeaturePin);
               if ((extracted_info[i12][2][0] !== extracted_info[i12][2][1]) || (extracted_info[i12][2][2] !== extracted_info[i12][2][3])) {
                 iconFeaturePin.setStyle(iconStyleBl);
-              }
-              else {
+              } else {
                 iconFeaturePin.setStyle(iconStyleBk);
               }
             }
 
-        //create a vector source with all points
+            //create a vector source with all points
             var vectorSourcePin = new ol.source.Vector({
               features: iconFeaturesPin
             });
 
-        //create a vector layer with all points from the vector source and pins
+            //create a vector layer with all points from the vector source and pins
             var vectorLayerPin = new ol.layer.Vector({
               title: 'pins',
               source: vectorSourcePin,
@@ -652,36 +661,31 @@
             map.addLayer(vectorLayerPin);
           }
 
-        //Fit to extent of features
-        //check if there are results
+          //Fit to extent of features
+          //check if there are results
           if (map.getLayers().getArray().length !== 1) {
             if (map.getLayers().getArray()[1].getSource().getFeatures().length != 0) {
               if (pins) {
                 if (ol.extent.containsExtent(map.getLayers().getArray()[1].getSource().getExtent(), map.getLayers().getArray()[2].getSource().getExtent())) {
                   var maxExt = map.getLayers().getArray()[1].getSource().getExtent();
-                }
-                else {
+                } else {
                   var maxExt = map.getLayers().getArray()[2].getSource().getExtent();
                 }
                 if (ol.extent.containsExtent(map.getView().getProjection().getExtent(), maxExt)) {
                   map.getView().fit(maxExt);
                   map.getView().setZoom(map.getView().getZoom() - 1);
-                }
-                else {
+                } else {
                   map.getView().fit(map.getView().calculateExtent());
                 }
-              }
-              else {
+              } else {
                 if (ol.extent.containsExtent(map.getView().getProjection().getExtent(), map.getLayers().getArray()[1].getSource().getExtent())) {
                   map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent());
                   map.getView().setZoom(map.getView().getZoom() - 1);
-                }
-                else {
+                } else {
                   map.getView().fit(map.getView().calculateExtent());
                 }
               }
-            }
-            else {
+            } else {
               map.getView().fit(map.getView().calculateExtent());
             }
           }
@@ -697,7 +701,7 @@
 
         //Mouseposition
         var mousePositionControl = new ol.control.MousePosition({
-          coordinateFormat: function (co) {
+          coordinateFormat: function(co) {
             return ol.coordinate.format(co, template = 'lon: {x}, lat: {y}', 2);
           },
           projection: 'EPSG:4326',
@@ -709,6 +713,78 @@
         map.addControl(zoomToExtentControl);
 
 
+
+
+        function fetch_ts_variables(url_o, md_ts_id) {
+          fetch('https://ncapi.adc-ncplot.met.no/ncplot/plot?get=param&resource_url=' + url_o)
+            .then(response => response.json())
+            .then(data => {
+              //clear options
+              document.getElementById("axis").value = Object.keys(data);
+              var opts = document.getElementById(md_ts_id).children['var_list'];
+              var length = opts.options.length;
+              for (i = length - 1; i > 0; i--) {
+                opts.options[i] = null;
+              }
+              for (const variable of data[Object.keys(data)]) {
+                var el = document.createElement("option");
+                el.textContent = variable;
+                el.value = variable;
+                document.getElementById(md_ts_id).children[0].appendChild(el);
+              }
+            });
+        }
+
+        function plot_ts(url_o, md_ts_id) {
+          let loader = '<img class="ts-plot-loader" src="/' + path + '/icons/loader.gif">';
+          document.getElementById(md_ts_id).children['tsplot'].innerHTML = loader;
+          var variable = document.getElementById(md_ts_id).children['var_list'].value;
+          fetch('https://ncapi.adc-ncplot.met.no/ncplot/plot?get=plot&resource_url=' + url_o + '&variable=' + variable + '&axis=' + document.getElementById("axis").value)
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(item) {
+              item.target_id = document.getElementById(md_ts_id).children['tsplot'].id;
+              Bokeh.embed.embed_item(item);
+              document.getElementById(md_ts_id).children['tsplot'].innerHTML = '';
+            })
+        }
+
+
+
+        var ald = document.getElementById("lrslist").children; //list of li
+        for (var i = ald.length; i--;) {
+          if (ald[i].children[0].checked) {
+            selectedLayer = ald[i].children[0].value;
+            map.addLayer(layer[selectedLayer]);
+          }
+          ald[i].children[0].onclick = function select_extralayer() {
+            if (this.checked) {
+              selectedLayer = this.value;
+              map.addLayer(layer[selectedLayer]);
+            } else {
+              selectedLayer = this.value;
+              map.removeLayer(layer[selectedLayer]);
+            }
+          }
+        }
+
+        document.getElementById("droplayers").style.display = "inline";
+
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var messagequery = document.getElementById("messagequery");
+            if (messagequery.style.display === "block") {
+              messagequery.style.display = "none";
+            } else {
+              messagequery.style.display = "block";
+            }
+          });
+        }
         // Search bbox filter
         $('#testButton').click(function(){
           console.log('click for bbox filter');
@@ -785,7 +861,7 @@
 
           for (var i = ch.length; i--;) {
             ch[i].onchange = function change_projection() {
-              var prj = this.value;
+              var prj = chosen_proj;
               for (var j = map.getLayers().getArray().length; j > 1; j--) {
                 map.getLayers().removeAt(j - 1);
               }
@@ -1104,79 +1180,8 @@
 
         });
 
-        function fetch_ts_variables(url_o, md_ts_id) {
-          fetch('https://ncapi.adc-ncplot.met.no/ncplot/plot?get=param&resource_url='+url_o)
-          .then(response => response.json())
-          .then(data => {
-            //clear options
-            document.getElementById("axis").value = Object.keys(data);
-            var opts = document.getElementById(md_ts_id).children['var_list'];
-            var length = opts.options.length;
-            for (i = length-1; i > 0; i--) {
-               opts.options[i] = null;
-            }
-            for (const variable of data[Object.keys(data)]) {
-              var el = document.createElement("option");
-              el.textContent = variable;
-              el.value = variable;
-              document.getElementById(md_ts_id).children[0].appendChild(el);
-            }
-          });
-        }
-
-        function plot_ts(url_o, md_ts_id) {
-          let loader =  '<img class="ts-plot-loader" src="/'+path+'/icons/loader.gif">';
-          document.getElementById(md_ts_id).children['tsplot'].innerHTML = loader;
-          var variable = document.getElementById(md_ts_id).children['var_list'].value;
-          fetch('https://ncapi.adc-ncplot.met.no/ncplot/plot?get=plot&resource_url='+url_o+'&variable='+variable+'&axis='+document.getElementById("axis").value)
-          .then(function (response) {
-              return response.json();
-          })
-          .then(function (item) {
-              item.target_id = document.getElementById(md_ts_id).children['tsplot'].id;
-              Bokeh.embed.embed_item(item);
-              document.getElementById(md_ts_id).children['tsplot'].innerHTML = '';
-          })
-        }
-
-
-
-            var ald = document.getElementById("lrslist").children; //list of li
-            for (var i = ald.length; i--;) {
-              if (ald[i].children[0].checked) {
-                selectedLayer = ald[i].children[0].value;
-                map.addLayer(layer[selectedLayer]);
-              }
-              ald[i].children[0].onclick = function select_extralayer() {
-                if (this.checked) {
-                  selectedLayer = this.value;
-                  map.addLayer(layer[selectedLayer]);
-                } else {
-                  selectedLayer = this.value;
-                  map.removeLayer(layer[selectedLayer]);
-                }
-              }
-            }
-
-            document.getElementById("droplayers").style.display = "inline";
-
-        var coll = document.getElementsByClassName("collapsible");
-        var i;
-
- for (i = 0; i < coll.length; i++) {
-   coll[i].addEventListener("click", function() {
-     this.classList.toggle("active");
-     var messagequery = document.getElementById("messagequery");
-     if (messagequery.style.display === "block") {
-       messagequery.style.display = "none";
-     } else {
-       messagequery.style.display = "block";
-     }
-   });
- }
-
-});
-},
-};
+      });
+    },
+  };
 
 })(jQuery, Drupal, drupalSettings);

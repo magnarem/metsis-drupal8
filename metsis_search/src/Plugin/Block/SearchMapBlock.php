@@ -36,17 +36,24 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         $module_path = $module_handler->getModule('metsis_search')->getPath();
         // Get the bounding box drawn on the map
         \Drupal::logger('metsis_search')->debug("Building MapSearchForm");
-        $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
-        $bboxFilter = $tempstore->get('bboxFilter');
+        //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+        //$bboxFilter = $tempstore->get('bboxFilter');
+        $session = \Drupal::request()->getSession();
+        $bboxFilter = $session->get('bboxFilter');
         $tllat = "";
         $tllon = "";
         $brlat = "";
         $brlon = "";
         if ($bboxFilter != null) {
+          $ttlat = $session->get('tllat');
+          $tllon = $session->get('tllon');
+          $brlat = $session->get('brlat');
+          $brlon = $session->get('brlon');
+            /*
             $tllat = $tempstore->get('tllat');
             $tllon = $tempstore->get('tllon');
             $brlat = $tempstore->get('brlat');
-            $brlon = $tempstore->get('brlon');
+            $brlon = $tempstore->get('brlon'); */
             \Drupal::logger('metsis_search')->debug("Got input filter vars: " .$tllat .','. $tllon .','.$brlat.','.$brlon);
         }
 
@@ -68,8 +75,8 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         $map_filter = $config->get('map_bbox_filter');
 
         //Get the extracted info from tempstore
-        $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
-        $extracted_info = $tempstore->get('extracted_info');
+        //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+        $extracted_info = $session->get('extracted_info');
 
         /**
          * Create the render array

@@ -45,6 +45,12 @@ function metsis_search_views_pre_render(ViewExecutable $view)
         $view->element['#attached']['library'][] = 'metsis_search/children_count';
         $view->element['#attached']['library'][] = 'blazy/load';
         $view->element['#attached']['library'][] = 'metsis_lib/adc_buttons';
+        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/style';
+        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_js';
+        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_widgets';
+        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_tables';
+        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_api';
+
 
         //$view->element['#attributes']['id'][] = 'children';
     /*  foreach($view->result as &$row) {
@@ -67,17 +73,18 @@ function metsis_search_theme()
     \Drupal::logger('metsis_search')->debug("Enter: hook_theme");
 
     //Check if we already have an active bboxFilter
-    $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
-    $bboxFilter = $tempstore->get('bboxFilter');
+    //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+    $session = \Drupal::request()->getSession();
+    $bboxFilter = $session->get('bboxFilter');
     $tllat = "";
     $tllon = "";
     $brlat = "";
     $brlon = "";
     if ($bboxFilter != null) {
-        $tllat = $tempstore->get('tllat');
-        $tllon = $tempstore->get('tllon');
-        $brlat = $tempstore->get('brlat');
-        $brlon = $tempstore->get('brlon');
+        $tllat = $session->get('tllat');
+        $tllon = $session->get('tllon');
+        $brlat = $session->get('brlat');
+        $brlon = $session->get('brlon');
     }
 
     //Get saved configuration
@@ -126,9 +133,10 @@ function metsis_search_views_query_alter(ViewExecutable $view, QueryPluginBase $
 
 function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInterface $solarium_query, \Drupal\search_api\Query\QueryInterface $query)
 {
-    $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+    $session = \Drupal::request()->getSession();
+    //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
     // Get the current bbox filter
-    $bboxFilter = $tempstore->get('bboxFilter');
+    $bboxFilter = $session->get('bboxFilter');
 
     //Get filter predicate from config
     $config = \Drupal::config('metsis_search.settings');
@@ -208,8 +216,9 @@ function metsis_search_search_api_solr_search_results_alter(
     //Extract some info for the search map from the solr result
     $extracted_info = SearchUtils::getExtractedInfo($result);
     //add the extracted info to the tempstore
-    $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
-    $tempstore->set('extracted_info', $extracted_info);
+    //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+    $session = \Drupal::request()->getSession();
+    $session->set('extracted_info', $extracted_info);
 }
 
 /*
@@ -233,12 +242,15 @@ function metsis_search_views_pre_build(ViewExecutable $view)
         if (isset($query_from_request['op'])) {
             if ($query_from_request['op'] == "Reset") {
                 \Drupal::logger('metsis_search')->debug("Got reset event..resetting bbox");
-                $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
-                $tempstore->delete('bboxFilter');
-                $tempstore->delete('tllat');
-                $tempstore->delete('tllon');
-                $tempstore->delete('brlat');
-                $tempstore->delete('brlon');
+                $session = \Drupal::request()->getSession();
+                //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+                $session->delete('bboxFilter');
+                $session->delete('tllat');
+                $session->delete('tllon');
+                $session->delete('brlat');
+                $session->delete('brlon');
+                $session->delete('extracted_info');
+
                 \Drupal::cache()->invalidate('metsis_search_map');
             }
         }
