@@ -253,4 +253,65 @@ public static function msb_get_title($metadata_identifier)
       return 'No Title';
     }
 }
+public static function msb_get_resources($metadata_identifier)
+{
+    /** @var Index $index  TODO: Change to metsis when prepeare for release */
+    $index = Index::load('drupal8');
+
+    /** @var SearchApiSolrBackend $backend */
+    $backend = $index->getServerInstance()->getBackend();
+
+    $connector = $backend->getSolrConnector();
+
+    $solarium_query = $connector->getSelectQuery();
+
+
+    \Drupal::logger('metsis_lib')->debug("setQuery: metadata_identifier: " .$metadata_identifier);
+    $solarium_query->setQuery('metadata_identifier:'.$metadata_identifier);
+
+    //$solarium_query->addSort('sequence_id', Query::SORT_ASC);
+    //$solarium_query->setRows(2);
+    $solarium_query->setFields([
+      'data_access_url_http',
+      'data_access_url_odata',
+      'data_access_url_opendap',
+      'data_access_url_ogc_wms'
+    ]);
+
+    $result = $connector->execute($solarium_query);
+
+    // The total number of documents found by Solr.
+    $found = $result->getNumFound();
+    \Drupal::logger('metsis_lib')->debug("found :" .$found);
+    // The total number of documents returned from the query.
+    //$count = $result->count();
+
+    // Check the Solr response status (not the HTTP status).
+    // Can't find much documentation for this apart from https://lucene.472066.n3.nabble.com/Response-status-td490876.html#a3703172.
+    //$status = $result->getStatus();
+    $fields = null;
+    $dar = [];
+    foreach ($result as $doc) {
+      $fields = $doc->getFields();
+
+    }
+    if(isset($fields['data_access_url_http'])) {
+      // An array of documents. Can also iterate directly on $result.
+      $dar['http'] = $fields['data_access_url_http'];
+    }
+    if(isset($fields['data_access_url_odata'])) {
+      // An array of documents. Can also iterate directly on $result.
+      $dar['odata'] = $fields['data_access_url_odata'];
+    }
+    if(isset($fields['data_access_url_opendap'])) {
+      // An array of documents. Can also iterate directly on $result.
+      $dar['opendap'] = $fields['data_access_url_opendap'];
+    }
+    if(isset($fields['data_access_url_ogc_wms'])) {
+      // An array of documents. Can also iterate directly on $result.
+      $dar['ogc_wms'] = $fields['data_access_url_ogc_wms'];
+    }
+      return $dar;
+  }
+
 }
