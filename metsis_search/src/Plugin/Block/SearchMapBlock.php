@@ -99,6 +99,11 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
       '#allowed_tags' => ['div','label','button'],
     ];
 
+    $build['search-map']['layers'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="layers-wrapper"></div>',
+      '#allowed_tags' => ['div','label'],
+  ];
         //Message to be displayed under the map
         $build['search-map']['projection'] = [
           '#type' => 'markup',
@@ -106,11 +111,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
           '#allowed_tags' => ['div','label'],
       ];
 
-      $build['search-map']['layers'] = [
-        '#type' => 'markup',
-        '#markup' => '<div class="layers-wrapper"></div>',
-        '#allowed_tags' => ['div','label'],
-    ];
+
 
 
         /* $build['suffix'] = [
