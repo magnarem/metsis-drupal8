@@ -82,6 +82,8 @@ class MetsisTsBokehPlotForm extends FormBase {
   $form['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_tables';
   $form['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_api';
   $form['#attached']['library'][] = 'metsis_lib/adc_buttons';
+  $form['#attached']['library'][] = 'system/title';
+  $form['#attached']['library'][] = 'jquery_ui_draggable/draggable';
 
 
 /* We display the form above the plot with subit button on top */
@@ -140,11 +142,12 @@ $form['items'] = [
   $tempstore->set('isinit', false);
 
   //Add go back putton
+  /* Commented out since we use dialog
   $form['go_back'] = [
     '#type' => 'markup',
     '#markup' => '<a class="adc-button adc-sbutton" href="' .$referer .'">Go back to search</a>'
   ];
-
+*/
   return $form;
 }
 

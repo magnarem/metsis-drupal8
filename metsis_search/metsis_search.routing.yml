@@ -9,6 +9,7 @@ metsis_search.map:
       tllon: ""
       brlat: ""
       brlon: ""
+      proj: ""
   requirements:
     _permission: 'accsess content'
 

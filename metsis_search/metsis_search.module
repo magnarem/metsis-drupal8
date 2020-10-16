@@ -45,12 +45,23 @@ function metsis_search_views_pre_render(ViewExecutable $view)
         $view->element['#attached']['library'][] = 'metsis_search/children_count';
         $view->element['#attached']['library'][] = 'blazy/load';
         $view->element['#attached']['library'][] = 'metsis_lib/adc_buttons';
+        /* moved to search map block
         $view->element['#attached']['library'][] = 'metsis_ts_bokeh/style';
         $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_js';
         $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_widgets';
         $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_tables';
         $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_api';
-
+        */
+        /* For rendering wms in modal dialog
+          $view->element['#attached']['library'][] = 'metsis_wms/replace.css';
+          $view->element['#attached']['library'][] = 'metsis_lib/utils';
+          $view->element['#attached']['library'][] = 'metsis_wms/jquery';
+          $view->element['#attached']['library'][] = 'metsis_wms/jquery.ui';
+          $view->element['#attached']['library'][] = 'metsis_wms/jquery.cycle';
+          $view->element['#attached']['library'][] = 'metsis_wms/dropdown';
+          $view->element['#attached']['library'][] = 'metsis_wms/bundle';
+          $view->element['#attached']['library'][] = 'metsis_wms/wmsmap';
+          */
 
         //$view->element['#attributes']['id'][] = 'children';
     /*  foreach($view->result as &$row) {
@@ -133,6 +144,10 @@ function metsis_search_views_query_alter(ViewExecutable $view, QueryPluginBase $
 
 function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInterface $solarium_query, \Drupal\search_api\Query\QueryInterface $query)
 {
+      \Drupal::cache()->invalidate('metsis_search_map');
+
+    /*Get the current session */
+    $request = \Drupal::request();
     $session = \Drupal::request()->getSession();
     //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
     // Get the current bbox filter
@@ -143,9 +158,13 @@ function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInt
     $map_bbox_filter = $config->get('map_bbox_filter');
 
     //Add bbox filter query if drawn bbox on map
-    \Drupal::logger('metsis_search-hook_solr_qyery_alter')->debug("bboxFilter: " . $bboxFilter);
+
     if ($bboxFilter != null && $bboxFilter != "") {
+        \Drupal::logger('metsis_search-hook_solr_qyery_alter')->debug("bboxFilter: ".$map_bbox_filter. '(' . $bboxFilter. ')');
         $solarium_query->createFilterQuery('bbox')->setQuery('{!field f=bbox score=overlapRatio}' .$map_bbox_filter.'(' . $bboxFilter . ')');
+        $search_string = $map_bbox_filter. '(' . $bboxFilter. ')';
+        //$request->query->set('bboxFilter', $search_string);
+        //$request->request->set('bboxFilter', $search_string);
     }
 
     /**
@@ -203,6 +222,23 @@ function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInt
     /**
      * TODO:: Update url params and breadcrumbs
      */
+
+     /* Create facet pivot for keywords */
+     // get the facetset component
+     $facetSet = $solarium_query->getFacetSet();
+
+     // create two facet pivot instances
+     //PIVOT FACETS ARE SLOW maybe beause of cluttered data trying other approch for NoRewindIterator
+
+     $facet = $facetSet->createFacetPivot('gcmd');
+     $facet->addFields('keywords_level1, keywords_level2, keywords_level3, keywords_level4');
+     //$facet->addFields('keywords_level1, keywords_level2, keywords_level3, keywords_level4, keywords_level5, keywords_level6, keywords_level7, ');
+     $facet->setLimit(5);
+     $facet->setMinCount(1);
+
+
+    //$facetSet->createFacetField('gcmd')->setField('keywords_level1'); //->setLimit(10);
+
 }
 
 function metsis_search_search_api_solr_search_results_alter(
@@ -211,14 +247,20 @@ function metsis_search_search_api_solr_search_results_alter(
     \Solarium\QueryType\Select\Result\Result $result
 )
 {
-
+    //Get current session Object
+    $session = \Drupal::request()->getSession();
 
     //Extract some info for the search map from the solr result
     $extracted_info = SearchUtils::getExtractedInfo($result);
+
+    $gcmd_facet = SearchUtils::processGcmdFacet($result);
+    $session->set('gcmd', $gcmd_facet);
+    //dpm($gcmd_facet);
     //add the extracted info to the tempstore
     //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
-    $session = \Drupal::request()->getSession();
+
     $session->set('extracted_info', $extracted_info);
+
 }
 
 /*
@@ -235,25 +277,35 @@ function metsis_search_search_api_solr_search_results_alter(
 
 function metsis_search_views_pre_build(ViewExecutable $view)
 {
-    if ($view->id() == 'metsis_search') {
-        $request = \Drupal::request();
-        $query_from_request = $request->query->all();
-        //Check if operator op is set in query and op=Reset to reset boundingbox
-        if (isset($query_from_request['op'])) {
-            if ($query_from_request['op'] == "Reset") {
-                \Drupal::logger('metsis_search')->debug("Got reset event..resetting bbox");
-                $session = \Drupal::request()->getSession();
-                //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
-                $session->delete('bboxFilter');
-                $session->delete('tllat');
-                $session->delete('tllon');
-                $session->delete('brlat');
-                $session->delete('brlon');
-                $session->delete('extracted_info');
 
-                \Drupal::cache()->invalidate('metsis_search_map');
-            }
-        }
+
+    if ($view->id() == 'metsis_search') {
+      \Drupal::logger('metsis_search')->debug("hook_metsis_search_view_pre_build");
+      //Check if reset query and reset boundingbox if so.
+      \Drupal::cache()->invalidate('metsis_search_map');
+      $request = \Drupal::request();
+      $query_from_request = $request->query->all();
+      //Check if operator op is set in query and op=Reset to reset boundingbox
+      if (isset($query_from_request['op'])) {
+          if ($query_from_request['op'] == "Reset") {
+              \Drupal::logger('metsis_search')->debug("Got reset event..resetting bbox");
+              $session = \Drupal::request()->getSession();
+              //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+              $session->remove('bboxFilter');
+              $session->remove('tllat');
+              $session->remove('tllon');
+              $session->remove('brlat');
+              $session->remove('brlon');
+              $session->remove('extracted_info');
+              $session->remove('proj');
+              $session->remove('gcmd');
+              $session->remove('keywords_level');
+              $session->set('keywords_level', 1);
+
+              \Drupal::cache()->invalidate('block:metsis_search_map');
+          }
+      }
+
     }
 }
 

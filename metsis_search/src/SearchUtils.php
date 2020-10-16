@@ -14,10 +14,111 @@ use Solarium\QueryType\Select\Result\Result;
 use Solarium\QueryType\Select\Result\Document;
 use Solarium\Core\Query\DocumentInterface;
 use Solarium\Core\Query\Result\ResultInterface;
+use Solarium\Component\Result\Facet\Pivot\PivotItem;
+use Solarium\Component\Result\Facet\Pivot\Pivot;
 
 class SearchUtils
 {
 
+  /**
+   * Called from  hook_search_api_solr_search_results_alter  in metsis_search.module
+   *
+   * Input param: Results from Solrarium query
+   * Output: facet render array for facet block
+   */
+  public static function processGcmdFacet($result_set)
+  {
+    // Get the request referer for go back button
+    $request = \Drupal::request();
+    $referer = $request->headers->get('referer');
+    $session = \Drupal::request()->getSession();
+    // display facet results
+    $facet = $result_set->getFacetSet()->getFacet('gcmd');
+
+
+    $list = [];
+    $markup = "";
+    foreach ($facet as $pivot) {
+        $markup .= SearchUtils::displayPivotFacet($pivot,$referer);
+    }
+
+
+    return $markup;
+
+/*
+    $keyw_level = $session->get('keyword_level');
+
+    $markup = '<div class="gcmdlist">';
+    $markup .= "<ul>";
+    $keywords = [];
+    foreach ($facet as $value => $count) {
+      $value = rtrim($value, ", ");
+        $lower = ucwords(strtolower($value));
+        $string =  str_replace("\n","",$lower);
+        $keywords[] =  $string;
+      }
+
+      $keys = array_unique($keywords);
+      foreach( $keys as $value) {
+
+        $param = str_replace(" ", "_", $value);
+        $item = '<li><a href="'. $referer . '&gcmd'.$keyw_level.'=' .$param.'">'.$value .'</a></li>';
+        \Drupal::logger('metsis_search_gcmd_proccess')->debug($item);
+        $markup .= $item;
+      }
+
+
+
+    $markup .= "<ul>";
+    $markup .= "</div>";
+    $session->set('gcmd'.$keyw_level, $markup);
+    return $markup;
+    */
+  }
+
+  /**
+   * Recursively render pivot facets
+   *
+   * @param $pivot
+   */
+  public static function displayPivotFacet($pivot,$referer)
+  {
+      //dpm($pivot.getValue());
+      if($pivot->getValue() != null) {
+      $markup = '<ul>';
+      $item = '<li><a href="'. $referer . '&' .$pivot->getField() .'=' .$pivot->getValue().'">'.$pivot->getValue() . '(' .$pivot->getCount() .')</a></li>';
+      //\Drupal::logger('metsis_search-pivot-facets')->debug($item);
+      $markup .= $item;
+      foreach ($pivot->getPivot() as $nextPivot) {
+          $markup .= SearchUtils::displayPivotFacet($nextPivot,$referer);
+      }
+      $markup .= '</ul>';
+      return $markup;
+    }
+
+  }
+
+  /**
+   * Recursively render facet facets
+   *
+   * @param $facet
+   */
+  public static function displayFacet($facet,$referer)
+  {
+      //dpm($facet.getValue());
+      if($facet->getValue() != null) {
+      $markup = '<ul>';
+      $item = '<li><a href="'. $referer . '&' .$facet->getField() .'=' .$facet->getValue().'">'.$facet->getValue() . '(' .$facet->getCount() .')</a></li>';
+      //\Drupal::logger('metsis_search-facet-facets')->debug($item);
+      $markup .= $item;
+     foreach ($pivot->getPivot() as $nextPivot) {
+          $markup .= SearchUtils::displayPivotFacet($nextPivot,$referer);
+      }
+      $markup .= '</ul>';
+      return $markup;
+    }
+
+  }
   /**
    * Called from  hook_search_api_solr_search_results_alter  in metsis_search.module
    *

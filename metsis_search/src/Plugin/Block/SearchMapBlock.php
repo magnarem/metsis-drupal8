@@ -44,6 +44,8 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         $tllon = "";
         $brlat = "";
         $brlon = "";
+        $proj = $session->get('proj');
+
         if ($bboxFilter != null) {
           $ttlat = $session->get('tllat');
           $tllon = $session->get('tllon');
@@ -54,7 +56,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
             $tllon = $tempstore->get('tllon');
             $brlat = $tempstore->get('brlat');
             $brlon = $tempstore->get('brlon'); */
-            \Drupal::logger('metsis_search')->debug("Got input filter vars: " .$tllat .','. $tllon .','.$brlat.','.$brlon);
+            \Drupal::logger('metsis_search_map_block')->debug("Got input filter vars: " .$tllat .','. $tllon .','.$brlat.','.$brlon);
         }
 
         //Get saved configuration
@@ -78,6 +80,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
         $extracted_info = $session->get('extracted_info');
 
+        if($proj != null) { $map_init_proj = $proj; }
         /**
          * Create the render array
          */
@@ -87,19 +90,24 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
          ];
         // search-map wrapper
         $build['search-map'] = [
-     '#prefix' => '<div id="map-res" class="map-res">',
-     '#suffix' => '</div>'
+          '#prefix' => '<div id="map-res" class="map-res">',
+          '#suffix' => '</div>'
     ];
 
+    // search-map wrapper
+    $build['search-map']['panel'] = [
+      '#prefix' => '<div id="panel" class="panel">',
+      '#suffix' => '</div>'
+];
 
     //Panel button
-    $build['search-map']['panel'] = [
+    $build['search-map']['panel']['bbox-filter'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="panel"><button id="testButton" class="adc-button adc-sbutton">Bbox Filter</button><div class="current-bbox-filter"></div></div>',
-      '#allowed_tags' => ['div','label','button'],
+      '#markup' => '<button id="bboxButton" class="adc-button adc-sbutton">Bbox Filter</button><div class="current-bbox-filter"></div><div class="current-bbox-select"',
+      '#allowed_tags' => ['div','label','button','br'],
     ];
 
-    $build['search-map']['layers'] = [
+    $build['search-map']['panel']['layers'] = [
       '#type' => 'markup',
       '#markup' => '<div class="layers-wrapper"></div>',
       '#allowed_tags' => ['div','label'],
@@ -121,17 +129,27 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
 
         //Set the cache for this form
         $build['#cache'] = [
-    'contexts' => [
-      'url.path',
-      'url.query_args',
-    ],
-    ];
+          //'max-age' => 0,
+         //'tags' =>$this->getCacheTags(),
+          'contexts' => [
+          //  'route',
+
+              'url.path',
+              'url.query_args',
+            ],
+          ];
 
         // Add CSS and JS libraries and drupalSettings JS variables
         $build['#attached'] = [
     'library' => [
     'metsis_search/search_map_block',
-    'metsis_lib/adc-button'
+    'metsis_lib/adc-button',
+    'metsis_ts_bokeh/style',
+    'metsis_ts_bokeh/bokeh_js',
+    'metsis_ts_bokeh/bokeh_widgets',
+    'metsis_ts_bokeh/bokeh_tables',
+    'metsis_ts_bokeh/bokeh_api',
+
     ],
     'drupalSettings' => [
     'metsis_search_map_block' => [
@@ -165,4 +183,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
 
         return $build;
     }
+    public function getCacheMaxAge() {
+    return 1;
 }
+  }

@@ -20,6 +20,7 @@ class MapSearchController extends ControllerBase {
       $tllon = $params['tllon'];
       $brlat = $params['brlat'];
       $brlon = $params['brlon'];
+      $proj = $params['proj'];
       \Drupal::logger('metsis_search_map_search_controller')->debug("Got boundingbox with ENVELOPE(" .  $tllon . ',' . $brlon . ',' . $tllat . ',' . $brlat . ')');
       $bboxFilter = 'ENVELOPE(' . $tllon . ',' . $brlon . ',' . $tllat . ',' . $brlat . ')';
 
@@ -29,6 +30,7 @@ class MapSearchController extends ControllerBase {
       $session->set('tllon', $tllon);
       $session->set('brlat', $brlat);
       $session->set('brlon', $brlon);
+      $session->set('proj', $proj);-
       /*
       $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
       $tempstore->set('bboxFilter', $bboxFilter);
@@ -53,8 +55,7 @@ class MapSearchController extends ControllerBase {
         $map_filter = $config->get('map_bbox_filter');
 
       $data = [
-        'drupalSettings' => [
-        'metsis_search' => [
+        'metsis_search_map_block' => [
           'mapLat' => $map_lat, //to be replaced with configuration variables
           'mapLon' => $map_lon, //to be replaced with configuration variables
           'mapZoom' => $map_zoom, //to be replaced with configuration variables
@@ -64,6 +65,7 @@ class MapSearchController extends ControllerBase {
           'tllon' => $tllon,
           'brlon' => $brlon,
           'brlat' => $brlat,
+          'proj' => $proj,
           'base_layer_wms_north' => $map_base_layer_wms_north,
           'base_layer_wms_south' => $map_base_layer_wms_south,
           'projections' => $map_projections,
@@ -71,8 +73,9 @@ class MapSearchController extends ControllerBase {
           'bboxFilter' => $bboxFilter,
           'mapFilter' => $map_filter,
         ],
-      ]];
+      ];
       $response = new AjaxResponse();
+      $response->addCommand(new SettingsCommand(['metsis_search_map_block' => []], TRUE));
       $response->addCommand(new SettingsCommand ($data, TRUE));
 
 

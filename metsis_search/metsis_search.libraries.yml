@@ -10,8 +10,10 @@ metadata_search_view:
     - core/drupal
     - core/drupalSettings
     - core/drupal.ajax
-#    - core/drupal.dialog
-#    - core/drupal.dialog.ajax
+    - core/drupal.dialog
+    - core/drupal.dialog.ajax
+    - core/jquery.form
+    - jquery_ui_draggable/draggable
 
 search_map:
   version: 1.0
