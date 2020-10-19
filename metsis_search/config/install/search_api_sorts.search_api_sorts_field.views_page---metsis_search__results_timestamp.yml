@@ -5,6 +5,6 @@ id: views_page---metsis_search__results_timestamp
 display_id: views_page---metsis_search__results
 field_identifier: timestamp
 default_sort: false
-default_order: asc
+default_order: desc
 label: Timestamp
 weight: 0

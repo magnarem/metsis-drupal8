@@ -8,7 +8,6 @@ dependencies:
     - user.role.anonymous
     - user.role.authenticated
   module:
-    - better_exposed_filters
     - search_api
     - user
     - views_fieldsets
@@ -43,57 +42,25 @@ display:
           bypass_access: 0
           preserve_facet_query_args: 1
       exposed_form:
-        type: bef
+        type: basic
         options:
           submit_button: Apply
           reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
+          expose_sort_order: false
           sort_asc_label: Asc
           sort_desc_label: Desc
-          text_input_required: 'Select any filter and click on Apply to see results'
-          text_input_required_format: basic_html
-          bef:
-            general:
-              autosubmit: false
-              autosubmit_exclude_textfield: false
-              autosubmit_textfield_delay: 500
-              autosubmit_hide: false
-              input_required: false
-              allow_secondary: true
-              secondary_label: 'Advanced options'
-              secondary_open: false
-            filter:
-              search_api_fulltext:
-                plugin_id: default
-                advanced:
-                  rewrite:
-                    filter_rewrite_values: ''
-                  collapsible: false
-                  is_secondary: false
-              temporal_extent_start_date:
-                plugin_id: bef_datepicker
-                advanced:
-                  collapsible: false
-                  is_secondary: true
-              temporal_extent_end_date:
-                plugin_id: bef_datepicker
-                advanced:
-                  collapsible: false
-                  is_secondary: true
       pager:
-        type: full
+        type: mini
         options:
-          items_per_page: 10
+          items_per_page: 15
           offset: 0
           id: 0
           total_pages: null
           tags:
             previous: ‹‹
             next: ››
-            first: '« First'
-            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -102,7 +69,6 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          quantity: 9
       style:
         type: html_list
         options:
@@ -189,7 +155,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<h1><a class=\"use-ajax\" \r\n    data-dialog-options=\"{&quot;width&quot;:400}\" \r\n    data-dialog-type=\"dialog\"\r\n    data-dialog-renderer=\"off_canvas\"\r\n    href=\"/metsis/metadata/{{ id}}\">{{ title}}</a></h1>"
+            text: "<h1><a class=\"use-ajax\" \r\n    data-dialog-options=\"{&quot;width&quot;:600, &quot;title&quot;:&quot;Metadata Details&quot;}\" \r\n    data-dialog-type=\"dialog\"\r\n    data-dialog-renderer=\"off_canvas\"\r\n    href=\"/metsis/metadata/{{ id}}\">{{ title}}</a></h1>"
             make_link: false
             path: ''
             absolute: false
@@ -276,11 +242,11 @@ display:
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
-          hide_empty: false
+          hide_empty: true
           empty_zero: false
           hide_alter_empty: true
           link_to_item: false
-          use_highlighting: false
+          use_highlighting: true
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
@@ -292,7 +258,7 @@ display:
           group_type: group
           admin_label: 'Project Long Name'
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -330,7 +296,7 @@ display:
           element_default_classes: true
           empty: ''
           hide_empty: true
-          empty_zero: false
+          empty_zero: true
           hide_alter_empty: true
           link_to_item: false
           use_highlighting: true
@@ -345,7 +311,7 @@ display:
           group_type: group
           admin_label: 'Project Short Name'
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -383,10 +349,10 @@ display:
           element_default_classes: true
           empty: ''
           hide_empty: true
-          empty_zero: false
+          empty_zero: true
           hide_alter_empty: true
           link_to_item: false
-          use_highlighting: false
+          use_highlighting: true
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
@@ -398,10 +364,10 @@ display:
           group_type: group
           admin_label: 'Aggregated Text Project Long and Short Name'
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: true
-            text: '{{ url(''<current>'') }}'
+            text: '<h4>{{ project_long_name }} ({{ project_short_name }})</h4>'
             make_link: false
             path: ''
             absolute: false
@@ -439,13 +405,66 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: custom
+        last_metadata_update_datetime:
+          id: last_metadata_update_datetime
+          table: search_api_index_drupal8
+          field: last_metadata_update_datetime
+          relationship: none
+          group_type: group
+          admin_label: 'Last Metadata Update'
+          label: 'Last metadata update'
+          exclude: false
+          alter:
+            alter_text: true
+            text: '{{last_metadata_update_datetime | date(''U'') | format_date(''short'') }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: strong
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_item: false
+          use_highlighting: false
+          multi_type: separator
+          multi_separator: ', '
+          plugin_id: search_api
         fieldset_1:
           id: fieldset_1
           table: views
           field: fieldset
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Temporal extent'
           label: ''
           exclude: false
           alter:
@@ -490,6 +509,7 @@ display:
           fields:
             - temporal_extent_start_date
             - temporal_extent_end_date
+            - nothing_8
           wrapper: fieldset
           legend: 'Temporal Extent'
           classes: ''
@@ -502,7 +522,7 @@ display:
           field: temporal_extent_start_date
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'temporal extent start date'
           label: 'Start date'
           exclude: false
           alter:
@@ -555,7 +575,7 @@ display:
           field: temporal_extent_end_date
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'temporal extent end date'
           label: 'End date'
           exclude: false
           alter:
@@ -602,18 +622,18 @@ display:
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
-        last_metadata_update_datetime:
-          id: last_metadata_update_datetime
-          table: search_api_index_drupal8
-          field: last_metadata_update_datetime
+        nothing_8:
+          id: nothing_8
+          table: views
+          field: nothing
           relationship: none
           group_type: group
-          admin_label: 'Last Metadata Update'
+          admin_label: 'Temporal extent aggregated'
           label: ''
           exclude: true
           alter:
             alter_text: true
-            text: '<strong>Last Updated</strong>: {{last_metadata_update_datetime | date(''U'') | format_date(''short'') }}'
+            text: '{{ temporal_extent_start_date }} to {{ temporal_extent_end_date }}'
             make_link: false
             path: ''
             absolute: false
@@ -649,12 +669,8 @@ display:
           empty: ''
           hide_empty: false
           empty_zero: false
-          hide_alter_empty: true
-          link_to_item: false
-          use_highlighting: false
-          multi_type: separator
-          multi_separator: ', '
-          plugin_id: search_api
+          hide_alter_empty: false
+          plugin_id: custom
         search_api_excerpt:
           id: search_api_excerpt
           table: search_api_index_drupal8
@@ -702,12 +718,68 @@ display:
           empty: ''
           hide_empty: false
           empty_zero: false
-          hide_alter_empty: true
+          hide_alter_empty: false
           link_to_item: false
           use_highlighting: true
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
+        fieldset_2:
+          id: fieldset_2
+          table: views
+          field: fieldset
+          relationship: none
+          group_type: group
+          admin_label: 'Show more'
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          fields:
+            - abstract
+          wrapper: details
+          legend: 'Show more...'
+          classes: ''
+          collapsible: 1
+          collapsed: 1
+          plugin_id: fieldset
         abstract:
           id: abstract
           table: search_api_index_drupal8
@@ -746,11 +818,11 @@ display:
             html: false
           element_type: em
           element_class: abstract-field
-          element_label_type: h2
+          element_label_type: h3
           element_label_class: abstract-label
           element_label_colon: true
-          element_wrapper_type: span
-          element_wrapper_class: abstract
+          element_wrapper_type: ''
+          element_wrapper_class: ''
           element_default_classes: true
           empty: ''
           hide_empty: false
@@ -763,18 +835,18 @@ display:
           entity_type: null
           entity_field: null
           plugin_id: search_api
-        related_url_landing_page:
-          id: related_url_landing_page
+        related_url_landing_page_desc:
+          id: related_url_landing_page_desc
           table: search_api_index_drupal8
-          field: related_url_landing_page
+          field: related_url_landing_page_desc
           relationship: none
           group_type: group
-          admin_label: 'Landing page'
+          admin_label: 'landing page desc'
           label: ''
-          exclude: false
+          exclude: true
           alter:
-            alter_text: true
-            text: '<a href="{ related_url_landing_page }} ">Dataset Landing Page</a>'
+            alter_text: false
+            text: ''
             make_link: false
             path: ''
             absolute: false
@@ -816,6 +888,59 @@ display:
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
+        related_url_landing_page:
+          id: related_url_landing_page
+          table: search_api_index_drupal8
+          field: related_url_landing_page
+          relationship: none
+          group_type: group
+          admin_label: 'Landing page'
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: '<a href="{{ related_url_landing_page }}">Dataset Landing Page</a>'
+            make_link: true
+            path: '{{ related_url_landing_page }}'
+            absolute: false
+            external: true
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: '{{ related_url_landing_page_desc }}'
+            rel: ''
+            link_class: ''
+            prefix: 'Dataset Landing page'
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_item: false
+          use_highlighting: false
+          multi_type: separator
+          multi_separator: ', '
+          plugin_id: search_api
         thumbnail_data:
           id: thumbnail_data
           table: search_api_index_drupal8
@@ -827,7 +952,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"media media--blazy media--loading media--image\">\r\n<a\r\nhref=\"/metsis/map/wms?dataset={{ id}}\"><img  class=\"b-lazy media__image media__element img-responsive\" alt=\"Embedded Thumbnail\" data-src={{thumbnail_data}}\r\n src=\"/modules/metsis/metsis_search/images/Blank.gif\" typeof=\"Image\"/>\r\n</a></div>"
+            text: "<div class=\"media media--blazy media--loading media--image\">\r\n<a \r\nhref=\"/metsis/map/wms?dataset={{ id}}\" >\r\n<img  class=\"b-lazy media__image media__element img-responsive\" alt=\"Embedded Thumbnail\" data-src={{thumbnail_data}}\r\n src=\"/modules/metsis/metsis_search/images/Blank.gif\" typeof=\"Image\"/>\r\n</a></div>"
             make_link: false
             path: ''
             absolute: false
@@ -1032,6 +1157,112 @@ display:
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
+        ss_access:
+          id: ss_access
+          table: search_api_index_drupal8
+          field: ss_access
+          relationship: none
+          group_type: group
+          admin_label: 'Access Constraint'
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_item: false
+          use_highlighting: false
+          multi_type: separator
+          multi_separator: ', '
+          plugin_id: search_api
+        data_access_url_ogc_wms:
+          id: data_access_url_ogc_wms
+          table: search_api_index_drupal8
+          field: data_access_url_ogc_wms
+          relationship: none
+          group_type: group
+          admin_label: ogc_wms
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_item: false
+          use_highlighting: false
+          multi_type: separator
+          multi_separator: ', '
+          plugin_id: search_api
         fieldset:
           id: fieldset
           table: views
@@ -1082,13 +1313,17 @@ display:
           hide_alter_empty: true
           fields:
             - nothing_2
-            - nothing_1
             - nothing_3
+            - nothing_6
             - nothing_4
             - data_access_url_http
+            - nothing_5
+            - data_access_url_odata
+            - nothing_7
+            - nothing_1
           wrapper: fieldset
-          legend: ''
-          classes: inline
+          legend: 'Access: {{ ss_access }}'
+          classes: datasetOps
           collapsible: 1
           collapsed: 0
           plugin_id: fieldset
@@ -1103,7 +1338,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div id=\"basket\" class=\"basket ajax-wrapper\">\r\n<a id=\"addtobasket\" class=\"button button--small\" href=/metsis/basket/{{id}}>Add to Basket</a>\r\n</div>"
+            text: "<div id=\"basket\" class=\"basket\">\r\n<a id=\"addtobasket-{{ id }}\" class=\"adc-button adc-sbutton use-ajax\" href=/metsis/basket/add/{{id}}>Add to Basket</a>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -1135,55 +1370,6 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: inline
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: false
-          plugin_id: custom
-        nothing_1:
-          id: nothing_1
-          table: views
-          field: nothing
-          relationship: none
-          group_type: group
-          admin_label: Children
-          label: ''
-          exclude: false
-          alter:
-            alter_text: true
-            text: "<div id=\"metachild\" class=\"metachild\" data-id={{ id }} isparent={{ is_parent }}>\r\n<a id=\"metachildlink\" class=\"visually-hidden button button--small\" href=/metsis/elements/{{ id }}/search></a>\r\n</div>"
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: 'ajax-wrapper metachild-wrapper inline'
           element_default_classes: true
           empty: ''
           hide_empty: false
@@ -1201,7 +1387,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "{% if  data_access_url_opendap %}\r\n  {% if feature_type != 'timeSeries' or feature_type != 'profile' %}\r\n<div id=\"transform\" class=\"transform\">\r\n  <a class=\"button button--small\" href=/metsis/fimex/{{ id }} >Transform</a>\r\n</div>\r\n  {% endif %}\r\n{% endif %}"
+            text: "{% if  data_access_url_opendap %}\r\n  {% if feature_type != 'timeSeries' or feature_type != 'profile' %}\r\n<div id=\"transform\" class=\"transform\">\r\n  <a class=\"adc-button adc-sbutton\" href=/metsis/fimex?dataset_id={{ id }} >Transform</a>\r\n</div>\r\n  {% endif %}\r\n{% endif %}"
             make_link: false
             path: ''
             absolute: false
@@ -1239,6 +1425,55 @@ display:
           empty_zero: false
           hide_alter_empty: false
           plugin_id: custom
+        nothing_6:
+          id: nothing_6
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: Visualise
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{% if data_access_url_ogc_wms %} \r\n<div id=\"visualise\" class=\"visualise\">\r\n  <a class=\"adc-button adc-sbutton\" href=\"/metsis/map/wms?dataset={{ id }}\">Visualise</a>\r\n</div>\r\n{% endif %}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
         nothing_4:
           id: nothing_4
           table: views
@@ -1250,7 +1485,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "{% if  data_access_url_opendap %}\r\n  {% if feature_type == 'timeSeries' or feature_type == 'profile' %}\r\n<div id=\"transform\" class=\"transform\">\r\n  <a class=\"button button--small\" href=/metsis/fimex/{{ id }} >Visualise TimeSeries</a>\r\n</div>\r\n  {% endif %}\r\n{% endif %}"
+            text: "{% if  data_access_url_opendap %}\r\n  {% if feature_type == 'timeSeries' or feature_type == 'profile' %}\r\n<div id=\"viusalise-ts\" class=\"viusalise-ts\">\r\n  <a class=\"adc-button adc-sbutton use-ajax\" \r\n  data-dialog-options=\"{&quot;width&quot;:800, &quot;height&quot;:800,  &quot;draggable&quot;:true}\"  \r\n    data-dialog-type=\"dialog\" \r\n\r\nhref=\"/metsis/bokeh/plot?opendap_urls={{ data_access_url_opendap }}\" >Visualise TimeSeries</a>\r\n</div>\r\n  {% endif %}\r\n{% endif %}"
             make_link: false
             path: ''
             absolute: false
@@ -1299,7 +1534,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<a class=button button--small inline" href={{ data_access_url_http }}>Download</a>'
+            text: '<a class="adc-button adc-sbutton inline" href={{ data_access_url_http }}>Download data</a>'
             make_link: false
             path: ''
             absolute: false
@@ -1341,6 +1576,206 @@ display:
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
+        nothing_5:
+          id: nothing_5
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: 'OPeNDAP download'
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{% if  data_access_url_opendap %}\r\n<a class=\"adc-button adc-sbutton\" href=\"{{ data_access_url_opendap }}.html\">OPeNDAP</a>\r\n{% endif %}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: true
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: custom
+        data_access_url_odata:
+          id: data_access_url_odata
+          table: search_api_index_drupal8
+          field: data_access_url_odata
+          relationship: none
+          group_type: group
+          admin_label: 'ODATA Download'
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: '<a class="adc-button adc-sbutton inline" href={{ data_access_url_odata }}>Download SAFE product</a>'
+            make_link: false
+            path: ''
+            absolute: false
+            external: true
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_item: false
+          use_highlighting: false
+          multi_type: separator
+          multi_separator: ', '
+          plugin_id: search_api
+        nothing_7:
+          id: nothing_7
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: 'Download ASCII'
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{% if  data_access_url_opendap %}\r\n  {% if feature_type == 'timeSeries' or feature_type == 'profile' %}\r\n<div id=\"download-csv\" class=\"download-csv\">\r\n  <a class=\"adc-button adc-sbutton\" href=\"/metsis/bokeh/csv?opendap_urls={{ data_access_url_opendap }}\" >Download as ASCII</a>\r\n</div>\r\n  {% endif %}\r\n{% endif %}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: true
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: custom
+        nothing_1:
+          id: nothing_1
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: Children
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "<div id=\"metachild\" class=\"metachild\" data-id={{ id }} isparent={{ is_parent }}>\r\n<a id=\"metachildlink\" class=\"visually-hidden adc-button adc-sbutton\" href=/metsis/elements/{{ id }}/search></a>\r\n</div>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: 'ajax-wrapper metachild-wrapper inline'
+          element_default_classes: true
+          empty: ''
+          hide_empty: true
+          empty_zero: true
+          hide_alter_empty: true
+          plugin_id: custom
       filters:
         search_api_fulltext:
           id: search_api_fulltext
@@ -1363,12 +1798,12 @@ display:
             operator_list: {  }
             identifier: fulltext
             required: false
-            remember: false
+            remember: true
             multiple: true
             remember_roles:
               authenticated: authenticated
+              administrator: administrator
               anonymous: '0'
-              administrator: '0'
             placeholder: 'Enter your search here'
           is_grouped: false
           group_info:
@@ -1496,7 +1931,7 @@ display:
           expose:
             label: ''
           plugin_id: search_api
-      title: ''
+      title: 'Metadata Search'
       header:
         result:
           id: result
@@ -1551,7 +1986,9 @@ display:
         menu_name: main
       exposed_block: true
       defaults:
-        cache: true
+        cache: false
+      cache:
+        type: none
     cache_metadata:
       max-age: -1
       contexts:

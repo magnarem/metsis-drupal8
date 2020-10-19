@@ -142,6 +142,14 @@ function metsis_search_views_query_alter(ViewExecutable $view, QueryPluginBase $
     }
 }
 
+function metsis_search_views_data_alter(ViewExecutable $view)
+{
+    if ($view->id() == 'metsis_search') {
+      dpm($view);
+        //Do something withe the veiws query here
+    }
+}
+
 function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInterface $solarium_query, \Drupal\search_api\Query\QueryInterface $query)
 {
       \Drupal::cache()->invalidate('metsis_search_map');

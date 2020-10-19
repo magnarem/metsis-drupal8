@@ -18,7 +18,7 @@ widget:
   type: links
   config:
     show_numbers: true
-    soft_limit: 15
+    soft_limit: 10
     soft_limit_settings:
       show_less_label: 'Show less'
       show_more_label: 'Show more'
@@ -29,7 +29,7 @@ query_operator: and
 use_hierarchy: false
 expand_hierarchy: false
 enable_parent_when_child_gets_disabled: true
-hard_limit: 75
+hard_limit: 30
 exclude: false
 only_visible_when_facet_source_is_visible: true
 processor_configs:

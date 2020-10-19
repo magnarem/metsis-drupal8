@@ -33,11 +33,11 @@ backend_config:
   connector: standard
   connector_config:
     scheme: http
-    host: localhost
+    host: 157.249.178.165
     port: 8983
     path: /
-    core: drupal8
-    timeout: 5
+    core: adc-d8-dev
+    timeout: 10
     index_timeout: 5
     optimize_timeout: 10
     finalize_timeout: 30

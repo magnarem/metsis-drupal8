@@ -19,15 +19,10 @@ suggester_settings:
     search_api_solr/site_hash: 1
     search_api/index: drupal8
     drupal/langcode: any
-  search_api_solr_terms:
-    fields:
-      - full_text
 suggester_weights:
   server: -49
-  search_api_solr_suggester: -47
-  search_api_solr_terms: -46
-suggester_limits:
-  search_api_solr_terms: 5
+  search_api_solr_suggester: 0
+suggester_limits: {  }
 search_settings:
   'views:metsis_search':
     displays:
@@ -35,8 +30,8 @@ search_settings:
       selected: {  }
 options:
   limit: 10
-  min_length: 1
+  min_length: 3
   show_count: false
   autosubmit: true
   submit_button_selector: ':submit'
-  delay: 500
+  delay: 350
