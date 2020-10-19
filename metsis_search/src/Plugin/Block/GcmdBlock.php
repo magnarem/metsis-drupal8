@@ -36,14 +36,20 @@ class GcmdBlock extends BlockBase implements BlockPluginInterface {
       $session = \Drupal::request()->getSession();
       $list = $session->get('gcmd');
     return [
+      '#prefix' => '<div id="gcmdList" class="gcmd-list">',
       '#markup' => $list,
+      '#suffix' => '</div>',
       '#cache' => [
       'contexts' => [
         'url.path',
         'url.query_args',
       ],
       ],
-
+      '#attached' => [
+      'library' => [
+      'metsis_search/gcmd_list',
+    ],
+  ],
     ];
 
   }

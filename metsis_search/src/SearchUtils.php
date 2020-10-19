@@ -87,6 +87,7 @@ class SearchUtils
       if($pivot->getValue() != null) {
       $markup = '<ul>';
       $item = '<li><a href="'. $referer . '&' .$pivot->getField() .'=' .$pivot->getValue().'">'.$pivot->getValue() . '(' .$pivot->getCount() .')</a></li>';
+      $item = '<li><a>'. $pivot->getValue() . '(' .$pivot->getCount() .')</a></li>';
       //\Drupal::logger('metsis_search-pivot-facets')->debug($item);
       $markup .= $item;
       foreach ($pivot->getPivot() as $nextPivot) {

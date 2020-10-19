@@ -103,7 +103,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
     //Panel button
     $build['search-map']['panel']['bbox-filter'] = [
       '#type' => 'markup',
-      '#markup' => '<button id="bboxButton" class="adc-button adc-sbutton">Bbox Filter</button><div class="current-bbox-filter"></div><div class="current-bbox-select"',
+      '#markup' => '<button id="bboxButton" class="adc-button adc-sbutton">Bbox Filter</button><div class="current-bbox-filter"></div><div class="current-bbox-select"</div>',
       '#allowed_tags' => ['div','label','button','br'],
     ];
 

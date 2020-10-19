@@ -230,11 +230,11 @@ function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInt
      // create two facet pivot instances
      //PIVOT FACETS ARE SLOW maybe beause of cluttered data trying other approch for NoRewindIterator
 
-     $facet = $facetSet->createFacetPivot('gcmd');
-     $facet->addFields('keywords_level1, keywords_level2, keywords_level3, keywords_level4');
+     //$facet = $facetSet->createFacetPivot('gcmd');
+     //$facet->addFields('keywords_level1, keywords_level2, keywords_level3');
      //$facet->addFields('keywords_level1, keywords_level2, keywords_level3, keywords_level4, keywords_level5, keywords_level6, keywords_level7, ');
-     $facet->setLimit(5);
-     $facet->setMinCount(1);
+     //$facet->setLimit(5);
+     //$facet->setMinCount(1);
 
 
     //$facetSet->createFacetField('gcmd')->setField('keywords_level1'); //->setLimit(10);
@@ -253,8 +253,8 @@ function metsis_search_search_api_solr_search_results_alter(
     //Extract some info for the search map from the solr result
     $extracted_info = SearchUtils::getExtractedInfo($result);
 
-    $gcmd_facet = SearchUtils::processGcmdFacet($result);
-    $session->set('gcmd', $gcmd_facet);
+    //$gcmd_facet = SearchUtils::processGcmdFacet($result);
+    //$session->set('gcmd', $gcmd_facet);
     //dpm($gcmd_facet);
     //add the extracted info to the tempstore
     //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
