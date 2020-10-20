@@ -46,14 +46,14 @@ class MetsisTsBokehInitForm extends FormBase {
     /*
      * Clean up tempstore
      */
-    $tempstore = \Drupal::service('tempstore.private')->get('metsis_ts_bokeh');
-    $tempstore->delete('data_uri');
-    $tempstore->delete('yaxis');
-    $tempstore->delete('isinit');
+    $session = \Drupal::request()->getSession();
+    $session->remove('data_uri');
+    $session->remove('yaxis');
+    $session->remove('isinit');
     /*
      * Add helper variable to check for init
      */
-    $tempstore->set('isinit', true);
+    $session->set('isinit', true);
 
 
     /*
@@ -98,8 +98,8 @@ class MetsisTsBokehInitForm extends FormBase {
    * Redirect init form to plot
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $tempstore = \Drupal::service('tempstore.private')->get('metsis_ts_bokeh');
-    $tempstore->set('data_uri', $form_state->getValue('data_uri'));
+    $session = \Drupal::request()->getSession();
+    $session->set('data_uri', $form_state->getValue('data_uri'));
     $form_state->setRedirect('metsis_ts_bokeh.formplot');
   }
 }

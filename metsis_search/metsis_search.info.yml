@@ -15,3 +15,15 @@ dependencies:
   - facets
   - system
   - metsis_search
+  - twig_tweak
+  - twig_views
+  - data_popup
+  - search_api_sorts
+  - blazy
+  - lazy
+  - metsis_lib
+  - metsis_wms
+  - metsis_basket
+  - metsis_ts_bokeh
+  - metsis_csv_bokeh
+  - back_to_top

@@ -52,11 +52,11 @@ class MetsisTsBokehPlotForm extends FormBase {
    *
    * {@inheritdoc}
    */
-  $tempstore = \Drupal::service('tempstore.private')->get('metsis_ts_bokeh');
-  //$data_uri = $tempstore->get('metsis_ts_bokeh')->get('data_uri');
-  //$items = $tempstore->get('items');
+   $session = \Drupal::request()->getSession();
+  //$data_uri = $session->get('metsis_ts_bokeh')->get('data_uri');
+  //$items = $session->get('items');
   \Drupal::logger('metsis_ts_bokeh')->debug('buildForm: yaxis form_state is: ' . $form_state->getValue('y_axis'));
-  $isinit = $tempstore->get('isinit');
+  $isinit = $session->get('isinit');
 
 // Get the request referer for go back button
   $request = \Drupal::request();
@@ -69,7 +69,7 @@ class MetsisTsBokehPlotForm extends FormBase {
    $query_from_request = \Drupal::request()->query->all();
    $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
    if(isset($query['opendap_urls'])) {
-     $tempstore->set('data_uri', $query['opendap_urls']);
+     $session->set('data_uri', $query['opendap_urls']);
    }
 
 
@@ -139,7 +139,7 @@ $form['items'] = [
 
 
 
-  $tempstore->set('isinit', false);
+  $session->set('isinit', false);
 
   //Add go back putton
   /* Commented out since we use dialog
@@ -174,8 +174,8 @@ $form['items'] = [
   public function getPlotData(array $form, FormStateInterface $form_state) {
     \Drupal::logger('metsis_ts_bokeh')->debug('Ajax callback y-axis: ' . $form_state->getValue('y_axis'));
     //Get data resource url from tempstore
-     $tempstore = \Drupal::service('tempstore.private')->get('metsis_ts_bokeh');
-     $data_uri = $tempstore->get('data_uri');
+    $session = \Drupal::request()->getSession();
+     $data_uri = $session->get('data_uri');
 
     //Get plot json data
     $items = adc_get_ts_bokeh_plot($data_uri, $form_state->getValue('y_axis'));

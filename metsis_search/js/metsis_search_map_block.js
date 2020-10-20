@@ -389,16 +389,48 @@
 
         // clickable ID in tooltop
         var infoMapRes = document.createElement("div");
-        infoMapRes.setAttribute("id", "info-map-res")
+        infoMapRes.setAttribute("id", "info-map-res");
         document.getElementById("map-res").appendChild(infoMapRes);
         infoMapRes.innerHTML = 'Interact directly with selected products from the map by clicking on the highlighted features. Select products from the table below to store them in your basket';
 
         // clickable ID in tooltop
         var tlpMapRes = document.createElement("div");
-        tlpMapRes.setAttribute("id", "tlp-map-res")
+        tlpMapRes.setAttribute("id", "tlp-map-res");
         document.getElementById("map-res").appendChild(tlpMapRes);
 
         var toolclickevent;
+        var toolclickevent_new;
+
+        function tooltipclick_new(evt) {
+          //overlay.setPosition([coordinate[0] + coordinate[0] * 20 / 100, coordinate[1] + coordinate[1] * 20 / 100]);
+        $('.datasets-row').css('display', 'none');
+        console.log('tooltiptipclick new event');
+        var feature_ids = [];
+        map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+          //feature_ids.push(feature.get('id'));
+          //alert(feature.get('id'));
+          //string = '.'+feature.get('id');
+          //alert(string);
+          id = feature.get('id');
+          newId = id.replace(/_/g,"-");
+          //alert(newId);
+          $('.datasets-'+newId).css('display', 'block');
+          //$('._'+newId).css('display', 'block');
+          //$('.'+newId).focus();
+
+          // $(feature.get('id')).each(function() {
+             //$(this).css('display', 'block');
+           //});
+      });
+      var bLazy = new Blazy();
+      bLazy.revalidate();
+       //for (let i = 0; i < feature_ids.length; i++) {
+         //alert(feature_ids[i]);
+         //$('.'+feature_ids[i]).removeClass(['hidden']);
+         //$('.'+feature_ids[i]).css('display', 'block');
+       //}
+       //$(feature_ids).css('display', 'block');
+      }
 
         function tooltipclick(evt) {
         console.log('tooltiptipclick event');
@@ -580,6 +612,13 @@
           map.on('click',tooltipclick);
         }
 
+        function id_tooltip_new() {
+          //var tooltip = document.getElementById('tlp-map-res');
+          console.log('inside id_tooltip_new');
+
+          map.on('click',tooltipclick_new);
+        }
+
         //build up the point/polygon features
         function buildFeatures(prj) {
 
@@ -717,7 +756,8 @@
 
         // display clickable ID in tooltip
         console.log('calling id_tooltip');
-        id_tooltip()
+        //id_tooltip()
+        id_tooltip_new()
         id_tooltip_h()
         addExtraLayers(init_proj)
 
@@ -743,8 +783,8 @@
   //        var brlon;
 
           // clear pins and polygons
-          //map.getLayers().getArray()[2].getSource().clear(true);
-          //map.getLayers().getArray()[1].getSource().clear(true);
+          map.getLayers().getArray()[2].getSource().clear(true);
+          map.getLayers().getArray()[1].getSource().clear(true);
 
           //clear id_tooltip
           //map.un('click', function tooltipclick(evt) {});
@@ -768,42 +808,7 @@
           build_draw(prj)
 
         });
-/**
-        function fetch_ts_variables(url_o, md_ts_id) {
-          fetch('https://ncapi.adc-ncplot.met.no/ncplot/plot?get=param&resource_url='+url_o)
-          .then(response => response.json())
-          .then(data => {
-            //clear options
-            document.getElementById("axis").value = Object.keys(data);
-            var opts = document.getElementById(md_ts_id).children['var_list'];
-            var length = opts.options.length;
-            for (i = length-1; i > 0; i--) {
-               opts.options[i] = null;
-            }
-            for (const variable of data[Object.keys(data)]) {
-              var el = document.createElement("option");
-              el.textContent = variable;
-              el.value = variable;
-              document.getElementById(md_ts_id).children[0].appendChild(el);
-            }
-          });
-        }
 
-        function plot_ts(url_o, md_ts_id) {
-          let loader =  '<img class="ts-plot-loader" src="/'+path+'/icons/loader.gif">';
-          document.getElementById(md_ts_id).children['tsplot'].innerHTML = loader;
-          var variable = document.getElementById(md_ts_id).children['var_list'].value;
-          fetch('https://ncapi.adc-ncplot.met.no/ncplot/plot?get=plot&resource_url='+url_o+'&variable='+variable+'&axis='+document.getElementById("axis").value)
-          .then(function (response) {
-              return response.json();
-          })
-          .then(function (item) {
-              item.target_id = document.getElementById(md_ts_id).children['tsplot'].id;
-              Bokeh.embed.embed_item(item);
-              document.getElementById(md_ts_id).children['tsplot'].innerHTML = '';
-          })
-        }
-*/
         function build_draw(proj) {
 
             // Add drawing vector source
@@ -895,7 +900,7 @@
             topLeft[0] = bottomRight[0];
             bottomRight[0] = topLeftCopy;
           }
-          console.log(proj); + proj
+          //console.log(proj); + proj
           //jQuery(tllat).attr('value', topLeft[1]);
           //jQuery(tllon).attr('value', topLeft[0]);
           //jQuery(brlat).attr('value', bottomRight[1]);
@@ -906,11 +911,7 @@
           console.log('calling controller url: ' + myurl);
           data = Drupal.ajax({ url: myurl,
             async: false }).execute();
-/*
-          $.ajax({
-            url: myurl
-          });
-          */
+
           $(document).ajaxComplete(function(event, xhr, settings) {
             console.log('ajax complete:'+drupalSettings.metsis_search_map_block.bboxFilter);
              var bboxFilter = drupalSettings.metsis_search_map_block.bboxFilter;
