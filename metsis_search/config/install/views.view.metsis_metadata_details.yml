@@ -6,6 +6,10 @@ dependencies:
   module:
     - search_api
     - views_fieldsets
+    - metsis_search
+  enforced:
+    module:
+      - metsis_search
 id: metsis_metadata_details
 label: 'Metsis Metadata Details'
 module: views

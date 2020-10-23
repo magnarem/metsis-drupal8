@@ -3,13 +3,13 @@
 box-shadow: 0px 0px 6px 6px rgba(49,65,95,0.22);
 background: #FAF8F8;
 }
-
+/*
 .numberOfResults {
 text-shadow: 2px 2px 4px rgba(26,121,54,0.2), 2px 2px 4px rgba(26,121,54,0.2);
 color: #FFFFFF;
 background: #10CF1B;
 }
-
+*/
 /*
  * Order buttons inline and wrap in fieldset
 */
@@ -29,7 +29,26 @@ ul.js-facets-checkbox-links {
 /*
  * Display checkbox labels inline for facets
  * TODO: NOT WORKING
- */
+
   label {
     display: inline-block;
+}
+*/
+/* Add marking of highlighted words */
+em strong {
+  background-color: #ffff00;
+}
+
+/* Do some show/hide  and styling on gcmd/keywords_facets */
+/*
+section#block-gcmdkeywords h2, li {
+  display: none;
+}
+section#block-gcmdkeywords li.is-active {
+  display: block;
+  flex-wrap: wrap;
+}
+*/
+a:hover {
+    text-decoration: underline;
 }

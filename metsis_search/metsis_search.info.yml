@@ -17,7 +17,7 @@ dependencies:
   - metsis_search
   - twig_tweak
   - twig_views
-  - data_popup
+  - date_popup
   - search_api_sorts
   - blazy
   - lazy
@@ -27,3 +27,4 @@ dependencies:
   - metsis_ts_bokeh
   - metsis_csv_bokeh
   - back_to_top
+  - extlink

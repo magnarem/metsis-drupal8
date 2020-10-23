@@ -1,7 +1,7 @@
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.metsisMapSearch = {
     attach: function (context, drupalSettings) {
-      $('.map-search', context).once('metsisMapSearch').each(function() {
+      $('#map-search', context).once('metsisMapSearch').each(function() {
 //  $(document).ready(function() {
     var lat = drupalSettings.metsis_search.mapLat;
     var lon = drupalSettings.metsis_search.mapLon;
@@ -17,8 +17,102 @@
     var brlon = drupalSettings.metsis_search.brlon;
     var base_layer_wms_north = drupalSettings.metsis_search.base_layer_wms_north;
     var base_layer_wms_south = drupalSettings.metsis_search.base_layer_wms_south;
+    var projections = drupalSettings.metsis_search.projections;
+    var layers_list = drupalSettings.metsis_search.layers_list;
 
     console.log("Start of searchmap.js script: "+additional_layers);
+    // Create the projections input boxes
+    for (var key in projections) {
+      var value = projections[key];
+      $('.proj-wrapper').append(
+        $(document.createElement('input')).prop({
+          id: key,
+          name: 'map-res-projection',
+          value: key,
+          type: 'radio',
+          class: 'projections'
+        })
+      ).append(
+        $(document.createElement('label')).prop({
+          class: "proj-labels",
+          for: key
+        }).html(value)
+      );
+    }
+    // Do some styling
+    $('.proj-labels').css({
+      "display": "inline-block",
+      "font-weight": "normal",
+      "padding-right": "10px",
+      "vertical-align": "middle"
+    });
+    $('.projections').css({
+      "padding-left": "10px",
+      "padding-right": "0px",
+      "vertical-align": "middle"
+    });
+
+    //If additional lyers are set, create the layers dropdown button list
+    if (additional_layers) {
+      console.log('Creating additonal layers dropdown  button');
+      $('.layers-wrapper').append(
+        $(document.createElement('div')).prop({
+          id: 'droplayers',
+          class: 'layers'
+        }));
+      $('#droplayers').append(
+        $(document.createElement('button')).prop({
+          class: 'layers-button',
+          onclick: "document.getElementById('lrs').classList.toggle('show')",
+        }).html('Layers'));
+      $('#droplayers').append(
+        $(document.createElement('div')).prop({
+          id: "lrs",
+          class: "panel dropdown-lrs-content",
+        }));
+      $('#lrs').append(
+        $(document.createElement('ul')).prop({
+          id: "lrslist"
+        }));
+
+      for (var key in layers_list) {
+        var value = layers_list[key];
+        $('#lrslist').append(
+          $(document.createElement('li')).prop({
+            class: 'addl'
+          })
+          .append(
+            $(document.createElement('input')).prop({
+              id: value,
+              class: 'check-layers',
+              type: 'checkbox',
+              value: value,
+              name: "layers"
+            }))
+          .append(
+            $(document.createElement('label')).prop({
+              class: "layer-labels",
+              for: value
+            }).html(value))
+        );
+      }
+      //Add event listener to layers button
+      $(".layers-button").click(function() {
+        document.getElementById('lrs').classList.toggle('show');
+      });
+      //Do some styling
+      $('.layer-labels').css({
+        "display": "inline-block",
+        "font-weight": "normal",
+        "padding-right": "10px",
+        "vertical-align": "middle"
+      });
+      $('.check-layers').css({
+        "vertical-align": "middle",
+        "padding-right": "5px",
+      });
+
+    }
 
     // 32661
     proj4.defs('EPSG:32661', '+proj=stere +lat_0=90 +lat_ts=90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs');

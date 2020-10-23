@@ -178,6 +178,9 @@ class WmsController extends ControllerBase
         //Get the referer uri
         $request = \Drupal::request();
         $referer = $request->headers->get('referer');
+        //Get the module path
+        $module_handler = \Drupal::service('module_handler');
+        $module_path = $module_handler->getModule('metsis_search')->getPath();
 
         $string = <<<EOM
       <div class="ajax">
@@ -204,6 +207,7 @@ class WmsController extends ControllerBase
                         ],
                        productSelect: $wms_product_select});
         });
+
   <!--  }); -->
 
     </script>

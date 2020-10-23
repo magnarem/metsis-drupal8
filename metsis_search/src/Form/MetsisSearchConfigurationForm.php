@@ -13,6 +13,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
+use Drupal\metsis_search\SearchUtils;
 
 /*
  *  * Class ConfigurationForm.
@@ -45,6 +46,17 @@ class MetsisSearchConfigurationForm extends ConfigFormBase {
     $config = $this->config('metsis_search.settings');
     //$form = array();
 
+    //Get a list of collections
+    $collections =  SearchUtils::getCollections();
+    //dpm($collections);
+    $form['collections'] = [
+      '#title' => t('Select which collections to include in search'),
+      '#type' => 'select',
+      //'#header' => ['Collection'],
+      '#options' => $collections,
+      '#multiple' => TRUE,
+      '#default_value' => $config->get('selected_collections'),
+    ];
     $form['lp_button_var'] = [
       '#type' => 'select',
       '#title' => t('Select variable for Landing Page button text'),
@@ -64,6 +76,14 @@ class MetsisSearchConfigurationForm extends ConfigFormBase {
         'zoo' => t('zoo'),
       ],
       '#default_value' => $config->get('ts_server_type'),
+    ];
+
+    $form['ts_pywps_url'] = [
+      '#type' => 'textfield',
+      '#title' => t('Enter URL of pywps service'),
+    //  '#description' => t("the button text for HTTP access "),
+      '#size' => 100,
+      '#default_value' => $config->get('pywps_service'),
     ];
     $form['ts_button_text'] = [
       '#type' => 'textfield',
@@ -246,6 +266,7 @@ class MetsisSearchConfigurationForm extends ConfigFormBase {
         }
         else{ $pins = false; }
 
+
         $this->configFactory->getEditable('metsis_search.settings')
           ->set('map_base_layer_wms_north', $values['searchmap']['map_base_layer_wms_north'])
           ->set('map_base_layer_wms_south', $values['searchmap']['map_base_layer_wms_south'])
@@ -266,6 +287,8 @@ class MetsisSearchConfigurationForm extends ConfigFormBase {
           ->set('ts_server_type', $values['ts_server_type'])
           ->set('ts_button_text', $values['ts_button_text'])
           ->set('csv_button_text', $values['csv_button_text'])
+          ->set('selected_collections', $values['collections'])
+          ->set('pywps_service', $values['ts_pywps_url'])
           ->save();
 
         parent::submitForm($form, $form_state);

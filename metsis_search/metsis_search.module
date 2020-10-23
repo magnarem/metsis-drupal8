@@ -40,13 +40,45 @@ function metsis_search_help($route_name, RouteMatchInterface $route_match)
 */
 function metsis_search_views_pre_render(ViewExecutable $view)
 {
+    // Get the module path
+    $module_handler = \Drupal::service('module_handler');
+    $module_path = $module_handler->getModule('metsis_search')->getPath();
+    // Get the config
+    $config = \Drupal::config('metsis_search.settings');
+    $pywps_service = $config->get('pywps_service');
+
     if (isset($view) && ($view->storage->id() == 'metsis_search')) {
         $view->element['#attached']['library'][] = 'metsis_search/metadata_search_view';
         $view->element['#attached']['library'][] = 'metsis_search/children_count';
         $view->element['#attached']['library'][] = 'blazy/load';
         $view->element['#attached']['library'][] = 'metsis_lib/adc_buttons';
 
-        //var_dump($view);
+
+        //Attach ts plot javascript and settings to view
+        $view->element['#attached']['library'][] = 'metsis_search/ts_plot';
+        $view->element['#attached']['drupalSettings']['metsis_search_ts_plot'] = [
+          'pywps_service' => $pywps_service,
+          'module_path' => $module_path
+        ];
+
+/*
+        $results = $view-each ($view->result as $row) {
+
+          // Get the full name value.
+          $name = $row->field_search_api_excerpt;
+          dpm($name);
+        }
+*/
+/*    foreach ($view->result as $index => &$result) {
+      // Alter the title field value
+      var_dump($result->search_api_excerpt);
+    }
+    $view->style_plugin->render_fields($view->result);
+    foreach ($view->style_plugin->rendered_fields as $index => &$rendered_result) {
+      // Add HTML markup icon on rendered title field
+      $rendered_result['search_api_excerpt'] = $result->search_api_excerpt;
+    }*/
+//}
         /* moved to search map block
         $view->element['#attached']['library'][] = 'metsis_ts_bokeh/style';
         $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_js';
@@ -69,15 +101,55 @@ function metsis_search_views_pre_render(ViewExecutable $view)
     /*  foreach($view->result as &$row) {
         dpm($row);
       } */
+
     }
     if (isset($view) && ($view->storage->id() == 'metsis_elements')) {
         $view->element['#attached']['library'][] = 'metsis_search/metadata_search_view';
         //$view->element['#attached']['library'][] = 'metsis_search/children_count';
         $view->element['#attached']['library'][] = 'blazy/load';
         $view->element['#attached']['library'][] = 'metsis_lib/adc_buttons';
+
+
+        //Attach ts plot javascript and settings to view
+        $view->element['#attached']['library'][] = 'metsis_search/ts_plot';
+        $view->element['#attached']['drupalSettings']['metsis_search_ts_plot'] = [
+          'pywps_service' => $pywps_service,
+          'module_path' => $module_path
+        ]; 
     }
 }
 
+/**
+ * Implements hook_entity_view().
+ */
+/*function metsis_search_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  dpm('bla');
+  $excerpt_component = $display->getComponent('search_api_excerpt');
+  if ($excerpt_component !== NULL && isset($build['#search_api_excerpt'])) {
+    dpm($build['#search_api_excerpt']);
+    $build['search_api_excerpt'] = [
+      '#type' => 'markup',
+      '#markup' => $build['#search_api_excerpt'],
+      '#cache' => [
+        'contexts' => ['url.query_args']
+      ],
+      '#allowed_tags' => ['mark', 'strong'],
+    ];
+  }
+}
+*/
+/*
+function metsis_search_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+    if (isset($view) && ($view->storage->id() == 'metsis_search')) {
+      foreach ($view->result as $index => &$result) {
+           // Alter the title field value
+           //var_dump($result->search_api_excerpt);
+           $output[$index]['search_api_excerpt'] = $result->search_api_excerpt;
+           $output[$index]['search_api_excerpt']
+         }
+        // var_dump($output);
+    }
+} */
 /**
  * Implemets hook_theme()
  */
@@ -168,13 +240,19 @@ function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInt
     $map_bbox_filter = $config->get('map_bbox_filter');
 
     //Add bbox filter query if drawn bbox on map
-
     if ($bboxFilter != null && $bboxFilter != "") {
         \Drupal::logger('metsis_search-hook_solr_qyery_alter')->debug("bboxFilter: ".$map_bbox_filter. '(' . $bboxFilter. ')');
         $solarium_query->createFilterQuery('bbox')->setQuery('{!field f=bbox score=overlapRatio}' .$map_bbox_filter.'(' . $bboxFilter . ')');
         $search_string = $map_bbox_filter. '(' . $bboxFilter. ')';
         //$request->query->set('bboxFilter', $search_string);
         //$request->request->set('bboxFilter', $search_string);
+    }
+
+    //Filter on selected collections from config
+    $selected_collections = $config->get('selected_collections');
+    if(isset($selected_collections) && $selected_collections != null) {
+        \Drupal::logger('metsis_search-hook_solr_qyery_alter')->debug("collections filter: " .implode(" ", array_keys($selected_collections)));
+        $solarium_query->createFilterQuery('collection')->setQuery('collection:(' .implode(" ", array_keys($selected_collections)).')');
     }
 
     /**
@@ -235,7 +313,7 @@ function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInt
 
      /* Create facet pivot for keywords */
      // get the facetset component
-     $facetSet = $solarium_query->getFacetSet();
+     //$facetSet = $solarium_query->getFacetSet();
 
      // create two facet pivot instances
      //PIVOT FACETS ARE SLOW maybe beause of cluttered data trying other approch for NoRewindIterator

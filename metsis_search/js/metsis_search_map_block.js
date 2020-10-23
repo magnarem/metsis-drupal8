@@ -416,8 +416,9 @@
           //alert(newId);
           $('.datasets-'+newId).css('display', 'block');
           //$('._'+newId).css('display', 'block');
-          //$('.'+newId).focus();
-
+          $(document).ready(function() {
+          $('li.datasets-'+newId).focus();
+});
           // $(feature.get('id')).each(function() {
              //$(this).css('display', 'block');
            //});

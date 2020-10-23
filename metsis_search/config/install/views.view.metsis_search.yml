@@ -11,6 +11,10 @@ dependencies:
     - search_api
     - user
     - views_fieldsets
+    - metsis_search
+  enforced:
+    module:
+      - metsis_search
 id: metsis_search
 label: 'Metsis Search'
 module: views

@@ -16,6 +16,14 @@ use Solarium\Core\Query\DocumentInterface;
 use Solarium\Core\Query\Result\ResultInterface;
 use Solarium\Component\Result\Facet\Pivot\PivotItem;
 use Solarium\Component\Result\Facet\Pivot\Pivot;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Drupal\search_api\Entity\Index;
+use Drupal\search_api\Query\QueryInterface;
+use Drupal\search_api_solr\Plugin\search_api\backend\SearchApiSolrBackend;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Drupal\Component\Serialization\Json;
+
 
 class SearchUtils
 {
@@ -220,9 +228,9 @@ class SearchUtils
             } else {
                 $related_lp = $fields['title'];
             }
-
-            $keywords = SearchUtils::keywords_to_string($fields['keywords_keyword']);
-
+            if(isset($fields['keywords_keyword'])) {
+              $keywords = SearchUtils::keywords_to_string($fields['keywords_keyword']);
+          }
             if (isset($fields['collection'])) {
                 $collection =$fields['collection'];
             } else {
@@ -385,4 +393,34 @@ EOD;
         $glue = "<br>";
         return implode($glue, $keywords_array);
     }
+
+/* Get a list of available collections in the index */
+    public static function getCollections() {
+      /** @var Index $index  TODO: Change to metsis when prepeare for release */
+      $index = Index::load('drupal8');
+
+      /** @var SearchApiSolrBackend $backend */
+      $backend = $index->getServerInstance()->getBackend();
+
+      $connector = $backend->getSolrConnector();
+
+      $solarium_query = $connector->getSelectQuery();
+      // get the facetset component
+      $facetSet = $solarium_query->getFacetSet();
+
+      // create a facet field instance and set options
+      $facetSet->createFacetField('collection')->setField('collection');
+
+      $result = $connector->execute($solarium_query);
+
+      // The total number of documents found by Solr.
+      //$found = $result->getNumFound();
+      $facet = $result->getFacetSet()->getFacet('collection');
+      $collection = [];
+      foreach ($facet as $value => $count) {
+        $collection[$value] = $value;
+      }
+      return $collection;
+    }
+
 }

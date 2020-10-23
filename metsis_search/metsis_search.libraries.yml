@@ -15,18 +15,19 @@ metadata_search_view:
     - core/jquery.form
     - jquery_ui_draggable/draggable
 
-gcmd_list:
+ts_plot:
   version: 1.0
-  css:
-    theme:
-      css/gcmd.css: {}
   js:
-    js/folding.js: {}
+    https://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.js: { type: external}
+    https://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.2.min.js: { type: external}
+    https://cdn.pydata.org/bokeh/release/bokeh-tables-2.0.2.min.js: { type: external}
+    js/ts_plot.js: {}
   dependencies:
     - core/jquery
     - core/jquery.ui
-    - core/jquery.once
     - core/drupal
+    - core/jquery.once
+    - core/drupalSettings
 
 search_map:
   version: 1.0
@@ -58,9 +59,9 @@ search_map_block:
       /libraries/openlayers6/css/ol.css: {}
   js:
     #js/bundle.js: {}
-    https://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.js: { type: external}
-    https://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.2.min.js: { type: external}
-    https://cdn.pydata.org/bokeh/release/bokeh-tables-2.0.2.min.js: { type: external}
+    #https://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.js: { type: external}
+    #https://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.2.min.js: { type: external}
+    #https://cdn.pydata.org/bokeh/release/bokeh-tables-2.0.2.min.js: { type: external}
     /libraries/openlayers6/build/ol.js: {}
     /libraries/openlayers6/apidoc/scripts/bootstrap.min.js: {}
     https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js: { type: external }
@@ -84,3 +85,11 @@ children_count:
     - core/jquery.once
     - core/drupal
     - core/drupal.ajax
+
+gcmd:
+  version: 1.0
+  css:
+    theme:
+      css/gcmd.css: {}
+  js:
+    js/gcmd.js: {}

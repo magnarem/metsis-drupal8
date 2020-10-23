@@ -35,6 +35,7 @@ class MetsisSearchController extends ControllerBase {
       $solarium_query->setQuery('related_dataset:'.$id);
       //$solarium_query->addSort('sequence_id', Query::SORT_ASC);
       $solarium_query->setRows(1);
+      $solarium_query->setFields('id');
 
       $result = $connector->execute($solarium_query);
 
@@ -60,6 +61,7 @@ class MetsisSearchController extends ControllerBase {
           \Drupal::logger('metsis_search')->debug("MetsisSearchController::getChildrenCount: markup: ". $markup );
         $response->addCommand(new HtmlCommand($selector,$markup));
       }
+      /*
       else {
         $data = [
           'success' => true,
@@ -67,7 +69,7 @@ class MetsisSearchController extends ControllerBase {
         ];
         $response->setData($data);
       }
-
+*/
        return $response;
    }
 }
