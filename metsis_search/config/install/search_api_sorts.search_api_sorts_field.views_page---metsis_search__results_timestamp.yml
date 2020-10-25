@@ -1,7 +1,7 @@
 langcode: en
 status: true
 dependencies:
-      - metsis_search
+  - metsis_search
     enforced:
       module:
         - metsis_search
