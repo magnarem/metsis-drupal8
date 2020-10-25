@@ -15,7 +15,6 @@ metsis_ts_bokeh.init_form:
 
 metsis.parent:
   title: 'Metsis'
-  route_name: metsis.main
   description: "Metsis"
   menu_name: main
 

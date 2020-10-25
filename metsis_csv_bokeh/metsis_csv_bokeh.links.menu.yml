@@ -9,7 +9,7 @@ metsis_csv_bokeh.download:
   title: 'METSIS CSV Bokeh'
   description: 'Download CSV ASCII'
   route_name: metsis_csv_bokeh.download
-  menu_name: main
+  menu_name: metsis.main
   weight: 0
 
 metsis.group.admin:
@@ -18,8 +18,3 @@ metsis.group.admin:
   parent: system.admin_config
   description: 'METSIS Configuration'
   weight: -999
-
-metsis.main:
-  title: 'Metsis'
-  description: 'Metsis Main Menu'
-  parent: main
