@@ -18,3 +18,8 @@ metsis.group.admin:
   parent: system.admin_config
   description: 'METSIS Configuration'
   weight: -999
+
+metsis.main:
+  title: 'Metsis'
+  description: 'Metsis Main Menu'
+  parent: main
