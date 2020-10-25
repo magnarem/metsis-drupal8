@@ -18,7 +18,7 @@ map_locations:
     lat: 59.94266
     lon: 10.72051
 map_selected_location: longyearbyen
-map_bbox_filter: Intersects
+map_bbox_filter: Within
 map_search_text: 'Click on the map to draw a selection box. Boxes in UPS are transfomed into 4-edge polygons'
 map_layers:
   - europaveg
@@ -27,9 +27,21 @@ map_layers:
 map_pins: '1'
 dar_http: 'Download data'
 dar_odata: 'Download SAFE product'
-dar_opendap: 'OPeNDAP'
+dar_opendap: OPeNDAP
 dar_ogc_wms: 'OGC WMS'
 lp_button_var: title
 ts_server_type: pywps
 ts_button_text: 'Viusalize timeseries'
 csv_button_text: 'Download dataset as ASCII'
+map_additional_layers_b: true
+map_pins_b: true
+selected_collections:
+  ADC: ADC
+  NSDN: NSDN
+  GCW: GCW
+  SIOS: SIOS
+  NMAP: NMAP
+  YOPP: YOPP
+  APPL: APPL
+  NMDC: NMDC
+pywps_service: 'https://ncapi.adc-ncplot.met.no/ncplot/plot'
