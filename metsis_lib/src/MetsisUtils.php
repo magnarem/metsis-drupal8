@@ -171,7 +171,7 @@ class MetsisUtils
       public static function msb_get_fields($metadata_identifier, $fields)
       {
           /** @var Index $index  TODO: Change to metsis when prepeare for release */
-          $index = Index::load('drupal8');
+          $index = Index::load('metsis');
 
           /** @var SearchApiSolrBackend $backend */
           $backend = $index->getServerInstance()->getBackend();
@@ -212,7 +212,7 @@ class MetsisUtils
 public static function msb_get_title($metadata_identifier)
 {
     /** @var Index $index  TODO: Change to metsis when prepeare for release */
-    $index = Index::load('drupal8');
+    $index = Index::load('metsis');
 
     /** @var SearchApiSolrBackend $backend */
     $backend = $index->getServerInstance()->getBackend();
@@ -256,7 +256,7 @@ public static function msb_get_title($metadata_identifier)
 public static function msb_get_resources($metadata_identifier)
 {
     /** @var Index $index  TODO: Change to metsis when prepeare for release */
-    $index = Index::load('drupal8');
+    $index = Index::load('metsis');
 
     /** @var SearchApiSolrBackend $backend */
     $backend = $index->getServerInstance()->getBackend();

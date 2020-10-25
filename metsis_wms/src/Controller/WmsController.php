@@ -239,7 +239,7 @@ EOM;
     public function getFields($metadata_identifier, $fields)
     {
         /** @var Index $index  TODO: Change to metsis when prepeare for release */
-        $index = Index::load('drupal8');
+        $index = Index::load('metsis');
 
         /** @var SearchApiSolrBackend $backend */
         $backend = $index->getServerInstance()->getBackend();

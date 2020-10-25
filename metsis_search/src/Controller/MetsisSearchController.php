@@ -24,7 +24,7 @@ class MetsisSearchController extends ControllerBase {
       $id = $params['metadata_identifier'];
 
       /** @var Index $index  TODO: Change to metsis when prepeare for release */
-      $index = Index::load('drupal8');
+      $index = Index::load('metsis');
 
       /** @var SearchApiSolrBackend $backend */
       $backend = $index->getServerInstance()->getBackend();

@@ -397,7 +397,7 @@ EOD;
 /* Get a list of available collections in the index */
     public static function getCollections() {
       /** @var Index $index  TODO: Change to metsis when prepeare for release */
-      $index = Index::load('drupal8');
+      $index = Index::load('metsis');
 
       /** @var SearchApiSolrBackend $backend */
       $backend = $index->getServerInstance()->getBackend();
