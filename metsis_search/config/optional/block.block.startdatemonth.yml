@@ -5,12 +5,16 @@ dependencies:
     - facets.facet.start_date_month
   module:
     - facets
+    - system
   theme:
     - metsis
+    - adc
+    - sios
+    - drupal8_w3css_theme
 id: startdatemonth
 theme: metsis
 region: sidebar_first
-weight: -12
+weight: -15
 provider: null
 plugin: 'facet_block:start_date_month'
 settings:
@@ -19,4 +23,9 @@ settings:
   provider: facets
   label_display: '0'
   block_id: startdatemonth
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: /metsis/search
+    negate: false
+    context_mapping: {  }

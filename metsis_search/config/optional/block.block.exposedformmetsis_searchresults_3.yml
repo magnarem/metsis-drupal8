@@ -4,14 +4,16 @@ dependencies:
   config:
     - views.view.metsis_search
   module:
-    - system
     - views
   theme:
     - metsis
+    - adc
+    - sios
+    - drupal8_w3css_theme
 id: exposedformmetsis_searchresults_3
 theme: metsis
 region: sidebar_first
-weight: -17
+weight: -19
 provider: null
 plugin: 'views_exposed_filter_block:metsis_search-results'
 settings:
@@ -20,9 +22,4 @@ settings:
   provider: views
   label_display: '0'
   views_label: ''
-visibility:
-  request_path:
-    id: request_path
-    pages: '/metsis/elements/*'
-    negate: true
-    context_mapping: {  }
+visibility: {  }

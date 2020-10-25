@@ -1,8 +1,9 @@
+uuid: 1a2660d7-5beb-4679-bd49-d55f75b29e05
 langcode: en
 status: true
 dependencies:
   config:
-    - search_api.index.drupal8
+    - search_api.index.metsis
     - views.view.metsis_search
   module:
     - views
@@ -10,14 +11,14 @@ dependencies:
     - search_api_solr
 id: metsis_search
 label: 'Metsis Search'
-index_id: drupal8
+index_id: metsis
 suggester_settings:
   server:
     fields:
       - text_suggester
   search_api_solr_suggester:
     search_api_solr/site_hash: 1
-    search_api/index: drupal8
+    search_api/index: metsis
     drupal/langcode: any
 suggester_weights:
   server: -49

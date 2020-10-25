@@ -6,10 +6,13 @@ dependencies:
     - system
   theme:
     - metsis
+    - adc
+    - sios
+    - drupal8_w3css_theme
 id: metsis_metsissearchmap
 theme: metsis
 region: content
-weight: -9
+weight: -15
 provider: null
 plugin: metsis_search_map
 settings:

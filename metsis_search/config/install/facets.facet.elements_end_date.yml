@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - search_api.index.drupal8
+    - search_api.index.metsis
     - views.view.metsis_elements
   module:
     - search_api
@@ -29,123 +29,36 @@ query_operator: and
 use_hierarchy: false
 expand_hierarchy: false
 enable_parent_when_child_gets_disabled: true
-hard_limit: 0
+hard_limit: 100
 exclude: false
 only_visible_when_facet_source_is_visible: true
 processor_configs:
-  active_widget_order:
-    processor_id: active_widget_order
-    weights:
-      sort: 20
-    settings:
-      sort: DESC
-  count_widget_order:
-    processor_id: count_widget_order
-    weights:
-      sort: 30
-    settings:
-      sort: DESC
   date_item:
     processor_id: date_item
     weights:
       build: 35
     settings:
       date_display: actual_date
-      granularity: 5
-      date_format: Y-m-d
+      granularity: 2
+      date_format: 'Y-m-d H:i:s'
   dependent_processor:
     processor_id: dependent_processor
     weights:
       build: 5
     settings:
-      cloud_coverage:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      collection:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      data_center:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      dataset_level:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      gcmd_keywords:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      instrument_mode:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      instrument_short_name:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      isottopic_category:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      keywords:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      keywords_level2:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      keywords_level3:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      organisation:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      personnel:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      personnel_role:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      platform:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      project:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      publisher:
-        enable: false
-        condition: null
-        values: ''
-        negate: false
-      start_date_day:
+      elements_start_date_day:
         enable: true
         condition: not_empty
+        values: ''
+        negate: false
+      elements_start_date_month:
+        enable: false
+        condition: null
+        values: ''
+        negate: false
+      elements_start_date_year:
+        enable: false
+        condition: null
         values: ''
         negate: false
   display_value_widget_order:

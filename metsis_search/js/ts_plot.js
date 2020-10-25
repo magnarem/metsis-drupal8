@@ -4,6 +4,9 @@
     let loader =  '<img class="ts-plot-loader" src="/'+path+'/icons/loader.gif">';
     $('#bokeh-ts-plot-'+md_ts_id).find('.ts-loader').append(loader);
     var variable = $('#bokeh-ts-plot-'+md_ts_id).find('#ts-var-list').val();
+    if ( $('#ts-plot-'+md_ts_id).html().length > 0 ) {
+      $('#ts-plot-'+md_ts_id).empty();
+    }
 
     fetch(pywps+'?get=plot&resource_url='+url_o+'&variable='+variable+'&axis='+$('#bokeh-ts-plot-'+md_ts_id).find('#axis').val())
     .then(function (response) {
@@ -28,6 +31,10 @@
 
    $(this).click(function () {
              console.log("calling ts-plot with url: "+opendap_url);
+             if ( $('#ts-plot-'+id).html().length > 0 || $('#bokeh-ts-plot-'+id).find('.ts-vars').html().length > 0) {
+               $('#ts-plot-'+id).empty();
+               $('#bokeh-ts-plot-'+id).find('.ts-vars').empty();
+             }  else {
              let loader =  '<img class="ts-click-loader" src="/core/misc/throbber-active.gif">';
                $('#bokeh-ts-plot-'+id).find('.ts-loader').append(loader);
            console.log('fetching varuables');
@@ -63,12 +70,10 @@
          $('#bokeh-ts-plot-'+id).find('#ts-var-list').on('change', function () {
            plot_ts(opendap_url, id, path, pywpsUrl)
 
-            });
-
-
+         });
 
 });
-
+}
 });
 
     });

@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - search_api.index.drupal8
+    - search_api.index.metsis
     - user.role.administrator
     - user.role.anonymous
     - user.role.authenticated
@@ -16,7 +16,7 @@ label: 'Metsis Elements'
 module: views
 description: 'View for searching Metadata from indexed MMD files'
 tag: ''
-base_table: search_api_index_drupal8
+base_table: search_api_index_metsis
 base_field: search_api_id
 display:
   default:
@@ -52,15 +52,17 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
-        type: mini
+        type: full
         options:
-          items_per_page: 15
+          items_per_page: 10
           offset: 0
           id: 0
           total_pages: null
           tags:
             previous: ‹‹
             next: ››
+            first: '« First'
+            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -69,6 +71,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
+          quantity: 9
       style:
         type: html_list
         options:
@@ -93,7 +96,7 @@ display:
       fields:
         id:
           id: id
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: id
           relationship: none
           group_type: group
@@ -146,7 +149,7 @@ display:
           plugin_id: search_api
         is_parent:
           id: is_parent
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: is_parent
           relationship: none
           group_type: group
@@ -203,7 +206,7 @@ display:
           plugin_id: search_api_boolean
         title:
           id: title
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: title
           relationship: none
           group_type: group
@@ -243,7 +246,7 @@ display:
           element_label_class: ''
           element_label_colon: false
           element_wrapper_type: ''
-          element_wrapper_class: ''
+          element_wrapper_class: w3-margin-left
           element_default_classes: true
           empty: ''
           hide_empty: false
@@ -254,9 +257,62 @@ display:
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
+        thumbnail_data:
+          id: thumbnail_data
+          table: search_api_index_metsis
+          field: thumbnail_data
+          relationship: none
+          group_type: group
+          admin_label: Thumbnail
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "<div class=\"w3-padding w3-left media media--blazy media--loading media--image\">\r\n<a \r\nhref=\"/metsis/map/wms?dataset={{ id}}\" >\r\n<img  class=\"w3-image b-lazy media__image media__element img-responsive\" alt=\"Embedded Thumbnail\" data-src={{thumbnail_data}}\r\n src=\"/modules/metsis/metsis_search/images/Blank.gif\" typeof=\"Image\"/>\r\n</a></div>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_item: false
+          use_highlighting: false
+          multi_type: separator
+          multi_separator: ', '
+          plugin_id: search_api
         project_short_name:
           id: project_short_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: project_short_name
           relationship: none
           group_type: group
@@ -309,7 +365,7 @@ display:
           plugin_id: search_api
         project_long_name:
           id: project_long_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: project_long_name
           relationship: none
           group_type: group
@@ -362,7 +418,7 @@ display:
           plugin_id: search_api
         last_metadata_update_datetime:
           id: last_metadata_update_datetime
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: last_metadata_update_datetime
           relationship: none
           group_type: group
@@ -464,7 +520,7 @@ display:
           plugin_id: custom
         feature_type:
           id: feature_type
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: feature_type
           relationship: none
           group_type: group
@@ -517,7 +573,7 @@ display:
           plugin_id: search_api
         search_api_excerpt:
           id: search_api_excerpt
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: search_api_excerpt
           relationship: none
           group_type: group
@@ -570,7 +626,7 @@ display:
           plugin_id: search_api
         abstract:
           id: abstract
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: abstract
           relationship: none
           group_type: group
@@ -682,7 +738,7 @@ display:
           plugin_id: fieldset
         temporal_extent_start_date:
           id: temporal_extent_start_date
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: temporal_extent_start_date
           relationship: none
           group_type: group
@@ -735,7 +791,7 @@ display:
           plugin_id: search_api
         temporal_extent_end_date:
           id: temporal_extent_end_date
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: temporal_extent_end_date
           relationship: none
           group_type: group
@@ -786,62 +842,9 @@ display:
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
-        thumbnail_data:
-          id: thumbnail_data
-          table: search_api_index_drupal8
-          field: thumbnail_data
-          relationship: none
-          group_type: group
-          admin_label: Thumbnail
-          label: ''
-          exclude: false
-          alter:
-            alter_text: true
-            text: "<div class=\"media media--blazy media--loading media--image\">\r\n<a \r\nhref=\"/metsis/map/wms?dataset={{ id}}\" >\r\n<img  class=\"b-lazy media__image media__element img-responsive\" alt=\"Embedded Thumbnail\" data-src={{thumbnail_data}}\r\n src=\"/modules/metsis/metsis_search/images/Blank.gif\" typeof=\"Image\"/>\r\n</a></div>"
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          link_to_item: false
-          use_highlighting: false
-          multi_type: separator
-          multi_separator: ', '
-          plugin_id: search_api
         related_url_landing_page:
           id: related_url_landing_page
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: related_url_landing_page
           relationship: none
           group_type: group
@@ -894,7 +897,7 @@ display:
           plugin_id: search_api
         data_access_url_opendap:
           id: data_access_url_opendap
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_opendap
           relationship: none
           group_type: group
@@ -947,7 +950,7 @@ display:
           plugin_id: search_api
         personnel_organisation:
           id: personnel_organisation
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_organisation
           relationship: none
           group_type: group
@@ -1000,7 +1003,7 @@ display:
           plugin_id: search_api
         ss_access:
           id: ss_access
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: ss_access
           relationship: none
           group_type: group
@@ -1053,7 +1056,7 @@ display:
           plugin_id: search_api
         data_access_url_ogc_wms:
           id: data_access_url_ogc_wms
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_ogc_wms
           relationship: none
           group_type: group
@@ -1161,7 +1164,6 @@ display:
             - nothing_5
             - data_access_url_odata
             - nothing_7
-            - nothing_1
           wrapper: fieldset
           legend: 'Access: {{ ss_access }}'
           classes: datasetOps
@@ -1366,7 +1368,7 @@ display:
           plugin_id: custom
         data_access_url_http:
           id: data_access_url_http
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_http
           relationship: none
           group_type: group
@@ -1468,7 +1470,7 @@ display:
           plugin_id: custom
         data_access_url_odata:
           id: data_access_url_odata
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_odata
           relationship: none
           group_type: group
@@ -1568,201 +1570,11 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: custom
-        nothing_1:
-          id: nothing_1
-          table: views
-          field: nothing
-          relationship: none
-          group_type: group
-          admin_label: Children
-          label: ''
-          exclude: false
-          alter:
-            alter_text: true
-            text: "<div id=\"metachild\" class=\"metachild\" data-id={{ id }} isparent={{ is_parent }}>\r\n<a id=\"metachildlink\" class=\"visually-hidden adc-button adc-sbutton\" href=/metsis/elements/{{ id }}/search></a>\r\n</div>"
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: 'ajax-wrapper metachild-wrapper inline'
-          element_default_classes: true
-          empty: ''
-          hide_empty: true
-          empty_zero: true
-          hide_alter_empty: true
-          plugin_id: custom
-      filters:
-        search_api_fulltext:
-          id: search_api_fulltext
-          table: search_api_index_drupal8
-          field: search_api_fulltext
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: or
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: search_api_fulltext_op
-            label: Search
-            description: ''
-            use_operator: false
-            operator: search_api_fulltext_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: fulltext
-            required: false
-            remember: true
-            multiple: true
-            remember_roles:
-              authenticated: authenticated
-              administrator: administrator
-              anonymous: '0'
-            placeholder: 'Enter your search here'
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          parse_mode: terms
-          min_length: null
-          fields:
-            - abstract
-            - full_text
-            - title
-          plugin_id: search_api_fulltext
-        temporal_extent_start_date:
-          id: temporal_extent_start_date
-          table: search_api_index_drupal8
-          field: temporal_extent_start_date
-          relationship: none
-          group_type: group
-          admin_label: 'Start date'
-          operator: '>='
-          value:
-            min: ''
-            max: ''
-            value: ''
-            type: date
-          group: 1
-          exposed: true
-          expose:
-            operator_id: temporal_extent_start_date_op
-            label: 'Start Date'
-            description: ''
-            use_operator: false
-            operator: temporal_extent_start_date_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: start_date
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: search_api_date
-        temporal_extent_end_date:
-          id: temporal_extent_end_date
-          table: search_api_index_drupal8
-          field: temporal_extent_end_date
-          relationship: none
-          group_type: group
-          admin_label: 'End date'
-          operator: '<='
-          value:
-            min: ''
-            max: ''
-            value: ''
-            type: date
-          group: 1
-          exposed: true
-          expose:
-            operator_id: temporal_extent_end_date_op
-            label: 'End Date'
-            description: ''
-            use_operator: false
-            operator: temporal_extent_end_date_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: end_date
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: search_api_date
+      filters: {  }
       sorts:
         last_metadata_update_datetime:
           id: last_metadata_update_datetime
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: last_metadata_update_datetime
           relationship: none
           group_type: group
@@ -1801,7 +1613,7 @@ display:
       arguments:
         related_dataset:
           id: related_dataset
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: related_dataset
           relationship: none
           group_type: group
@@ -1833,8 +1645,7 @@ display:
       display_extenders: {  }
       filter_groups:
         operator: AND
-        groups:
-          1: AND
+        groups: {  }
       use_ajax: false
     cache_metadata:
       max-age: -1
@@ -1844,7 +1655,7 @@ display:
         - url.query_args
         - user.roles
       tags:
-        - 'config:search_api.index.drupal8'
+        - 'config:search_api.index.metsis'
   results:
     display_plugin: page
     id: results
@@ -1880,4 +1691,4 @@ display:
         - url.query_args
         - user.roles
       tags:
-        - 'config:search_api.index.drupal8'
+        - 'config:search_api.index.metsis'

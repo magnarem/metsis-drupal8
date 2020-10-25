@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - search_api.index.drupal8
+    - search_api.index.metsis
     - views.view.metsis_search
   module:
     - search_api
@@ -18,11 +18,11 @@ widget:
   type: links
   config:
     show_numbers: true
-    soft_limit: 5
+    soft_limit: 15
     soft_limit_settings:
       show_less_label: 'Show less'
       show_more_label: 'Show more'
-    show_reset_link: true
+    show_reset_link: false
     reset_text: 'Show all'
     hide_reset_when_no_selection: true
 query_operator: and
@@ -136,6 +136,16 @@ processor_configs:
         values: ''
         negate: false
       start_date_day:
+        enable: false
+        condition: null
+        values: ''
+        negate: false
+      start_date_month:
+        enable: false
+        condition: null
+        values: ''
+        negate: false
+      start_date_year:
         enable: false
         condition: null
         values: ''

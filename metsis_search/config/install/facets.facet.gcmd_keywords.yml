@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - search_api.index.drupal8
+    - search_api.index.metsis
     - views.view.metsis_search
   module:
     - search_api
@@ -22,9 +22,9 @@ widget:
     soft_limit_settings:
       show_less_label: 'Show less'
       show_more_label: 'Show more'
-    show_reset_link: true
+    show_reset_link: false
     reset_text: 'Show all'
-    hide_reset_when_no_selection: true
+    hide_reset_when_no_selection: false
 query_operator: and
 use_hierarchy: false
 expand_hierarchy: false
@@ -33,24 +33,17 @@ hard_limit: 20
 exclude: false
 only_visible_when_facet_source_is_visible: false
 processor_configs:
-  active_widget_order:
-    processor_id: active_widget_order
-    weights:
-      sort: 20
-    settings:
-      sort: DESC
   count_widget_order:
     processor_id: count_widget_order
     weights:
       sort: 30
     settings:
       sort: DESC
-  display_value_widget_order:
-    processor_id: display_value_widget_order
+  hide_non_narrowing_result_processor:
+    processor_id: hide_non_narrowing_result_processor
     weights:
-      sort: 40
-    settings:
-      sort: ASC
+      build: 40
+    settings: {  }
   url_processor_handler:
     processor_id: url_processor_handler
     weights:

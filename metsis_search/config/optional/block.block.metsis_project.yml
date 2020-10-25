@@ -8,6 +8,9 @@ dependencies:
     - system
   theme:
     - metsis
+    - adc
+    - sios
+    - drupal8_w3css_theme
 id: metsis_project
 theme: metsis
 region: sidebar_second
@@ -23,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: '/metsis/elements/*'
-    negate: true
+    pages: /metsis/search
+    negate: false
     context_mapping: {  }

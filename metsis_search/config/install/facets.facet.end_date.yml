@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - search_api.index.drupal8
+    - search_api.index.metsis
     - views.view.metsis_search
   module:
     - search_api
@@ -29,30 +29,18 @@ query_operator: and
 use_hierarchy: false
 expand_hierarchy: false
 enable_parent_when_child_gets_disabled: true
-hard_limit: 0
+hard_limit: 100
 exclude: false
 only_visible_when_facet_source_is_visible: true
 processor_configs:
-  active_widget_order:
-    processor_id: active_widget_order
-    weights:
-      sort: 20
-    settings:
-      sort: DESC
-  count_widget_order:
-    processor_id: count_widget_order
-    weights:
-      sort: 30
-    settings:
-      sort: DESC
   date_item:
     processor_id: date_item
     weights:
       build: 35
     settings:
       date_display: actual_date
-      granularity: 4
-      date_format: Y-m-d
+      granularity: 2
+      date_format: 'Y-m-d H:i:s'
   dependent_processor:
     processor_id: dependent_processor
     weights:
@@ -146,6 +134,16 @@ processor_configs:
       start_date_day:
         enable: true
         condition: not_empty
+        values: ''
+        negate: false
+      start_date_month:
+        enable: false
+        condition: not_empty
+        values: ''
+        negate: false
+      start_date_year:
+        enable: false
+        condition: null
         values: ''
         negate: false
   display_value_widget_order:

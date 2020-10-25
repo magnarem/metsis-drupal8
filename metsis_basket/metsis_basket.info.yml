@@ -7,4 +7,7 @@ configure: metsis_basket.metsis_basket_admin_settings_form
 dependencies:
   metsis_lib: 'drupal:metsis_lib'
   views: 'drupal:views'
+  0: metsis_basket
+  1: facets
+  2: system
 type: module

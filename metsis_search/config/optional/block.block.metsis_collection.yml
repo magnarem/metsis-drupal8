@@ -8,10 +8,13 @@ dependencies:
     - system
   theme:
     - metsis
+    - adc
+    - sios
+    - drupal8_w3css_theme
 id: metsis_collection
 theme: metsis
 region: sidebar_first
-weight: -14
+weight: -17
 provider: null
 plugin: 'facet_block:collection'
 settings:
@@ -23,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: '/metsis/elements/*'
-    negate: true
+    pages: /metsis/search
+    negate: false
     context_mapping: {  }
