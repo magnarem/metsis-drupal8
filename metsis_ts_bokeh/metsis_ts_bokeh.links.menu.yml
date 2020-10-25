@@ -10,13 +10,8 @@ metsis_ts_bokeh.init_form:
   description: 'View Timeseries Bokeh Plot'
   route_name: metsis_ts_bokeh.forminit
   menu_name: main
-  parent: metsis.parent
+  parent: main
   weight: 0
-
-metsis.parent:
-  title: 'Metsis'
-  description: "Metsis"
-  menu_name: main
 
 metsis.group.admin:
   title: 'METSIS'

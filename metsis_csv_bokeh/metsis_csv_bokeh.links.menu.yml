@@ -9,7 +9,7 @@ metsis_csv_bokeh.download:
   title: 'METSIS CSV Bokeh'
   description: 'Download CSV ASCII'
   route_name: metsis_csv_bokeh.download
-  menu_name: metsis.main
+  menu_name: main
   weight: 0
 
 metsis.group.admin:
