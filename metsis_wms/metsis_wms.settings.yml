@@ -1,9 +1,9 @@
-wms_base_layer: 'north'
+wms_base_layer: north
 wms_overlay_border: 'true'
 wms_product_select: 'false'
 wms_init_proj: 'EPSG:4326'
 wms_additional_layers: 'false'
-wms_zoom: 3.5
+wms_zoom: '3.5'
 wms_locations:
   longyearbyen:
     lat: 78.22314167
@@ -14,3 +14,4 @@ wms_locations:
   metno:
     lat: 59.94266
     lon: 10.72051
+wms_selected_location: longyearbyen
