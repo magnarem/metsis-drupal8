@@ -9,10 +9,6 @@ dependencies:
     - views
     - search_api_autocomplete
     - search_api_solr
-    - metsis_search
-      enforced:
-        module:
-        - metsis_search
 id: metsis_search
 label: 'Metsis Search'
 index_id: metsis
