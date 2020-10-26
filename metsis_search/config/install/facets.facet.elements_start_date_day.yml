@@ -6,6 +6,7 @@ dependencies:
     - views.view.metsis_elements
   module:
     - search_api
+    - metsis_search
 id: elements_start_date_day
 name: 'Elements Start date day'
 url_alias: start_date_day
