@@ -4,9 +4,9 @@ dependencies:
   module:
     - system
   theme:
-    - drupal8_w3css_theme
-id: drupal8_w3css_theme_branding
-theme: drupal8_w3css_theme
+    - metsis_w3css_theme
+id: metsis_w3css_theme_branding
+theme: metsis_w3css_theme
 region: header
 weight: 1
 provider: null

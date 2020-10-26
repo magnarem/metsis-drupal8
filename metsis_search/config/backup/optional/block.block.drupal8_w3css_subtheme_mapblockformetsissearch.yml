@@ -5,9 +5,9 @@ dependencies:
     - metsis_search
     - system
   theme:
-    - drupal8_w3css_subtheme
-id: drupal8_w3css_subtheme_mapblockformetsissearch
-theme: drupal8_w3css_subtheme
+    - metsis_w3css_subtheme
+id: metsis_w3css_subtheme_mapblockformetsissearch
+theme: metsis_w3css_subtheme
 region: sidebar_first
 weight: -4
 provider: null

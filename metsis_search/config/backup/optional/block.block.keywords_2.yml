@@ -6,9 +6,9 @@ dependencies:
   module:
     - facets
   theme:
-    - drupal8_w3css_theme
+    - metsis_w3css_theme
 id: keywords_2
-theme: drupal8_w3css_theme
+theme: metsis_w3css_theme
 region: sidebar_second
 weight: -11
 provider: null

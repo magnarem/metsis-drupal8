@@ -5,9 +5,9 @@ dependencies:
     - metsis_search
     - system
   theme:
-    - drupal8_w3css_subtheme
-id: drupal8_w3css_subtheme_metsissearchmap
-theme: drupal8_w3css_subtheme
+    - metsis_w3css_subtheme
+id: metsis_w3css_subtheme_metsissearchmap
+theme: metsis_w3css_subtheme
 region: content
 weight: -9
 provider: null

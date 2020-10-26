@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - search_api.index.drupal8
+    - search_api.index.metsis
     - system.menu.main
     - user.role.administrator
     - user.role.anonymous
@@ -20,7 +20,7 @@ label: 'Metsis Search'
 module: views
 description: 'View for searching Metadata from indexed MMD files'
 tag: ''
-base_table: search_api_index_drupal8
+base_table: search_api_index_metsis
 base_field: search_api_id
 display:
   default:
@@ -100,7 +100,7 @@ display:
       fields:
         id:
           id: id
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: id
           relationship: none
           group_type: group
@@ -153,7 +153,7 @@ display:
           plugin_id: search_api
         title:
           id: title
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: title
           relationship: none
           group_type: group
@@ -206,7 +206,7 @@ display:
           plugin_id: search_api
         personnel_organisation:
           id: personnel_organisation
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_organisation
           relationship: none
           group_type: group
@@ -259,7 +259,7 @@ display:
           plugin_id: search_api
         project_long_name:
           id: project_long_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: project_long_name
           relationship: none
           group_type: group
@@ -312,7 +312,7 @@ display:
           plugin_id: search_api
         project_short_name:
           id: project_short_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: project_short_name
           relationship: none
           group_type: group
@@ -414,7 +414,7 @@ display:
           plugin_id: custom
         last_metadata_update_datetime:
           id: last_metadata_update_datetime
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: last_metadata_update_datetime
           relationship: none
           group_type: group
@@ -525,7 +525,7 @@ display:
           plugin_id: fieldset
         temporal_extent_start_date:
           id: temporal_extent_start_date
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: temporal_extent_start_date
           relationship: none
           group_type: group
@@ -578,7 +578,7 @@ display:
           plugin_id: search_api
         temporal_extent_end_date:
           id: temporal_extent_end_date
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: temporal_extent_end_date
           relationship: none
           group_type: group
@@ -680,7 +680,7 @@ display:
           plugin_id: custom
         search_api_excerpt:
           id: search_api_excerpt
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: search_api_excerpt
           relationship: none
           group_type: group
@@ -789,7 +789,7 @@ display:
           plugin_id: fieldset
         abstract:
           id: abstract
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: abstract
           relationship: none
           group_type: group
@@ -844,7 +844,7 @@ display:
           plugin_id: search_api
         related_url_landing_page_desc:
           id: related_url_landing_page_desc
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: related_url_landing_page_desc
           relationship: none
           group_type: group
@@ -897,7 +897,7 @@ display:
           plugin_id: search_api
         related_url_landing_page:
           id: related_url_landing_page
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: related_url_landing_page
           relationship: none
           group_type: group
@@ -950,7 +950,7 @@ display:
           plugin_id: search_api
         thumbnail_data:
           id: thumbnail_data
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: thumbnail_data
           relationship: none
           group_type: group
@@ -1003,7 +1003,7 @@ display:
           plugin_id: search_api
         is_parent:
           id: is_parent
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: is_parent
           relationship: none
           group_type: group
@@ -1060,7 +1060,7 @@ display:
           plugin_id: search_api_boolean
         data_access_url_opendap:
           id: data_access_url_opendap
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_opendap
           relationship: none
           group_type: group
@@ -1113,7 +1113,7 @@ display:
           plugin_id: search_api
         feature_type:
           id: feature_type
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: feature_type
           relationship: none
           group_type: group
@@ -1166,7 +1166,7 @@ display:
           plugin_id: search_api
         ss_access:
           id: ss_access
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: ss_access
           relationship: none
           group_type: group
@@ -1219,7 +1219,7 @@ display:
           plugin_id: search_api
         data_access_url_ogc_wms:
           id: data_access_url_ogc_wms
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_ogc_wms
           relationship: none
           group_type: group
@@ -1532,7 +1532,7 @@ display:
           plugin_id: custom
         data_access_url_http:
           id: data_access_url_http
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_http
           relationship: none
           group_type: group
@@ -1634,7 +1634,7 @@ display:
           plugin_id: custom
         data_access_url_odata:
           id: data_access_url_odata
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_odata
           relationship: none
           group_type: group
@@ -1786,7 +1786,7 @@ display:
       filters:
         search_api_fulltext:
           id: search_api_fulltext
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: search_api_fulltext
           relationship: none
           group_type: group
@@ -1833,7 +1833,7 @@ display:
           plugin_id: search_api_fulltext
         temporal_extent_start_date:
           id: temporal_extent_start_date
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: temporal_extent_start_date
           relationship: none
           group_type: group
@@ -1880,7 +1880,7 @@ display:
           plugin_id: search_api_date
         temporal_extent_end_date:
           id: temporal_extent_end_date
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: temporal_extent_end_date
           relationship: none
           group_type: group
@@ -1928,7 +1928,7 @@ display:
       sorts:
         last_metadata_update_datetime:
           id: last_metadata_update_datetime
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: last_metadata_update_datetime
           relationship: none
           group_type: group
@@ -1968,7 +1968,7 @@ display:
         - url.query_args
         - user.roles
       tags:
-        - 'config:search_api.index.drupal8'
+        - 'config:search_api.index.metsis'
   results:
     display_plugin: page
     id: results
@@ -2004,4 +2004,4 @@ display:
         - url.query_args
         - user.roles
       tags:
-        - 'config:search_api.index.drupal8'
+        - 'config:search_api.index.metsis'

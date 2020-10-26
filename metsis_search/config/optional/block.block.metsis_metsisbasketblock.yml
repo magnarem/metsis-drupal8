@@ -7,7 +7,7 @@ dependencies:
     - metsis
     - adc
     - sios
-    - drupal8_w3css_theme
+    - metsis_w3css_theme
 id: metsis_metsisbasketblock
 theme: metsis
 region: sidebar_first

@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - search_api.index.drupal8
+    - search_api.index.metsis
   module:
     - search_api
     - views_fieldsets
@@ -15,7 +15,7 @@ label: 'Metsis Metadata Details'
 module: views
 description: ''
 tag: ''
-base_table: search_api_index_drupal8
+base_table: search_api_index_metsis
 base_field: search_api_id
 display:
   default:
@@ -72,7 +72,7 @@ display:
       fields:
         title:
           id: title
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: title
           relationship: none
           group_type: group
@@ -125,7 +125,7 @@ display:
           plugin_id: search_api
         project_long_name:
           id: project_long_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: project_long_name
           relationship: none
           group_type: group
@@ -178,7 +178,7 @@ display:
           plugin_id: search_api
         project_short_name:
           id: project_short_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: project_short_name
           relationship: none
           group_type: group
@@ -280,7 +280,7 @@ display:
           plugin_id: custom
         data_center_long_name:
           id: data_center_long_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_center_long_name
           relationship: none
           group_type: group
@@ -333,7 +333,7 @@ display:
           plugin_id: search_api
         data_center_short_name:
           id: data_center_short_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_center_short_name
           relationship: none
           group_type: group
@@ -386,7 +386,7 @@ display:
           plugin_id: search_api
         data_center_url:
           id: data_center_url
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_center_url
           relationship: none
           group_type: group
@@ -488,7 +488,7 @@ display:
           plugin_id: custom
         collection:
           id: collection
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: collection
           relationship: none
           group_type: group
@@ -541,7 +541,7 @@ display:
           plugin_id: search_api
         iso_topic_category:
           id: iso_topic_category
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: iso_topic_category
           relationship: none
           group_type: group
@@ -594,7 +594,7 @@ display:
           plugin_id: search_api
         sm_keywords:
           id: sm_keywords
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: sm_keywords
           relationship: none
           group_type: group
@@ -647,7 +647,7 @@ display:
           plugin_id: search_api
         related_url_landing_page_desc:
           id: related_url_landing_page_desc
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: related_url_landing_page_desc
           relationship: none
           group_type: group
@@ -700,7 +700,7 @@ display:
           plugin_id: search_api
         related_url_user_guide_desc:
           id: related_url_user_guide_desc
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: related_url_user_guide_desc
           relationship: none
           group_type: group
@@ -753,7 +753,7 @@ display:
           plugin_id: search_api
         related_url_landing_page:
           id: related_url_landing_page
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: related_url_landing_page
           relationship: none
           group_type: group
@@ -806,7 +806,7 @@ display:
           plugin_id: search_api
         related_url_user_guide:
           id: related_url_user_guide
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: related_url_user_guide
           relationship: none
           group_type: group
@@ -915,7 +915,7 @@ display:
           plugin_id: fieldset
         abstract:
           id: abstract
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: abstract
           relationship: none
           group_type: group
@@ -1028,7 +1028,7 @@ display:
           plugin_id: fieldset
         metadata_identifier:
           id: metadata_identifier
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: metadata_identifier
           relationship: none
           group_type: group
@@ -1081,7 +1081,7 @@ display:
           plugin_id: search_api
         last_metadata_update_datetime:
           id: last_metadata_update_datetime
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: last_metadata_update_datetime
           relationship: none
           group_type: group
@@ -1134,7 +1134,7 @@ display:
           plugin_id: search_api
         metadata_status:
           id: metadata_status
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: metadata_status
           relationship: none
           group_type: group
@@ -1187,7 +1187,7 @@ display:
           plugin_id: search_api
         access_constraint:
           id: access_constraint
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: access_constraint
           relationship: none
           group_type: group
@@ -1240,7 +1240,7 @@ display:
           plugin_id: search_api
         use_constraint_identifier:
           id: use_constraint_identifier
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: use_constraint_identifier
           relationship: none
           group_type: group
@@ -1354,7 +1354,7 @@ display:
           plugin_id: fieldset
         dataset_citation_title:
           id: dataset_citation_title
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: dataset_citation_title
           relationship: none
           group_type: group
@@ -1407,7 +1407,7 @@ display:
           plugin_id: search_api
         dataset_citation_author:
           id: dataset_citation_author
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: dataset_citation_author
           relationship: none
           group_type: group
@@ -1460,7 +1460,7 @@ display:
           plugin_id: search_api
         dataset_citation_publisher:
           id: dataset_citation_publisher
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: dataset_citation_publisher
           relationship: none
           group_type: group
@@ -1513,7 +1513,7 @@ display:
           plugin_id: search_api
         dataset_citation_publication_date:
           id: dataset_citation_publication_date
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: dataset_citation_publication_date
           relationship: none
           group_type: group
@@ -1566,7 +1566,7 @@ display:
           plugin_id: search_api
         dataset_citation_publication_place:
           id: dataset_citation_publication_place
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: dataset_citation_publication_place
           relationship: none
           group_type: group
@@ -1619,7 +1619,7 @@ display:
           plugin_id: search_api
         dataset_citation_series:
           id: dataset_citation_series
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: dataset_citation_series
           relationship: none
           group_type: group
@@ -1732,7 +1732,7 @@ display:
           plugin_id: fieldset
         personnel_datacenter_name:
           id: personnel_datacenter_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_datacenter_name
           relationship: none
           group_type: group
@@ -1785,7 +1785,7 @@ display:
           plugin_id: search_api
         personnel_datacenter_organisation:
           id: personnel_datacenter_organisation
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_datacenter_organisation
           relationship: none
           group_type: group
@@ -1838,7 +1838,7 @@ display:
           plugin_id: search_api
         personnel_datacenter_email:
           id: personnel_datacenter_email
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_datacenter_email
           relationship: none
           group_type: group
@@ -1891,7 +1891,7 @@ display:
           plugin_id: search_api
         personnel_datacenter_phone:
           id: personnel_datacenter_phone
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_datacenter_phone
           relationship: none
           group_type: group
@@ -1944,7 +1944,7 @@ display:
           plugin_id: search_api
         personnel_datacenter_fax:
           id: personnel_datacenter_fax
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_datacenter_fax
           relationship: none
           group_type: group
@@ -2055,7 +2055,7 @@ display:
           plugin_id: fieldset
         personnel_investigator_name:
           id: personnel_investigator_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_investigator_name
           relationship: none
           group_type: group
@@ -2108,7 +2108,7 @@ display:
           plugin_id: search_api
         personnel_investigator_organisation:
           id: personnel_investigator_organisation
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_investigator_organisation
           relationship: none
           group_type: group
@@ -2161,7 +2161,7 @@ display:
           plugin_id: search_api
         personnel_investigator_email:
           id: personnel_investigator_email
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_investigator_email
           relationship: none
           group_type: group
@@ -2272,7 +2272,7 @@ display:
           plugin_id: fieldset
         personnel_metadata_author_name:
           id: personnel_metadata_author_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_metadata_author_name
           relationship: none
           group_type: group
@@ -2325,7 +2325,7 @@ display:
           plugin_id: search_api
         personnel_metadata_author_organisation:
           id: personnel_metadata_author_organisation
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_metadata_author_organisation
           relationship: none
           group_type: group
@@ -2378,7 +2378,7 @@ display:
           plugin_id: search_api
         personnel_metadata_author_email:
           id: personnel_metadata_author_email
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: personnel_metadata_author_email
           relationship: none
           group_type: group
@@ -2431,7 +2431,7 @@ display:
           plugin_id: search_api
         platform_short_name:
           id: platform_short_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: platform_short_name
           relationship: none
           group_type: group
@@ -2484,7 +2484,7 @@ display:
           plugin_id: search_api
         platform_long_name:
           id: platform_long_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: platform_long_name
           relationship: none
           group_type: group
@@ -2598,7 +2598,7 @@ display:
           plugin_id: fieldset
         platform_instrument_short_name:
           id: platform_instrument_short_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: platform_instrument_short_name
           relationship: none
           group_type: group
@@ -2651,7 +2651,7 @@ display:
           plugin_id: search_api
         platform_instrument_long_name:
           id: platform_instrument_long_name
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: platform_instrument_long_name
           relationship: none
           group_type: group
@@ -2704,7 +2704,7 @@ display:
           plugin_id: search_api
         platform_instrument_mode:
           id: platform_instrument_mode
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: platform_instrument_mode
           relationship: none
           group_type: group
@@ -2757,7 +2757,7 @@ display:
           plugin_id: search_api
         platform_instrument_polarisation:
           id: platform_instrument_polarisation
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: platform_instrument_polarisation
           relationship: none
           group_type: group
@@ -2810,7 +2810,7 @@ display:
           plugin_id: search_api
         platform_instrument_product_type:
           id: platform_instrument_product_type
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: platform_instrument_product_type
           relationship: none
           group_type: group
@@ -2863,7 +2863,7 @@ display:
           plugin_id: search_api
         platform_ancillary_cloud_coverage:
           id: platform_ancillary_cloud_coverage
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: platform_ancillary_cloud_coverage
           relationship: none
           group_type: group
@@ -2982,7 +2982,7 @@ display:
           plugin_id: fieldset
         temporal_extent_start_date:
           id: temporal_extent_start_date
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: temporal_extent_start_date
           relationship: none
           group_type: group
@@ -3035,7 +3035,7 @@ display:
           plugin_id: search_api
         temporal_extent_end_date:
           id: temporal_extent_end_date
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: temporal_extent_end_date
           relationship: none
           group_type: group
@@ -3147,7 +3147,7 @@ display:
           plugin_id: fieldset
         geographic_extent_rectangle_north:
           id: geographic_extent_rectangle_north
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: geographic_extent_rectangle_north
           relationship: none
           group_type: group
@@ -3209,7 +3209,7 @@ display:
           plugin_id: search_api_numeric
         geographic_extent_rectangle_south:
           id: geographic_extent_rectangle_south
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: geographic_extent_rectangle_south
           relationship: none
           group_type: group
@@ -3271,7 +3271,7 @@ display:
           plugin_id: search_api_numeric
         geographic_extent_ectangle_east:
           id: geographic_extent_ectangle_east
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: geographic_extent_ectangle_east
           relationship: none
           group_type: group
@@ -3333,7 +3333,7 @@ display:
           plugin_id: search_api_numeric
         geographic_extent_rectangle_west:
           id: geographic_extent_rectangle_west
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: geographic_extent_rectangle_west
           relationship: none
           group_type: group
@@ -3461,7 +3461,7 @@ display:
           plugin_id: fieldset
         data_access_url_http_desc:
           id: data_access_url_http_desc
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_http_desc
           relationship: none
           group_type: group
@@ -3514,7 +3514,7 @@ display:
           plugin_id: search_api
         data_access_url_ftp_desc:
           id: data_access_url_ftp_desc
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_ftp_desc
           relationship: none
           group_type: group
@@ -3567,7 +3567,7 @@ display:
           plugin_id: search_api
         data_access_url_odata_desc:
           id: data_access_url_odata_desc
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_odata_desc
           relationship: none
           group_type: group
@@ -3620,7 +3620,7 @@ display:
           plugin_id: search_api
         data_access_url_ogc_wms_desc:
           id: data_access_url_ogc_wms_desc
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_ogc_wms_desc
           relationship: none
           group_type: group
@@ -3673,7 +3673,7 @@ display:
           plugin_id: search_api
         data_access_url_opendap_desc:
           id: data_access_url_opendap_desc
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_opendap_desc
           relationship: none
           group_type: group
@@ -3726,7 +3726,7 @@ display:
           plugin_id: search_api
         data_access_url_http:
           id: data_access_url_http
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_http
           relationship: none
           group_type: group
@@ -3779,7 +3779,7 @@ display:
           plugin_id: search_api
         data_access_url_ftp:
           id: data_access_url_ftp
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_ftp
           relationship: none
           group_type: group
@@ -3832,7 +3832,7 @@ display:
           plugin_id: search_api
         data_access_url_opendap:
           id: data_access_url_opendap
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_opendap
           relationship: none
           group_type: group
@@ -3885,7 +3885,7 @@ display:
           plugin_id: search_api
         data_access_url_odata:
           id: data_access_url_odata
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_odata
           relationship: none
           group_type: group
@@ -3938,7 +3938,7 @@ display:
           plugin_id: search_api
         data_access_url_ogc_wms:
           id: data_access_url_ogc_wms
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_ogc_wms
           relationship: none
           group_type: group
@@ -3991,7 +3991,7 @@ display:
           plugin_id: search_api
         data_access_url_ogc_wfs:
           id: data_access_url_ogc_wfs
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: data_access_url_ogc_wfs
           relationship: none
           group_type: group
@@ -4052,7 +4052,7 @@ display:
       arguments:
         id:
           id: id
-          table: search_api_index_drupal8
+          table: search_api_index_metsis
           field: id
           relationship: none
           group_type: group
@@ -4088,7 +4088,7 @@ display:
         - 'languages:language_interface'
         - url
       tags:
-        - 'config:search_api.index.drupal8'
+        - 'config:search_api.index.metsis'
   page_1:
     display_plugin: page
     id: page_1
@@ -4106,4 +4106,4 @@ display:
         - 'languages:language_interface'
         - url
       tags:
-        - 'config:search_api.index.drupal8'
+        - 'config:search_api.index.metsis'

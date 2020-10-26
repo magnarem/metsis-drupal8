@@ -8,7 +8,7 @@ dependencies:
     - metsis
     - adc
     - sios
-    - drupal8_w3css_theme
+    - metsis_w3css_theme
 id: gcmdkeywordsblock
 theme: metsis
 region: breadcrumb

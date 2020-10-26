@@ -6,9 +6,9 @@ dependencies:
   module:
     - system
   theme:
-    - drupal8_w3css_theme
-id: drupal8_w3css_theme_footer
-theme: drupal8_w3css_theme
+    - metsis_w3css_theme
+id: metsis_w3css_theme_footer
+theme: metsis_w3css_theme
 region: footer_menu
 weight: 0
 provider: null

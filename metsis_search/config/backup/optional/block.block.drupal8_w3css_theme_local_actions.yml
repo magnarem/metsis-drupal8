@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies:
   theme:
-    - drupal8_w3css_theme
-id: drupal8_w3css_theme_local_actions
-theme: drupal8_w3css_theme
+    - metsis_w3css_theme
+id: metsis_w3css_theme_local_actions
+theme: metsis_w3css_theme
 region: content
 weight: 1
 provider: null
