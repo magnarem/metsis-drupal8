@@ -12,7 +12,7 @@ dependencies:
     - metsis_search
     enforced:
       module:
-        -metsis_search
+        - metsis_search
 id: metsis_search
 label: 'Metsis Search'
 index_id: metsis
