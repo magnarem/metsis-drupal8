@@ -10,7 +10,6 @@ dependencies:
     - metsis
     - adc
     - sios
-    - metsis_w3css_theme
 id: metsis_organisation
 theme: metsis
 region: sidebar_second

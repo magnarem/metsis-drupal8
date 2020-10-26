@@ -8,7 +8,6 @@ dependencies:
     - metsis
     - adc
     - sios
-    - metsis_w3css_theme
 id: metsis_metsissearchmap
 theme: metsis
 region: content
