@@ -1,10 +1,6 @@
 langcode: en
 status: true
-dependencies:
-  - metsis_search
-    enforced:
-      module:
-        - metsis_search
+dependencies: { }
 id: views_page---metsis_search__results_timestamp
 display_id: views_page---metsis_search__results
 field_identifier: timestamp
