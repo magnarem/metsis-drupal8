@@ -90,22 +90,41 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
          ];
         // search-map wrapper
         $build['search-map'] = [
-          '#prefix' => '<div id="map-res" class="map-res">',
+          '#prefix' => '<div id="map-res" class="map-res w3-container">',
           '#suffix' => '</div>'
     ];
 
     // search-map wrapper
     $build['search-map']['panel'] = [
-      '#prefix' => '<div id="panel" class="panel">',
+      '#prefix' => '<div id="panel" class="panel w3-container">',
       '#suffix' => '</div>'
 ];
 
     //Panel button
     $build['search-map']['panel']['bbox-filter'] = [
       '#type' => 'markup',
-      '#markup' => '<button id="bboxButton" class="adc-button adc-sbutton">Bbox Filter</button><div class="current-bbox-filter"></div><div class="current-bbox-select"></div>',
+      '#markup' => '<button id="bboxButton" class="w3-left adc-button adc-sbutton">Bbox Filter</button>',
       '#allowed_tags' => ['div','label','button','br'],
     ];
+
+    $build['search-map']['panel']['vis-all'] = [
+      '#type' => 'markup',
+      '#markup' => '<span id="vizClass"><button id="vizAllButton" class="w3-center adc-button adc-sbutton"></button></span>',
+      '#allowed_tags' => ['div','label','button','br'],
+    ];
+    $build['search-map']['panel']['reset'] = [
+      '#type' => 'markup',
+      '#markup' => '<a id="resetButton" class="w3-right adc-button adc-sbutton" href="/metsis/search?op=Reset">Reset search</a>',
+      '#allowed_tags' => ['div','label','button','br','a'],
+    ];
+
+    $build['search-map']['panel']['filter'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="current-bbox-filter"></div><div class="current-bbox-select"></div>',
+      '#allowed_tags' => ['div','label','button','br'],
+    ];
+
+
 
     $build['search-map']['panel']['layers'] = [
       '#type' => 'markup',

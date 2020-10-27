@@ -53,7 +53,9 @@ class WmsController extends ControllerBase
         \Drupal::logger('metsis_wms')->debug("Got query parameters: " . count($query));
         if (count($query) > 0) {
             $datasets = explode(",", $query['dataset']);
+
             $webMapServers = $this->getWebMapServers($datasets);
+            dpm($webMapServers);
             $markup = $this->prepareWmsMarkup(
                 $wms_lon,
                 $wms_lat,
@@ -118,7 +120,7 @@ class WmsController extends ControllerBase
         $wms_data = [];
         $layers = [];
         $web_map_servers = [];
-        $wms_restrict_layers = 1;  //TODO: Read this from WMS Config
+        $wms_restrict_layers = 0;  //TODO: Read this from WMS Config
 
         $capdoc_postfix = "?SERVICE=WMS&REQUEST=GetCapabilities"; //TODO: Read this from config
 
@@ -148,7 +150,7 @@ class WmsController extends ControllerBase
                 if ($wms_restrict_layers === 1 && isset($wms_data[$mi]['layers'])) {
                     $web_map_servers[$mi] = '{capabilitiesUrl: "' . $wms_url_lhs . $wms_data[$mi]['dar'][0] . $capdoc_postfix . '",activeLayer:"' . $wms_data[$mi]['layers'][0] . '",layers: [' . $layers . ']}';
                 } else {
-                    $web_map_servers[$mi] = '{capabilitiesUrl: "' . $wms_url_lhs . $wms_data[$mi]['dar'][0] . $capdoc_postfix . '",activeLayer:"",layers: []}';
+                    $web_map_servers[$mi] = '{capabilitiesUrl: "' . $wms_url_lhs . $wms_data[$mi]['dar'][0] . $capdoc_postfix . '", activeLayer:"", layers: []}';
                 }
             }
            else {
@@ -156,6 +158,7 @@ class WmsController extends ControllerBase
               return new RedirectResponse($referer);
           }
         }
+
         $webMapServers = implode(',', $web_map_servers);
         return $webMapServers;
 
@@ -248,12 +251,13 @@ EOM;
 
         $solarium_query = $connector->getSelectQuery();
 
-        foreach ($metadata_identifier as $id) {
-            \Drupal::logger('metsis_wms')->debug("setQuery: metadata_identifier: " .$id);
-            $solarium_query->setQuery('metadata_identifier:'.$id);
-        }
+        //foreach ($metadata_identifier as $id) {
+        //    \Drupal::logger('metsis_wms')->debug("setQuery: metadata_identifier: " .$id);
+        $ids = implode(' ', $metadata_identifier);
+            $solarium_query->setQuery('metadata_identifier:('.$ids.')');
+        //}
         //$solarium_query->addSort('sequence_id', Query::SORT_ASC);
-        $solarium_query->setRows(2);
+        //$solarium_query->setRows(2);
         $solarium_query->setFields($fields);
 
         $result = $connector->execute($solarium_query);

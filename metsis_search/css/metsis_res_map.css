@@ -151,3 +151,6 @@
 .addl {
    list-style-type: none;
 }
+button#vizAllButton {
+  display: none;
+}

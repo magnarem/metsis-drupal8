@@ -115,7 +115,7 @@ function metsis_search_views_pre_render(ViewExecutable $view)
         $view->element['#attached']['drupalSettings']['metsis_search_ts_plot'] = [
           'pywps_service' => $pywps_service,
           'module_path' => $module_path
-        ]; 
+        ];
     }
 }
 
@@ -180,7 +180,7 @@ function metsis_search_theme()
     $map_layers_list =  $config->get('map_layers');
 
     return [
-    'block__exposedformmetsis_search_viewresults' => [
+  /*  'block__exposedformmetsis_search_viewresults' => [
       'render element' => 'elements',
       'base hook' => 'block',
     ],
@@ -202,7 +202,7 @@ function metsis_search_theme()
         'map_layers_list' => $map_layers_list,
       ],
       #'template' =>   'block--mapblockformetsissearch',
-    ],
+    ], */
   ];
 }
 

@@ -75,7 +75,7 @@ class MapSearchController extends ControllerBase {
         ],
       ];
       $response = new AjaxResponse();
-      $response->addCommand(new SettingsCommand(['metsis_search_map_block' => []], TRUE));
+      //$response->addCommand(new SettingsCommand(['metsis_search_map_block' => []], TRUE));
       $response->addCommand(new SettingsCommand ($data, TRUE));
 
 

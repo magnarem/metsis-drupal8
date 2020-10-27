@@ -34,6 +34,7 @@
         console.log('base layer south: ' +base_layer_wms_south);
         console.log('pins :' + pins);
         console.log('layers: ' + additional_layers);
+        console.log('init proj: ' + init_proj);
 
         // Create the projections input boxes
         for (var key in projections) {
@@ -423,6 +424,8 @@
              //$(this).css('display', 'block');
            //});
       });
+
+      //Reload the lazy loading of thumbnails
       var bLazy = new Blazy();
       bLazy.revalidate();
        //for (let i = 0; i < feature_ids.length; i++) {
@@ -775,9 +778,28 @@
         var zoomToExtentControl = new ol.control.ZoomToExtent({});
         map.addControl(zoomToExtentControl);
 
+        //Loop over the extracted info, and check how many wms resources we have
+        var wmsProducts = [];
+        for (var i = 0; i < extracted_info.length; i++) {
+           id = extracted_info[i][1];
+           wms = extracted_info[i][0][1];
+           if(wms != null && wms != "") {
+             wmsProducts.push(id);
+           }
+        }
+
+        // If we have wms datasets in map, show the visualise all button
+        if(wmsProducts.length > 0) {
+          datasets = wmsProducts.join(',');
+          $('#vizAllButton').css('display', 'block');
+          $('#vizAllButton').append(
+            $(document.createElement('a')).prop({
+              href: '/metsis/map/wms?dataset='+datasets,
+          }).text('Viusalise all WMS resources in Map'));
+        }
         // Search bbox filter
         $('#bboxButton').click(function(){
-          console.log('click for bbox filter');
+          console.log('click for bbox filter: '+proj);
   //        var tllat;
   //        var tllon;
   //        var brlat;

@@ -314,7 +314,7 @@ class SearchUtils
       ],
       [$institutions, $personnel_name],
       [$access_const, $use_const],
-      'drupal8',
+      'metsis',
     ];
             $metadata_div_counter += 1;
 
