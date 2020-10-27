@@ -799,7 +799,7 @@
         }
         // Search bbox filter
         $('#bboxButton').click(function(){
-          console.log('click for bbox filter: '+proj);
+          console.log('click for bbox filter: '+prj);
   //        var tllat;
   //        var tllon;
   //        var brlat;
