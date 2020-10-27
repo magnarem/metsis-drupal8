@@ -79,7 +79,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         //Get the extracted info from tempstore
         //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
         $extracted_info = $session->get('extracted_info');
-
+        //dpm($proj);
         if($proj != null) { $map_init_proj = $proj; }
         /**
          * Create the render array

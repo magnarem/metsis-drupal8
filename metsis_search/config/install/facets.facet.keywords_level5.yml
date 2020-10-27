@@ -6,19 +6,19 @@ dependencies:
     - views.view.metsis_search
   module:
     - search_api
-id: keywords_level2
-name: 'Keywords level2'
-url_alias: keywords_level2
+id: keywords_level5
+name: 'Keywords level5'
+url_alias: keywords_level5
 weight: 0
 min_count: 1
 show_only_one_result: false
-field_identifier: keywords_level2
+field_identifier: keywords_level5
 facet_source_id: 'search_api:views_page__metsis_search__results'
 widget:
   type: links
   config:
     show_numbers: true
-    soft_limit: 15
+    soft_limit: 10
     soft_limit_settings:
       show_less_label: 'Show less'
       show_more_label: 'Show more'
@@ -76,8 +76,8 @@ processor_configs:
         values: ''
         negate: false
       gcmd_keywords:
-        enable: true
-        condition: not_empty
+        enable: false
+        condition: null
         values: ''
         negate: false
       instrument_mode:
@@ -100,9 +100,19 @@ processor_configs:
         condition: null
         values: ''
         negate: false
+      keywords_level2:
+        enable: false
+        condition: not_empty
+        values: ''
+        negate: false
       keywords_level3:
         enable: false
-        condition: null
+        condition: not_empty
+        values: ''
+        negate: false
+      keywords_level4:
+        enable: true
+        condition: not_empty
         values: ''
         negate: false
       organisation:

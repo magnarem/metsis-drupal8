@@ -22,9 +22,9 @@ widget:
     soft_limit_settings:
       show_less_label: 'Show less'
       show_more_label: 'Show more'
-    show_reset_link: true
+    show_reset_link: false
     reset_text: 'Show all'
-    hide_reset_when_no_selection: true
+    hide_reset_when_no_selection: false
 query_operator: and
 use_hierarchy: false
 expand_hierarchy: false
@@ -38,7 +38,7 @@ processor_configs:
     weights:
       sort: 20
     settings:
-      sort: DESC
+      sort: ASC
   count_widget_order:
     processor_id: count_widget_order
     weights:
@@ -140,12 +140,16 @@ processor_configs:
         condition: null
         values: ''
         negate: false
-  display_value_widget_order:
-    processor_id: display_value_widget_order
-    weights:
-      sort: 40
-    settings:
-      sort: ASC
+      start_date_month:
+        enable: false
+        condition: null
+        values: ''
+        negate: false
+      start_date_year:
+        enable: false
+        condition: null
+        values: ''
+        negate: false
   url_processor_handler:
     processor_id: url_processor_handler
     weights:

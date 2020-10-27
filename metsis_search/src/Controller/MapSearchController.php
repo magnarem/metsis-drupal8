@@ -30,7 +30,7 @@ class MapSearchController extends ControllerBase {
       $session->set('tllon', $tllon);
       $session->set('brlat', $brlat);
       $session->set('brlon', $brlon);
-      $session->set('proj', $proj);-
+      $session->set('proj', $proj);
       /*
       $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
       $tempstore->set('bboxFilter', $bboxFilter);

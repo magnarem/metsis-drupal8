@@ -339,6 +339,9 @@ function metsis_search_search_api_solr_search_results_alter(
     $session = \Drupal::request()->getSession();
 
     //Extract some info for the search map from the solr result
+    $request = \Drupal::request();
+    $referer = $request->headers->get('referer');
+    //dpm($referer);
     $extracted_info = SearchUtils::getExtractedInfo($result);
 
     //$gcmd_facet = SearchUtils::processGcmdFacet($result);
