@@ -55,7 +55,7 @@ class WmsController extends ControllerBase
             $datasets = explode(",", $query['dataset']);
 
             $webMapServers = $this->getWebMapServers($datasets);
-            dpm($webMapServers);
+            //dpm($webMapServers);
             $markup = $this->prepareWmsMarkup(
                 $wms_lon,
                 $wms_lat,
