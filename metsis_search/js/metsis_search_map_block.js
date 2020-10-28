@@ -806,9 +806,12 @@
   //        var brlon;
 
           // clear pins and polygons
-          map.getLayers().getArray()[2].getSource().clear(true);
-          map.getLayers().getArray()[1].getSource().clear(true);
-
+          try {
+            map.getLayers().getArray()[2].getSource().clear(true);
+            map.getLayers().getArray()[1].getSource().clear(true);
+          } catch (e)  {
+            console.log('layers already remoed');
+          }
           //clear id_tooltip
           //map.un('click', function tooltipclick(evt) {});
           map.un('click',tooltipclick);
