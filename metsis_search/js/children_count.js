@@ -21,25 +21,7 @@
             Drupal.ajax({ url: myurl}).execute();
           //console.log(response);
           }
-          //  $.ajax({
-          //  url: myurl,
-          //  success : function(response) {
-            //  Drupal.behaviors.metsis_search = {
-            //    attach: function (context, settings) {
-            //      var data = $.parseJSON(response);
-            //      var count = parseInt(data.count);
-                  //var divid = metaid;
-            //      console.log(response);
-              //    if(count > 0) {
-              //      var markup = '<a href="/metsis/elements?metadata_identifier="' +'"/>Child data..['+data.count+']</a>';
-            //        console.log(markup);
-            //        $('#children',context).html(markup);
-            //      }
-          //    },
-        //    error: function (request, status, error) {
-        //        console.log("Error");
-          //    }
-            //});
+        
 
           });
         },
