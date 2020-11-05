@@ -113,4 +113,3 @@ class MetsisBasketConfigurationForm extends ConfigFormBase {
       ->save();
   }
 }
-?>
