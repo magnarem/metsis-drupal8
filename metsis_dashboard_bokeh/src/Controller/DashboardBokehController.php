@@ -25,9 +25,20 @@ class DashboardBokehController extends ControllerBase {
       //$backend_uri = 'https://pybasket.epinux.com/dashboard';
       //$backend_uri = 'https://pybasket.epinux.com/dashboard-bkapp-api';
       //$backend_uri = 'http://178.63.52.22:7000/dashboard-bkapp-api?datasources=a&datasources=b&datasources=c&email=me%40you.web';
-      var_dump($backend_uri);
+      //var_dump($backend_uri);
+      $resources_test = 'http://hyrax.epinux.com/opendap/SN99938.nc,http://hyrax.epinux.com/opendap/ctdiaoos_gi2007_2009.nc,http://hyrax.epinux.com/opendap/itp01_itp1grd2042.nc';
+
       \Drupal::logger('metsis_dashboard_bokeh')->debug(t("@backend", ['@backend' => $backend_uri ] ) );
-      $resources = 'http://hyrax.epinux.com/opendap/SN99938.nc,http://hyrax.epinux.com/opendap/ctdiaoos_gi2007_2009.nc,http://hyrax.epinux.com/opendap/itp01_itp1grd2042.nc';
+      $tempstore = \Drupal::service('tempstore.private');
+      // Get the store collection.
+      $store = $tempstore->get('metsis_dashboard_bokeh');
+      $resources = $store->get('basket');
+      dpm($resources);
+
+      /**
+       * FIXME: This IF-caluse is for testing only. Should be removed for prod
+       */
+      if($resources == NULL) { $resources = explode(',', $resources_test); }
 
       $markup = $this->getDashboard($backend_uri, $resources);
       \Drupal::logger('metsis_dashboard_bokeh')->debug(t("@markup", ['@markup' => $markup ] ) );
@@ -35,7 +46,7 @@ class DashboardBokehController extends ControllerBase {
       // Build page
       $build['dashboard-wrapper'] = [
         '#type' => 'markup',
-        '#markup' => '<div id="bokeh-dashboard" class="w3-container w3-card4">',
+        '#markup' => '<div id="bokeh-dashboard" class="w3-container w3-card-4">',
         '#attached' => [
           'library' => [
             'metsis_dashboard_bokeh/dashboard',
@@ -56,14 +67,31 @@ class DashboardBokehController extends ControllerBase {
     function getDashboard($backend_uri, $resources) {
 
       //Create datasources query parameters from resources
-      $res_list = explode(',', $resources);
+      $res_list = $resources;
       $query_params = "?";
       foreach ($res_list as $r) {
         $query_params .= 'datasources=' . urlencode($r) . '&';
       }
       // Add user email query parameter
       $query_params .= 'email=' .  \Drupal::currentUser()->getEmail();
-
+  /*    try {
+           $client = \Drupal::httpClient();
+           //$client->setOptions(['debug' => TRUE]);
+           $request = $client->request('GET', $backend_uri,
+           ['debug' => TRUE,
+             'headers' => [
+             'Accept' => 'application/json',
+             ],
+             'query' => [
+               'datasources' => $resources,
+               'email' =>  \Drupal::currentUser()->getEmail(),
+             ],
+           ]
+       );
+       $responseStatus = $request->getStatusCode();
+       $data = $request->getBody();
+       $json_response = \Drupal\Component\Serialization\Json::decode($data);
+     }*/
 
       try {
           $client = \Drupal::httpClient();
