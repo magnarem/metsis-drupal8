@@ -20,17 +20,12 @@ use Drupal\Core\Ajax\MessageCommand;
 class BasketBokehController extends ControllerBase  {
 
   /**
-   * Add opendap resources to private tempstore baslet
+   * Add opendap resources to private tempstore basket
    */
   public function add($metaid) {
       \Drupal::logger('metsis_basket_controller')->debug("/metsis/basket/add");
-    $query_from_request = \Drupal::request()->query->all();
-    $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
-    if(isset($query['datasource'])) {
-      $opendap_uri = $query['datasource'];
-      \Drupal::logger('metsis_basket_controller')->debug("Calling add to basket function with od_uri: @od", ['@od' => $opendap_uri]);
-      $user_id = (int) \Drupal::currentUser()->id();
-      $user_name = \Drupal::currentUser()->getAccountName();
+
+      $opendap_uris = $this->getResources($metaid);
 
       $opendap_uri = urldecode($opendap_uri);
 
@@ -39,14 +34,18 @@ class BasketBokehController extends ControllerBase  {
       $tempstore = \Drupal::service('tempstore.private');
       // Get the store collection.
       $store = $tempstore->get('metsis_dashboard_bokeh');
-      $datasources = [];
       $datasources = $store->get('basket');
       if($datasources != NULL) {
-        $basket_count = array_unshift($datasources, $opendap_uri);
+        foreach ($opendap_uris as $opendap_uri) {
+          $basket_count = array_unshift($datasources, $opendap_uri);
+        }
+
       }
       else {
         $datasources = [];
-        $basket_count = array_unshift($datasources, $opendap_uri);
+        foreach ($opendap_uris as $opendap_uri) {
+          $basket_count = array_unshift($datasources, $opendap_uri);
+        }
       }
       $store->set('basket', $datasources);
       //$basket_count = $this->get_user_item_count($store);
@@ -55,25 +54,57 @@ class BasketBokehController extends ControllerBase  {
 
       $response = new AjaxResponse();
       $response->addCommand(new HtmlCommand('#addtobasket-' . $metaid ,'Add to Basket &#10004;'));
-      $response->addCommand(new ReplaceCommand($selector,$markup));
+      //$response->addCommand(new ReplaceCommand($selector,$markup));
+      $response->addCommand(new HtmlCommand($selector,$basket_count));
       $response->addCommand(new MessageCommand("Dataset added to basket:  " . $metaid));
 
       return $response;
     }
-    else {
-      $response = new AjaxResponse();
-      $response->addCommand(new MessageCommand("Something went wrong", 'warn'));
-      return $response;
+
+
+  /* Get the opendap_uris from the given metadata id. */
+  function getResources($metaid) {
+
+    /** @var Index $index  TODO: Change to metsis when prepeare for release */
+    $index = Index::load('metsis');
+
+    /** @var SearchApiSolrBackend $backend */
+    $backend = $index->getServerInstance()->getBackend();
+
+    $connector = $backend->getSolrConnector();
+
+    $solarium_query = $connector->getSelectQuery();
+
+
+    \Drupal::logger('metsis_dashboard_bokeh')->debug("setQuery: metadata_identifier: " .$metaid);
+    $solarium_query->setQuery('metadata_identifier:'.$metaid);
+
+    //$solarium_query->addSort('sequence_id', Query::SORT_ASC);
+    //$solarium_query->setRows(2);
+    $solarium_query->setFields([
+      'data_access_url_opendap',
+    ]);
+
+    $result = $connector->execute($solarium_query);
+
+    // The total number of documents found by Solr.
+    $found = $result->getNumFound();
+    \Drupal::logger('metsis_dashboard_bokeh')->debug("found :" .$found);
+    // The total number of documents returned from the query.
+    //$count = $result->count();
+
+    // Check the Solr response status (not the HTTP status).
+    // Can't find much documentation for this apart from https://lucene.472066.n3.nabble.com/Response-status-td490876.html#a3703172.
+    //$status = $result->getStatus();
+    $fields = null;
+
+    $fields = $doc->getFields();
+
+    $opendap_uris = [];
+    if(isset($fields['data_access_url_opendap'])) {
+      // An array of documents. Can also iterate directly on $result.
+      $opendap_uris = $fields['data_access_url_opendap'];
     }
-  }
-
-  function getUserItemCount($store) {
-
-    /**
-     * Get count of resources from private tempstore
-     */
-
-    $count = 1;
-    return $count;
+    return $opendap_uris;
   }
 }
