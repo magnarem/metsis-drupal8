@@ -1,6 +1,12 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - search_api.index.metsis
+    - views.view.metsis_elements
+  module:
+    - search_api
+    - metsis_search
 id: elements_start_date_year
 name: 'Elements Start date year'
 url_alias: start_date_year

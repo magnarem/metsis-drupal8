@@ -1161,6 +1161,7 @@ display:
             - nothing_4
             - nothing_6
             - data_access_url_http
+            - data_access_url_ftp
             - nothing_5
             - data_access_url_odata
             - nothing_7
@@ -1181,7 +1182,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div id=\"basket\" class=\"basket\">\r\n<a id=\"addtobasket-{{ id }}\" class=\"adc-button adc-sbutton use-ajax\" href=/metsis/basket/add/{{id}}>Add to Basket</a>\r\n</div>"
+            text: "{% if data_access_url_opendap %}\r\n<div id=\"basket\" class=\"basket\">\r\n<a id=\"addtobasket-{{ id }}\" class=\"adc-button adc-sbutton use-ajax\" href=/metsis/basket/add/{{ id}}?datasource={{ data_access_url_opendap | url_encode }}>Add to Basket</a>\r\n</div>\r\n{% endif %}"
             make_link: false
             path: ''
             absolute: false
@@ -1227,7 +1228,7 @@ display:
           group_type: group
           admin_label: Transform
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: true
             text: "{% if  data_access_url_opendap %}\r\n  {% if feature_type != 'timeSeries' or feature_type != 'profile' %}\r\n<div id=\"transform\" class=\"transform\">\r\n  <a class=\"adc-button adc-sbutton\" href=/metsis/fimex?dataset_id={{ id }} >Transform</a>\r\n</div>\r\n  {% endif %}\r\n{% endif %}"
@@ -1378,6 +1379,59 @@ display:
           alter:
             alter_text: true
             text: '<a class="adc-button adc-sbutton inline" href={{ data_access_url_http }}>Download data</a>'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_item: false
+          use_highlighting: false
+          multi_type: separator
+          multi_separator: ', '
+          plugin_id: search_api
+        data_access_url_ftp:
+          id: data_access_url_ftp
+          table: search_api_index_metsis
+          field: data_access_url_ftp
+          relationship: none
+          group_type: group
+          admin_label: 'Download FTP'
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: '<a class="adc-button adc-sbutton inline" href={{ data_access_url_ftp }}>Download FTP</a>'
             make_link: false
             path: ''
             absolute: false

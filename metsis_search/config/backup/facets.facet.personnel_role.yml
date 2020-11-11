@@ -1,19 +1,24 @@
 langcode: en
 status: true
-dependencies: {  }
-id: elements_start_date_year
-name: 'Elements Start date year'
-url_alias: start_date_year
+dependencies:
+  config:
+    - search_api.index.metsis
+    - views.view.metsis_search
+  module:
+    - search_api
+id: personnel_role
+name: Personnel_role
+url_alias: personnel_role
 weight: 0
 min_count: 1
 show_only_one_result: false
-field_identifier: temporal_extent_start_date
-facet_source_id: 'search_api:views_page__metsis_elements__results'
+field_identifier: personnel_role
+facet_source_id: 'search_api:views_page__metsis_search__results'
 widget:
-  type: links
+  type: checkbox
   config:
-    show_numbers: true
-    soft_limit: 0
+    show_numbers: false
+    soft_limit: 10
     soft_limit_settings:
       show_less_label: 'Show less'
       show_more_label: 'Show more'
@@ -24,29 +29,33 @@ query_operator: and
 use_hierarchy: false
 expand_hierarchy: false
 enable_parent_when_child_gets_disabled: true
-hard_limit: 100
+hard_limit: 0
 exclude: false
-only_visible_when_facet_source_is_visible: true
+only_visible_when_facet_source_is_visible: false
 processor_configs:
-  date_item:
-    processor_id: date_item
+  active_widget_order:
+    processor_id: active_widget_order
     weights:
-      build: -7
+      sort: 20
     settings:
-      date_display: actual_date
-      granularity: 6
-      date_format: 'Y'
+      sort: DESC
+  count_widget_order:
+    processor_id: count_widget_order
+    weights:
+      sort: 30
+    settings:
+      sort: DESC
   display_value_widget_order:
     processor_id: display_value_widget_order
     weights:
       sort: 40
     settings:
-      sort: DESC
+      sort: ASC
   url_processor_handler:
     processor_id: url_processor_handler
     weights:
       pre_query: 50
-      build: -6
+      build: 15
     settings: {  }
 empty_behavior:
   behavior: none

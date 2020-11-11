@@ -6,18 +6,18 @@ dependencies:
     - views.view.metsis_search
   module:
     - search_api
-id: collection
-name: Collection
-url_alias: collection
+id: project
+name: Project
+url_alias: project
 weight: 0
 min_count: 1
 show_only_one_result: false
-field_identifier: collection
+field_identifier: project_short_name
 facet_source_id: 'search_api:views_page__metsis_search__results'
 widget:
   type: checkbox
   config:
-    show_numbers: true
+    show_numbers: false
     soft_limit: 5
     soft_limit_settings:
       show_less_label: 'Show less'
@@ -29,7 +29,7 @@ query_operator: and
 use_hierarchy: false
 expand_hierarchy: false
 enable_parent_when_child_gets_disabled: true
-hard_limit: 0
+hard_limit: 20
 exclude: false
 only_visible_when_facet_source_is_visible: false
 processor_configs:

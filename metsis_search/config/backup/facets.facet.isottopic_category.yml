@@ -6,19 +6,19 @@ dependencies:
     - views.view.metsis_search
   module:
     - search_api
-id: collection
-name: Collection
-url_alias: collection
+id: isottopic_category
+name: 'Iso Topic Category'
+url_alias: isottopic_category
 weight: 0
 min_count: 1
 show_only_one_result: false
-field_identifier: collection
+field_identifier: iso_topic_category
 facet_source_id: 'search_api:views_page__metsis_search__results'
 widget:
-  type: checkbox
+  type: links
   config:
     show_numbers: true
-    soft_limit: 5
+    soft_limit: 10
     soft_limit_settings:
       show_less_label: 'Show less'
       show_more_label: 'Show more'
@@ -29,7 +29,7 @@ query_operator: and
 use_hierarchy: false
 expand_hierarchy: false
 enable_parent_when_child_gets_disabled: true
-hard_limit: 0
+hard_limit: 20
 exclude: false
 only_visible_when_facet_source_is_visible: false
 processor_configs:
@@ -51,6 +51,13 @@ processor_configs:
       sort: 40
     settings:
       sort: ASC
+  exclude_specified_items:
+    processor_id: exclude_specified_items
+    weights:
+      build: 50
+    settings:
+      exclude: "Unknown,['climatologyMeteorologyAtmosphere', 'oceans'], [None, None],[None, None, None],not available \r\n\r\n"
+      regex: false
   url_processor_handler:
     processor_id: url_processor_handler
     weights:

@@ -23,7 +23,6 @@ dependencies:
   - lazy
   - metsis_lib
   - metsis_wms
-  - metsis_basket
   - metsis_ts_bokeh
   - metsis_csv_bokeh
   - back_to_top
