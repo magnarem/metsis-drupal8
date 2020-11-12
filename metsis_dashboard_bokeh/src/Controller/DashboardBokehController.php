@@ -33,7 +33,7 @@ class DashboardBokehController extends ControllerBase {
       // Get the store collection.
       $store = $tempstore->get('metsis_dashboard_bokeh');
       $resources = $store->get('basket');
-      dpm($resources);
+      //dpm($resources);
 
       /**
        * FIXME: This IF-caluse is for testing only. Should be removed for prod
