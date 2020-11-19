@@ -8,7 +8,7 @@ namespace Drupal\metsis_basket\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\metsis_lib\MetsisUtils;
-use Drupal\metsis_basket\Entity\MetsisBasket;
+use Drupal\metsis_basket\Entity\BasketItem;
 use Drupal\Core\Entity\Controller\EntityListController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Component\Serialization\Json;
@@ -20,6 +20,44 @@ use Drupal\Core\Ajax\MessageCommand;
  * {@inheritdoc}
  */
 class MetsisBasketController extends ControllerBase  {
+
+  public function myBasket() {
+    //Get the user_id
+    $user_id = (int) \Drupal::currentUser()->id();
+
+    //Get the refering page
+    $request = \Drupal::request();
+    $referer = $request->headers->get('referer');
+
+
+    //Create content wrapper
+    $build['content'] = [
+      '#prefix' => '<div class="w3-container">',
+      '#suffix' => '</div>'
+    ];
+
+
+    $build['content']['back'] = [
+      '#markup' => '<a class="w3-btn" href="'. $referer . '">Go back to search </a>',
+    ];
+    $build['content']['dashboard'] = [
+      '#markup' => '<a class="w3-btn" href="/metsis/bokeh/dashboard">Go to Dashboard</a>',
+    ];
+
+    $build['content']['view'] = views_embed_view('basket_view', 'embed_1');
+
+    $build['#cache'] = [
+      'contexts' => [
+        'url.path',
+        'url.query_args',
+      ],
+      'tags' => [
+        'view',
+      ],
+    ];
+
+    return $build;
+  }
 
   public function listing($iid) {
     \Drupal::logger('metsis_basket')->debug("Listing item with iid: " . $iid);
@@ -52,31 +90,32 @@ class MetsisBasketController extends ControllerBase  {
     $user_name = \Drupal::currentUser()->getAccountName();
     $title = MetsisUtils::msb_get_title($metaid);
     $dar = MetsisUtils::msb_get_resources($metaid);
+    foreach($dar['opendap'] as $res) {
       $fields = [
         'uid' => $user_id,
         'user_name' => $user_name,
-        'title' => $title[0],
+        'title' => $title,
         'session_id' => session_id(),
         'basket_timestamp' => time(),
         'metadata_identifier' => $metaid,
-        'data_access_resource_http' => $dar['http'],
-        'data_access_resource_odata' => $dar['odata'],
-        'data_access_resource_opendap' => $dar['opendap'],
-        'data_access_resource_ogc_wms' => $dar['ogc_wms'],
+  //      'data_access_resource_http' => $dar['http'],
+  //      'data_access_resource_odata' => $dar['odata'],
+        'data_access_resource_opendap' => $res,
+  //      'data_access_resource_ogc_wms' => $dar['ogc_wms'],
       ];
+      dpm($res);
       $query = \Drupal::database()->insert('metsis_basket')->fields($fields)->execute();
+    }
     //$objects = \Drupal::entityTypeManager()->getStorage('metsis_basket', array($iid));
     //\Drupal::messenger()->addMessage("Dataset added to basket:  " . $metaid);
     //\Drupal::cache()->invalidate('metsis_basket_block');//Check if we already have an active bboxFilter
 
 
-    //Check if we already have an active bboxFilter
-    $user_id = (int) \Drupal::currentUser()->id();
-    $basket_count = get_user_item_count($user_id);
-    $selector = '#myBasket';
+    $basket_count = $this->get_user_item_count($user_id);
+    $selector = '#myBasketCount';
     //$markup = '<a href="/metsis/elements?metadata_identifier="'. $id .'"/>Child data..['. $found .']</a>';
 
-    $markup = 'My Basket ('. $basket_count .')';
+    $markup = '<span id="myBasketCount" class="w3-badge w3-green">' . $basket_count . '</span>';
 
     $response = new AjaxResponse();
     $response->addCommand(new HtmlCommand('#addtobasket-' . $metaid ,'Add to Basket &#10004;'));
@@ -85,4 +124,15 @@ class MetsisBasketController extends ControllerBase  {
 
     return $response;
   }
+
+  public static  function get_user_item_count($user_id) {
+    $query = \Drupal::database()->select('metsis_basket', 'm');
+    $query->fields('m', array('iid'));
+    $query->condition('m.uid', $user_id, '=');
+    $results = $query->execute()->fetchAll();
+    return count($results);
+  }
+
+
+
 }

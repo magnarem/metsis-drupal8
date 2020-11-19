@@ -1,8 +1,9 @@
 metsis_basket.view:
-  path: '/metsis/basket'
+  path: '/metsis/mybasket'
   defaults:
     _title: 'My Basket'
-    _route: 'view.basket_view.page_1'
+#    _route: 'view.basket_view.page_1'
+    _controller: '\Drupal\metsis_basket\Controller\MetsisBasketController::myBasket'
   requirements:
     _permission: 'access metsis basket items'
 
@@ -13,13 +14,13 @@ metsis_basket.listing:
     _controller: '\Drupal\metsis_basket\Controller\MetsisBasketController::listing'
   requirements:
     _permission: 'access metsis basket items'
-#metsis_basket.add:
-#  path: '/metsis/basket/add/{metaid}'
-#  defaults:
-#    _title: 'METSIS Basket Add item'
-#    _controller: '\Drupal\metsis_basket\Controller\MetsisBasketController::add'
-#  requirements:
-#    _permission: 'access metsis basket items'
+metsis_basket.add:
+  path: '/metsis/basket/add/{metaid}'
+  defaults:
+    _title: 'METSIS Basket Add item'
+    _controller: '\Drupal\metsis_basket\Controller\MetsisBasketController::add'
+  requirements:
+    _permission: 'access metsis basket items'
 
 metsis_basket.metsis_basket_admin_settings_form:
     path: '/admin/config/metsis_basket/configuration'

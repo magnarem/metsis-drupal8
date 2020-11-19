@@ -8,22 +8,22 @@ dashboard:
   requirements:
     _permission: 'access bokeh dashboard'
 
-basket.add:
-  path: '/metsis/basket/add/{metaid}'
-  defaults:
-    _title: 'Add item to Basket'
-    _controller: '\Drupal\metsis_dashboard_bokeh\Controller\BasketBokehController::add'
-  options:
-    query:
-      datasource: ""
-  requirements:
-    _permission: 'add basket items'
+#basket.add:
+#  path: '/metsis/basket/add/{metaid}'
+#  defaults:
+#    _title: 'Add item to Basket'
+#    _controller: '\Drupal\metsis_dashboard_bokeh\Controller\BasketBokehController::add'
+#  options:
+#    query:
+#      datasource: ""
+#  requirements:
+#    _permission: 'add basket items'
 
 dashboard_bokeh.admin_settings_form:
-  path: '/admin/config/metsis/ts_bokeh'
+  path: '/admin/config/metsis/dashboard_bokeh'
   defaults:
     _form: '\Drupal\metsis_dashboard_bokeh\Form\DashboardBokehConfigurationForm'
-    _title: 'TS Bokeh Configuration Form'
+    _title: 'Dashboard Bokeh Configuration Form'
   requirements:
     _permission: 'administer site configuration'
   options:

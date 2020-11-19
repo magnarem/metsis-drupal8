@@ -1,24 +1,25 @@
 <?php
 /*
  * @file
- * Contains \Drupal\metsis_dashboard_bokeh\Plugin\Block\BasketBlock
+ * Contains \Drupal\metsis_basket\Plugin\Block\BasketBlock
  *
  * BLock to show basket button and number of items
  *
  */
-namespace Drupal\metsis_dashboard_bokeh\Plugin\Block;
+namespace Drupal\metsis_basket\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\metsis_basket\Controller\MetsisBasketController;
 
 
 /**
  * Provides a Block.
  *
  * @Block(
- *   id = "metsis_basket_block_bokeh",
- *   admin_label = @Translation("METSIS Basket Bokeh Block"),
+ *   id = "metsis_basket_block",
+ *   admin_label = @Translation("METSIS Basket Block"),
  *   category = @Translation("METSIS"),
  * )
  * {@inheritdoc}
@@ -42,7 +43,7 @@ class BasketBlock extends BlockBase implements BlockPluginInterface {
       '#postfix' => '</div>'
     ];
     $build['basket-wrapper']['link-button'] = [
-     '#markup' => '<a id="myBasket" class="w3-btn basket-link" href="/metsis/bokeh/dashboard">My Basket</a>',
+     '#markup' => '<a id="myBasket" class="w3-btn basket-link" href="/metsis/mybasket">My Basket</a>',
      '#allowed_tags' => ['a'],
     ];
     $build['basket-wrapper']['badge'] = [
@@ -67,15 +68,7 @@ class BasketBlock extends BlockBase implements BlockPluginInterface {
 
   function getUserItemCount() {
 
-    /**
-     * Get count of resources from private tempstore
-     */
-     $tempstore = \Drupal::service('tempstore.private');
-     // Get the store collection.
-     $store = $tempstore->get('metsis_dashboard_bokeh');
-     $resources = $store->get('basket');
-
-     $count = sizeof($resources);
-    return $count;
+    $user_id = (int) \Drupal::currentUser()->id();
+    return MetsisBasketController::get_user_item_count($user_id);
   }
 }

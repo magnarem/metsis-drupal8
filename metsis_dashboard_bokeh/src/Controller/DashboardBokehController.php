@@ -14,6 +14,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Render\Markup;
+use Drupal\metsis_basket\Entity\BasketItem;
 
 
 
@@ -22,18 +23,16 @@ class DashboardBokehController extends ControllerBase {
     public function build() {
       $config = \Drupal::config('metsis_dashboard_bokeh.configuration');
       $backend_uri = $config->get('dashboard_bokeh_service');
-      //$backend_uri = 'https://pybasket.epinux.com/dashboard';
-      //$backend_uri = 'https://pybasket.epinux.com/dashboard-bkapp-api';
-      //$backend_uri = 'http://178.63.52.22:7000/dashboard-bkapp-api?datasources=a&datasources=b&datasources=c&email=me%40you.web';
-      //var_dump($backend_uri);
+
+      //Get the user_id
+      $user_id = (int) \Drupal::currentUser()->id();
+
+      //For testing dashboard. To be removed
       $resources_test = 'http://hyrax.epinux.com/opendap/SN99938.nc,http://hyrax.epinux.com/opendap/ctdiaoos_gi2007_2009.nc,http://hyrax.epinux.com/opendap/itp01_itp1grd2042.nc';
 
       \Drupal::logger('metsis_dashboard_bokeh')->debug(t("@backend", ['@backend' => $backend_uri ] ) );
-      $tempstore = \Drupal::service('tempstore.private');
-      // Get the store collection.
-      $store = $tempstore->get('metsis_dashboard_bokeh');
-      $resources = $store->get('basket');
-      //dpm($resources);
+      //$resources = $store->get('basket');
+      $resources = $this->getOpendapUris($user_id);
 
       /**
        * FIXME: This IF-caluse is for testing only. Should be removed for prod
@@ -97,7 +96,7 @@ class DashboardBokehController extends ControllerBase {
           $client = \Drupal::httpClient();
           //$client->setOptions(['debug' => TRUE]);
           $request = $client->request('GET', $backend_uri . $query_params,
-          ['debug' => TRUE,
+          ['debug' => FALSE, //Set to TRUE for showing request debugging
             'headers' => [
             'Accept' => 'application/json',
             ],
@@ -115,5 +114,23 @@ class DashboardBokehController extends ControllerBase {
       }
 
         return $json_response;
+    }
+
+    function getOpendapUris($user_id) {
+      //Fetch opendap uris:
+      $query = \Drupal::database()->select('metsis_basket', 'm');
+      $query->fields('m', ['data_access_resource_opendap']); //['data_access_resource_opendap']);
+      $query->condition('m.uid', $user_id, '=');
+      $results = $query->execute()->fetchCol();
+      $opendap_uris = [];
+
+
+      foreach($results as $record) {
+
+        $opendap_uris[] = $record;
+
+    }
+
+      return $opendap_uris;
     }
   }

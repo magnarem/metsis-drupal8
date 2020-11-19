@@ -1,12 +1,10 @@
-uuid: 60f6fe22-4a4c-47fe-a0c1-6feff6f1de17
 langcode: en
 status: true
 dependencies:
   module:
     - metsis_basket
+    - user
     - views_bulk_operations
-_core:
-  default_config_hash: 5rgExpXuYl9DB4Z7OOKnTMvbb7xeY3CIqTTXgYTMSMI
 id: basket_view
 label: 'Basket View'
 module: views
@@ -22,8 +20,9 @@ display:
     position: 0
     display_options:
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access metsis basket items'
       cache:
         type: tag
         options: {  }
@@ -170,26 +169,12 @@ display:
           batch: false
           batch_size: 10
           form_step: true
-          buttons: false
+          buttons: true
           clear_on_exposed: true
           action_title: Action
           selected_actions:
-            1:
-              action_id: metsis_basket_download_action
-              preconfiguration:
-                label_override: 'Download Datasets'
-            2:
-              action_id: metsis_basket_transform_action
-              preconfiguration:
-                label_override: 'Transform Datasets'
-            3:
-              action_id: metsis_basket_visualize_action
-              preconfiguration:
-                label_override: 'Visualize Datasets'
-            4:
-              action_id: metsis_basket_delete_action
-              preconfiguration:
-                label_override: 'Delete Datasets'
+            5:
+              action_id: views_bulk_operations_delete_entity
           plugin_id: views_bulk_operations_bulk_form
         iid:
           id: iid
@@ -523,15 +508,15 @@ display:
         - url
         - url.query_args
         - user
+        - user.permissions
       tags: {  }
-  page_1:
-    display_plugin: page
-    id: page_1
-    display_title: Page
-    position: 1
+  embed_1:
+    display_plugin: embed
+    id: embed_1
+    display_title: Embed
+    position: 2
     display_options:
       display_extenders: {  }
-      path: metsis/basket
     cache_metadata:
       max-age: 0
       contexts:
@@ -540,4 +525,5 @@ display:
         - url
         - url.query_args
         - user
+        - user.permissions
       tags: {  }

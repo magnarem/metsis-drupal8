@@ -10,4 +10,6 @@ dependencies:
   0: metsis_basket
   1: facets
   2: system
+  4: user
+  5: views_bulk_operations
 type: module
