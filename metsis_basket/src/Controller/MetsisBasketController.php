@@ -103,7 +103,7 @@ class MetsisBasketController extends ControllerBase  {
         'data_access_resource_opendap' => $res,
   //      'data_access_resource_ogc_wms' => $dar['ogc_wms'],
       ];
-      dpm($res);
+      //dpm($res);
       $query = \Drupal::database()->insert('metsis_basket')->fields($fields)->execute();
     }
     //$objects = \Drupal::entityTypeManager()->getStorage('metsis_basket', array($iid));
