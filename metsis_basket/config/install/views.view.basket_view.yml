@@ -24,7 +24,7 @@ display:
         options:
           perm: 'access metsis basket items'
       cache:
-        type: tag
+        type: none
         options: {  }
       query:
         type: views_query
@@ -516,7 +516,10 @@ display:
     display_title: Embed
     position: 2
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        geocluster_views_display_extender:
+          geocluster_enabled: false
+          geocluster_options: {  }
     cache_metadata:
       max-age: 0
       contexts:
