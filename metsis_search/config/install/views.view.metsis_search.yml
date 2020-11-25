@@ -1342,7 +1342,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "{% if data_access_url_opendap %}\r\n<div id=\"basket\" class=\"basket\">\r\n<a id=\"addtobasket-{{ id }}\" class=\"adc-button adc-sbutton use-ajax\" href=/metsis/basket/add/{{ id}}?datasource={{ data_access_url_opendap | url_encode }}>Add to Basket</a>\r\n</div>\r\n{% endif %}"
+            text: "{% if data_access_url_opendap %}\r\n<div id=\"basket\" class=\"basket\">\r\n<a id=\"addtobasket-{{ id }}\" class=\"adc-button adc-sbutton use-ajax\" href=/metsis/basket/add/{{ id}}>Add to Basket</a>\r\n</div>\r\n{% endif %}"
             make_link: false
             path: ''
             absolute: false
@@ -2047,7 +2047,7 @@ display:
           group_type: group
           admin_label: ''
           empty: false
-          content: '<div class="numberOfResults"><strong>@total</strong> datasets found. Showing datasets @start  - @end on page @current_page of @page_count pages.</div>'
+          content: '<div class="numberOfResults w3-panel w3-leftbar"><strong>@total</strong> datasets found. Showing datasets @start  - @end on page @current_page of @page_count pages.</div>'
           plugin_id: result
       footer: {  }
       empty: {  }

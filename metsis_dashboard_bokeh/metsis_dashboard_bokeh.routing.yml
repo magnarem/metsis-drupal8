@@ -8,6 +8,16 @@ dashboard:
   requirements:
     _permission: 'access bokeh dashboard'
 
+dashboard.testpost:
+  path: /metsis/bokeh/dashboard/testpost
+  defaults:
+    _controller: \Drupal\metsis_dashboard_bokeh\Controller\DashboardBokehController::testpost
+    _title: "Bokeh Dashboard Test Post"
+  options:
+    query:
+  requirements:
+    _permission: 'access bokeh dashboard'
+
 #basket.add:
 #  path: '/metsis/basket/add/{metaid}'
 #  defaults:

@@ -41,7 +41,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *  fieldable = TRUE,
  *  entity_keys = {
  *    "id" = "iid",
- *    "label" = "title",
+ *    "uuid" = "uuid",
  *   },
  * )
  */
@@ -742,10 +742,10 @@ class BasketItem extends ContentEntityBase implements BasketItemInterface {
 
 
     //data_access_type
-    $fields['data_access_type'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(t('Data access type'))
-      ->setDescription(t("See section 5.14 MMD spec."))
-      ->setSettings(array(
+    $fields['dar'] = BaseFieldDefinition::create('map')
+      ->setLabel(t('Data access resources as properties'))
+      ->setDescription(t("See section 5.14 MMD spec."));
+  /*    ->setSettings(array(
         'default_value' => '',
         'max_length' => 4096,
         'text_processing' => 0,
@@ -760,15 +760,15 @@ class BasketItem extends ContentEntityBase implements BasketItemInterface {
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE );
+      ->setDisplayConfigurable('view', TRUE ); */
 
     //project_short_name
-    $fields['project_short_name'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(t('Project short name'))
+    $fields['feature_type'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Feature type'))
       ->setDescription(t("The abbreviated name of the project from which the data were collected. not required. no repeat"))
       ->setSettings(array(
         'default_value' => '',
-        'max_length' => 4096,
+        'max_length' => 255,
         'text_processing' => 0,
       ))
       ->setDisplayOptions('view', array(

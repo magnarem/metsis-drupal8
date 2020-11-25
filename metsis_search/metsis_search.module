@@ -351,6 +351,7 @@ function metsis_search_search_api_solr_search_results_alter(
     //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
 
     $session->set('extracted_info', $extracted_info);
+    $session->set('back_to_search', $referer);
 
 }
 
@@ -391,7 +392,9 @@ function metsis_search_views_pre_build(ViewExecutable $view)
               $session->remove('proj');
               $session->remove('gcmd');
               $session->remove('keywords_level');
+              $session->remove('back_to_search');
               $session->set('keywords_level', 1);
+
 
               \Drupal::cache()->invalidate('block:metsis_search_map');
           }

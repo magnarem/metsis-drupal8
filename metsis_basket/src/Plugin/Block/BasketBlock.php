@@ -56,6 +56,7 @@ class BasketBlock extends BlockBase implements BlockPluginInterface {
         'url.query_args',
       ],
     ];
+    $build['#cache']['max-age'] = 2;
     $build['#attached'] = [
       'library' => [
               'metsis_lib/adc_button'

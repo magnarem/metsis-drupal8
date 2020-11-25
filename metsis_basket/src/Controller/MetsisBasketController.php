@@ -15,6 +15,16 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\MessageCommand;
+
+use Drupal\search_api\Entity\Index;
+use Drupal\search_api\Query\QueryInterface;
+use Solarium\QueryType\Select\Query\Query;
+use Solarium\QueryType\Select\Result\Result;
+use Solarium\QueryType\Select\Result\Document;
+use Solarium\Core\Query\DocumentInterface;
+use Solarium\Core\Query\Result\ResultInterface;
+
+
 /**
  * Default controller for the metsis_basket module.
  * {@inheritdoc}
@@ -26,8 +36,8 @@ class MetsisBasketController extends ControllerBase  {
     $user_id = (int) \Drupal::currentUser()->id();
 
     //Get the refering page
-    $request = \Drupal::request();
-    $referer = $request->headers->get('referer');
+    $session = \Drupal::request()->getSession();
+    $referer = $session->get('back_to_search');
 
 
     //Create content wrapper
@@ -42,6 +52,9 @@ class MetsisBasketController extends ControllerBase  {
     ];
     $build['content']['dashboard'] = [
       '#markup' => '<a class="w3-btn" href="/metsis/bokeh/dashboard">Go to Dashboard</a>',
+    ];
+    $build['content']['dashboard-testpost'] = [
+      '#markup' => '<a class="w3-btn" href="/metsis/bokeh/dashboard/testpost">Go to TESTPOST Dashboard</a>',
     ];
 
     $build['content']['view'] = views_embed_view('basket_view', 'embed_1');
@@ -77,7 +90,7 @@ class MetsisBasketController extends ControllerBase  {
       ->getViewBuilder('metsis_basket_item');
     $entity = \Drupal::entityTypeManager()
       ->getStorage('metsis_basket_item')->load($iid);
-      \Drupal::logger('metsis_basket')->debug("Loaded entity with iid: " . $entity->id());
+      //\Drupal::logger('metsis_basket')->debug("Loaded entity with iid: " . $entity->id());
     return $view_builder
       ->view($entity, 'full');
 
@@ -88,28 +101,44 @@ class MetsisBasketController extends ControllerBase  {
     \Drupal::logger('metsis_basket')->debug("Calling add to basket function");
     $user_id = (int) \Drupal::currentUser()->id();
     $user_name = \Drupal::currentUser()->getAccountName();
-    $title = MetsisUtils::msb_get_title($metaid);
-    $dar = MetsisUtils::msb_get_resources($metaid);
-    foreach($dar['opendap'] as $res) {
+
+    //Generate uuid from uuid service
+    $uuid_service = \Drupal::service('uuid');
+    $uuid = $uuid_service->generate();
+    //Get info from solr given metaid that we put in the basket
+    $arr  = $this->msb_get_resources($metaid);
+
+    $feature_type = $arr[0];
+    $title = $arr[1];
+    $dar = $arr[2];
+
+
+    \Drupal::logger('metsis_basket')->debug("Adding product to basket:");
+    \Drupal::logger('metsis_basket')->debug("title: @title", ['@title'  => $title]);
+    \Drupal::logger('metsis_basket')->debug("feature_type: @ft", ['@ft'  => $feature_type]);
+    \Drupal::logger('metsis_basket')->debug("dar: @ft", ['@ft'  => Json::encode($dar)]);
+
+
+
+    //Te fields we put in database
       $fields = [
         'uid' => $user_id,
+        'uuid' => $uuid,
         'user_name' => $user_name,
         'title' => $title,
         'session_id' => session_id(),
         'basket_timestamp' => time(),
         'metadata_identifier' => $metaid,
-  //      'data_access_resource_http' => $dar['http'],
-  //      'data_access_resource_odata' => $dar['odata'],
-        'data_access_resource_opendap' => $res,
-  //      'data_access_resource_ogc_wms' => $dar['ogc_wms'],
+        'feature_type' => $feature_type,
+        'dar' => serialize($dar),
       ];
       //dpm($res);
       $query = \Drupal::database()->insert('metsis_basket')->fields($fields)->execute();
-    }
-    //$objects = \Drupal::entityTypeManager()->getStorage('metsis_basket', array($iid));
-    //\Drupal::messenger()->addMessage("Dataset added to basket:  " . $metaid);
-    //\Drupal::cache()->invalidate('metsis_basket_block');//Check if we already have an active bboxFilter
 
+
+
+
+    //\Drupal::logger('metsis_basket')->debug("dashboard json: " . $dashboard_json);
 
     $basket_count = $this->get_user_item_count($user_id);
     $selector = '#myBasketCount';
@@ -134,5 +163,76 @@ class MetsisBasketController extends ControllerBase  {
   }
 
 
+  public static function msb_get_resources($metadata_identifier)
+  {
+      /** @var Index $index  TODO: Change to metsis when prepeare for release */
+      $index = Index::load('metsis');
 
+      /** @var SearchApiSolrBackend $backend */
+      $backend = $index->getServerInstance()->getBackend();
+
+      $connector = $backend->getSolrConnector();
+
+      $solarium_query = $connector->getSelectQuery();
+
+
+      \Drupal::logger('metsis_basket_solr_query')->debug("metadata_identifier: " .$metadata_identifier);
+      $solarium_query->setQuery('metadata_identifier:'.$metadata_identifier);
+
+      //$solarium_query->addSort('sequence_id', Query::SORT_ASC);
+      //$solarium_query->setRows(2);
+      $solarium_query->setFields([
+        'data_access_url_http',
+        'data_access_url_odata',
+        'data_access_url_opendap',
+        'data_access_url_ogc_wms',
+        'feature_type',
+        'title',
+      ]);
+
+      $result = $connector->execute($solarium_query);
+
+      // The total number of documents found by Solr.
+      $found = $result->getNumFound();
+      \Drupal::logger('metsis_basket_solr_query')->debug("found :" .$found);
+      // The total number of documents returned from the query.
+      //$count = $result->count();
+
+      // Check the Solr response status (not the HTTP status).
+      // Can't find much documentation for this apart from https://lucene.472066.n3.nabble.com/Response-status-td490876.html#a3703172.
+      //$status = $result->getStatus();
+      $title = 'NA';
+      $feature_type = 'NA';
+      $dar = [];
+      foreach ($result as $doc) {
+        $fields = $doc->getFields();
+
+      }
+      if(isset($fields['data_access_url_http'])) {
+        // An array of documents. Can also iterate directly on $result.
+        $dar['http'] = $fields['data_access_url_http'];
+      }
+      if(isset($fields['data_access_url_odata'])) {
+        // An array of documents. Can also iterate directly on $result.
+        $dar['odata'] = $fields['data_access_url_odata'];
+      }
+      if(isset($fields['data_access_url_opendap'])) {
+        // An array of documents. Can also iterate directly on $result.
+        $dar['opendap'] = $fields['data_access_url_opendap'];
+      }
+      if(isset($fields['data_access_url_ogc_wms'])) {
+        // An array of documents. Can also iterate directly on $result.
+        $dar['ogc_wms'] = $fields['data_access_url_ogc_wms'];
+      }
+      if(isset($fields['feature_type'])) {
+        // An array of documents. Can also iterate directly on $result.
+        $feature_type = $fields['feature_type'];
+
+      }
+      if(isset($fields['title'])) {
+        // An array of documents. Can also iterate directly on $result.
+        $title = $fields['title'][0];
+      }
+        return array($feature_type, $title, $dar);
+    }
 }
