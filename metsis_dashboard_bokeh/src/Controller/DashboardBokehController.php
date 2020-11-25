@@ -107,6 +107,7 @@ class DashboardBokehController extends ControllerBase {
         \Drupal::logger('metsis_dashboard_bokeh_json_testpost')->debug("json_body: @string", ['@string' => $json_body ]);
         //\Drupal::logger('metsis_dashboard_bokeh_json_testpost')->debug("json_data: @string", ['@string' => $json_data ]);
 
+      //Get markup from bokeh dashboard endpoint. post json_data.
       $markup = "<h2> Ooops Something went wrong!!</h2> Contact Administraor or see logs";
       try {
           $client = \Drupal::httpClient();

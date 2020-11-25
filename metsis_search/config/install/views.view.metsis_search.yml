@@ -158,7 +158,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<h1><a class=\"use-ajax\" \r\n    data-dialog-options=\"{&quot;width&quot;:600, &quot;title&quot;:&quot;Metadata Details&quot;}\" \r\n    data-dialog-type=\"dialog\"\r\n    data-dialog-renderer=\"off_canvas\"\r\n    href=\"/metsis/metadata/{{ id}}\">{{ title}}</a></h1>"
+            text: "<h2><a class=\"use-ajax\" \r\n    data-dialog-options=\"{&quot;width&quot;:600, &quot;title&quot;:&quot;Metadata Details&quot;}\" \r\n    data-dialog-type=\"dialog\"\r\n    data-dialog-renderer=\"off_canvas\"\r\n    href=\"/metsis/metadata/{{ id}}\">{{ title}}</a></h2>"
             make_link: false
             path: ''
             absolute: false
@@ -955,8 +955,8 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<a class="ext" href="{{ related_url_landing_page }}">Dataset Landing Page</a>'
-            make_link: true
+            text: '<p><a class="ext" href="{{ related_url_landing_page }}">Dataset Landing Page</a></p>'
+            make_link: false
             path: '{{ related_url_landing_page }}'
             absolute: false
             external: true
