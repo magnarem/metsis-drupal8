@@ -394,6 +394,7 @@ function metsis_search_views_pre_build(ViewExecutable $view)
               $session->remove('keywords_level');
               $session->remove('back_to_search');
               $session->set('keywords_level', 1);
+              $session->set('back_to_search', '/metsis/search');
 
 
               \Drupal::cache()->invalidate('block:metsis_search_map');

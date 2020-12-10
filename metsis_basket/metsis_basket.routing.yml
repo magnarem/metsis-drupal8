@@ -7,13 +7,13 @@ metsis_basket.view:
   requirements:
     _permission: 'access metsis basket items'
 
-metsis_basket.listing:
-  path: '/metsis/basket/listing/{iid}'
-  defaults:
-    _title: 'METSIS Basket Listing'
-    _controller: '\Drupal\metsis_basket\Controller\MetsisBasketController::listing'
-  requirements:
-    _permission: 'access metsis basket items'
+#metsis_basket.listing:
+#  path: '/metsis/basket/listing/{iid}'
+#  defaults:
+#    _title: 'METSIS Basket Listing'
+#    _controller: '\Drupal\metsis_basket\Controller\MetsisBasketController::listing'
+#  requirements:
+#    _permission: 'access metsis basket items'
 metsis_basket.add:
   path: '/metsis/basket/add/{metaid}'
   defaults:

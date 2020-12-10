@@ -11,7 +11,7 @@ metsis_search.map:
       brlon: ""
       proj: ""
   requirements:
-    _permission: 'accsess content'
+    _permission: 'access metsis search'
 
 metsis_search.children_count:
   path: /metsis/elements/count
@@ -22,7 +22,7 @@ metsis_search.children_count:
     query:
       metadata_identifier: ""
   requirements:
-    _permission: 'accsess content'
+    _permission: 'access metsis search'
 
 metsis_search.admin_config_form:
   path: '/admin/config/metsis/search'
