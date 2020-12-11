@@ -763,7 +763,11 @@
         //id_tooltip()
         id_tooltip_new()
         id_tooltip_h()
-        addExtraLayers(init_proj)
+        if(additional_layers) {
+          console.log("Adding additional layers");
+          addExtraLayers(init_proj);
+        }
+        //addExtraLayers(init_proj)
 
         //Mouseposition
         var mousePositionControl = new ol.control.MousePosition({
