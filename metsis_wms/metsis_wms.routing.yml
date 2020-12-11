@@ -9,7 +9,7 @@ metsis_wms.get_custom_content:
       solr_core: ""
       page: ""
   requirements:
-    _permission: 'access content'
+    _permission: 'access wms'
 metsis_wms.wms:
   path: /metsis/map/wms
   defaults:
