@@ -1386,12 +1386,12 @@ display:
           field: nothing
           relationship: none
           group_type: group
-          admin_label: Transform
+          admin_label: Metadata
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: true
-            text: "{% if  data_access_url_opendap %}\r\n  {% if feature_type != 'timeSeries' or feature_type != 'profile' %}\r\n<div id=\"transform\" class=\"transform\">\r\n  <a class=\"adc-button adc-sbutton\" href=/metsis/fimex?dataset_id={{ id }} >Transform</a>\r\n</div>\r\n  {% endif %}\r\n{% endif %}"
+            text: "<a class=\"use-ajax adc-button adc-sbutton\" \r\n    data-dialog-options=\"{&quot;width&quot;:600, &quot;title&quot;:&quot;Metadata Details&quot;}\" \r\n    data-dialog-type=\"dialog\"\r\n    data-dialog-renderer=\"off_canvas\"\r\n    href=\"/metsis/metadata/{{ id}}\">Metadata</a>"
             make_link: false
             path: ''
             absolute: false

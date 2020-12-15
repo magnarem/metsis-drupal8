@@ -12,7 +12,7 @@
         var path = drupalSettings.metsis_search_map_block.path;
         var pins = drupalSettings.metsis_search_map_block.pins;
         var site_name = drupalSettings.metsis_search_map_block.site_name;
-        var init_proj = drupalSettings.metsis_search_map_block.init_proj_res_map;
+        //var init_proj = drupalSettings.metsis_search_map_block.init_proj_res_map;
 
         var lat = drupalSettings.metsis_search_map_block.mapLat;
         var lon = drupalSettings.metsis_search_map_block.mapLon;
@@ -92,6 +92,7 @@
 
           for (var key in layers_list) {
             var value = layers_list[key];
+            console.log("Creating additional layer: "+value);
             $('#lrslist').append(
               $(document.createElement('li')).prop({
                 class: 'addl'
@@ -181,6 +182,7 @@
         for (var i = ch.length; i--;) {
           ch[i].onchange = function change_projection() {
             prj = this.value;
+            console.log("change projection event: "+prj);
             if (prj == 'EPSG:32761') {
               if (pins) {
                 map.getLayers().removeAt(2, layer['pins']);
@@ -190,6 +192,7 @@
               map.getLayers().insertAt(0, layer['baseS']);
             }
             else {
+              console.log("change projection event: else statement");
               if (pins) {
                 map.getLayers().removeAt(2, layer['pins']);
               }
@@ -208,17 +211,24 @@
 
             layer['baseN'].getSource().refresh();
             layer['baseS'].getSource().refresh();
+
+            //Adding try catch to aviod errors when layers are not defined
+            try {
             if (additional_layers) {
               layer['europaveg'].getSource().refresh();
               layer['fylkesveg'].getSource().refresh();
               layer['riksveg'].getSource().refresh();
+            }
+          }
+            catch (e)  {
+              console.log('additional layers already removed');
             }
             //clear pins and polygons
             //When in bbox mode this code catches Type Error.
             // we catch this exception and log some info instead
             try {
             if (map.getLayers().getArray().length !== 1) {
-              map.getLayers().getArray()[1].getSource().clear(true);
+              //map.getLayers().getArray()[1].getSource().clear(true);
               if (pins) {
                 map.getLayers().getArray()[2].getSource().clear(true);
               }
@@ -228,6 +238,7 @@
             console.log('layers already removed');
           }
             //rebuild vector source
+            console.log("buildFeatures with proj "+prj);
             buildFeatures(projObjectforCode[prj].projection);
           }
         }
@@ -320,11 +331,19 @@
             crossOrigin: 'anonymous'
           })
         });
+        var map_layer = layer['baseN'];
+        if( init_proj == 'EPSG:32761') {
+           map_layer = layer['baseS'];
+        }
+        if( init_proj == 'EPSG:32661') {
+           map_layer = layer['baseN'];
+        }
+
 
         var map = new ol.Map({
           target: 'map-res',
-          layers: [layer['baseN']
-          ],
+          layers: [map_layer],
+          //layers: [layer['baseN']],
           view: new ol.View({
             zoom: defzoom,
             minZoom: 0,
@@ -814,12 +833,12 @@
             map.getLayers().getArray()[2].getSource().clear(true);
 
           } catch (e)  {
-            console.log('layers already remoed');
+            console.log('layers already removed');
           }
           try {
           map.getLayers().getArray()[1].getSource().clear(true);
         } catch (e)  {
-          console.log('layers already remoed');
+          console.log('layers already removed');
         }
           //clear id_tooltip
           //map.un('click', function tooltipclick(evt) {});
