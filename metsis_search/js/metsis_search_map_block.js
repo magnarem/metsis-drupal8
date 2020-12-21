@@ -199,7 +199,10 @@
               map.getLayers().removeAt(1, layer['polygons']);
               map.getLayers().removeAt(0, layer['baseS']);
               map.getLayers().insertAt(0, layer['baseN']);
+              //alert(map.getLayers());
             }
+            layer['baseN'].getSource().refresh({force:true});
+            layer['baseS'].getSource().refresh({force:true});
             map.setView(new ol.View({
               zoom: defzoom,
               minZoom: 0,
@@ -207,10 +210,10 @@
               extent: projObjectforCode[prj].extent,
               center: ol.proj.transform(projObjectforCode[prj].center, 'EPSG:4326', projObjectforCode[prj].projection),
               projection: projObjectforCode[prj].projection,
-            }))
+            }));
 
-            layer['baseN'].getSource().refresh();
-            layer['baseS'].getSource().refresh();
+            layer['baseN'].getSource().refresh({force:true});
+            layer['baseS'].getSource().refresh({force:true});
 
             //Adding try catch to aviod errors when layers are not defined
             try {
@@ -228,7 +231,7 @@
             // we catch this exception and log some info instead
             try {
             if (map.getLayers().getArray().length !== 1) {
-              //map.getLayers().getArray()[1].getSource().clear(true);
+              map.getLayers().getArray()[1].getSource().clear(true);
               if (pins) {
                 map.getLayers().getArray()[2].getSource().clear(true);
               }
@@ -339,7 +342,7 @@
            map_layer = layer['baseN'];
         }
 
-
+        console.log("Creating new map with layer: "+ map_layer);
         var map = new ol.Map({
           target: 'map-res',
           layers: [map_layer],
@@ -741,7 +744,7 @@
         //Fit to extent of features
         //check if there are results
           if (map.getLayers().getArray().length !== 1) {
-            if (map.getLayers().getArray()[1].getSource().getFeatures().length != 0) {
+           if (map.getLayers().getArray()[1].getSource().getExtent().length != 0) {
               if (pins) {
                 if (ol.extent.containsExtent(map.getLayers().getArray()[1].getSource().getExtent(), map.getLayers().getArray()[2].getSource().getExtent())) {
                   var maxExt = map.getLayers().getArray()[1].getSource().getExtent();

@@ -341,13 +341,14 @@ function metsis_search_search_api_solr_search_results_alter(
     //Extract some info for the search map from the solr result
     $request = \Drupal::request();
     $referer = $request->headers->get('referer');
-    //dpm($referer);
+  \Drupal::logger('metsis_search-hook_search_results_alter')->debug("before extracted info - basepath: " . $request->getBasePath());
+    \Drupal::logger('metsis_search-hook_search_results_alter')->debug("before extracted info - referer: " . $referer);
     $extracted_info = SearchUtils::getExtractedInfo($result);
 
     //$gcmd_facet = SearchUtils::processGcmdFacet($result);
     //$session->set('gcmd', $gcmd_facet);
     //dpm($gcmd_facet);
-    //add the extracted info to the tempstore
+    //add the extracted info to the tempstores
     //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
 
     $session->set('extracted_info', $extracted_info);
