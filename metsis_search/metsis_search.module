@@ -231,8 +231,11 @@ function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInt
     /*Get the current session */
     $request = \Drupal::request();
     $session = \Drupal::request()->getSession();
+      \Drupal::logger('metsis_search-hook_solr_qyery_alter')->debug("basepath: ". $request->getBasePath() . 'pathinfo: ' . $request->getPathInfo());
     //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
     // Get the current bbox filter
+    if ($request->getPathInfo() == '/metsis/search') {
+      \Drupal::logger('metsis_search-hook_solr_qyery_alter')->debug("Alter solr query for /metsis/search");
     $bboxFilter = $session->get('bboxFilter');
 
     //Get filter predicate from config
@@ -307,6 +310,8 @@ function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInt
 
     //dpm($uniq_fields);
     $solarium_query->setFields($uniq_fields);
+
+  }
     /**
      * TODO:: Update url params and breadcrumbs
      */
@@ -378,6 +383,7 @@ function metsis_search_views_pre_build(ViewExecutable $view)
       \Drupal::cache()->invalidate('metsis_search_map');
       $request = \Drupal::request();
       $query_from_request = $request->query->all();
+
       //Check if operator op is set in query and op=Reset to reset boundingbox
       if (isset($query_from_request['op'])) {
           if ($query_from_request['op'] == "Reset") {
