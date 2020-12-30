@@ -90,8 +90,9 @@
   max-height: 250px;
 }
 
-.map-ts-plot {
+.bokeh-map-ts-plot {
   margin: 16px;
+  display: none;
 }
 /*
 .map-res .ol-viewport {

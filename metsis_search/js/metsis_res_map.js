@@ -917,6 +917,9 @@ console.log("Start of metsis search map script:");
           //Add Popup if selected more than one feature:
           var numberOfFeatures = Object.keys(feature_ids).length;
           console.log("Number of selected features: " + numberOfFeatures);
+          if (numberOfFeatures === 0) {
+            $('.datasets-row').css('display', 'block');
+          }
           if (numberOfFeatures === 1) {
             console.log("Execute action for ONE feature");
             var wmsResource = feature_ids[id].url_w;
@@ -1085,6 +1088,7 @@ console.log("Start of metsis search map script:");
             popUpOverlay.setPosition(coordinate);
           } else {
             console.log("No feature selected");
+              //$('.datasets-row').css('display', 'block');
           }
 
           //});

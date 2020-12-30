@@ -93,7 +93,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
 
     // search-map wrapper
     $build['search-map']['panel'] = [
-      '#prefix' => '<div id="panel" class="panel w3-container w3-border w3-border-black">',
+      '#prefix' => '<div id="panel" class="panel w3-container">',
       '#suffix' => '</div>'
 ];
 
@@ -147,7 +147,7 @@ $build['search-map']['panel']['projection'] = [
 
 
       $build['search-map']['map'] = [
-        '#prefix' => '<div class="w3-border w3-border-black">',
+        '#prefix' => '<div>',
         '#type' => 'markup',
         '#markup' => '<div id="map-res" class="map-res"></div>',
         '#suffix' => '</div>',
