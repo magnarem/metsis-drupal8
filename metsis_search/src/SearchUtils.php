@@ -257,8 +257,10 @@ class SearchUtils
             /**
              * time series{
              */
+            $feature_type = "NA";
             $server_type = $config->get('ts_server_type');
             if (isset($fields['feature_type']) && isset($fields['data_access_url_opendap'])) {
+                $feature_type = $fields['feature_type'];
                 if (($fields['feature_type'] === "timeSeries") || ($fields['feature_type'] === "profile")) {
                     if (isset($server_type) && $server_type  === 'pywps') {
                         $visualize_url = "/metsis/bokeh/plot?opendap_urls=" . $fields['data_access_url_opendap'][0];
@@ -315,6 +317,7 @@ class SearchUtils
       [$institutions, $personnel_name],
       [$access_const, $use_const],
       'metsis',
+      $feature_type,
     ];
             $metadata_div_counter += 1;
 

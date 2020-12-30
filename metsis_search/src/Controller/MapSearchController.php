@@ -39,7 +39,7 @@ class MapSearchController extends ControllerBase {
       $tempstore->set('brlat', $brlat);
       $tempstore->set('brlon', $brlon);
       */
-        \Drupal::cache()->invalidate('metsis_search_map');
+        //\Drupal::cache()->invalidate('metsis_search_map');
         //Get saved configuration
         $config = \Drupal::config('metsis_search.settings');
         $map_location = $config->get('map_selected_location');

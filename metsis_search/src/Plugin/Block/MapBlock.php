@@ -41,10 +41,10 @@ class MapBlock extends BlockBase implements BlockPluginInterface {
     //$bboxFilter = $tempstore->get('bboxFilter');
     $session = \Drupal::request()->getSession();
     $bboxFilter = $session->get('bboxFilter');
-    $tllat = "";
-    $tllon = "";
-    $brlat = "";
-    $brlon = "";
+    //$tllat = "";
+    //$tllon = "";
+    //$brlat = "";
+    //$brlon = "";
     $proj = $session->get('proj');
 
     if ($bboxFilter != null) {

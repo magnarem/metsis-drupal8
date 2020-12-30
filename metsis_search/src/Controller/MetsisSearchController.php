@@ -18,6 +18,9 @@ use Drupal\Core\Ajax\HtmlCommand;
 
 class MetsisSearchController extends ControllerBase {
 
+    /**
+    * Ajax callback to get the count of children datasets for a parent dataset 
+    */
     public function getChildrenCount() {
       $query_from_request = \Drupal::request()->query->all();
       $params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);

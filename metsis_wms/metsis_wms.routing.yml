@@ -35,6 +35,17 @@ metsis_qsearch.map_getcap:
   requirements:
     _permission: 'access wms'
 
+metsis_qsearchmap_getcapfromurl:
+  path: /metsis/map/getcapfromurl
+  defaults:
+    _title: 'GetWMSCapabilitiesFromUrl'
+    _controller: '\Drupal\metsis_wms\Controller\GetCapController::getCapDocFromUrl'
+  options:
+    query:
+      url: ""
+  requirements:
+    _permission: 'access wms'
+
 metsis_wms.admin_config_form:
   path: '/admin/config/metsis/wms'
   defaults:

@@ -53,19 +53,25 @@ search_map:
 search_map_block:
   version: 1.0
   css:
+    component:
+      /libraries/openlayers-6.5.0/ol.css: {}
+      /libraries/ol-layerswitcher-3.8.3/dist/ol-layerswitcher.css: {}
     theme:
       css/metsis_qsearch.css: {}
       css/metsis_res_map.css: {}
-      /libraries/openlayers6/css/ol.css: {}
   js:
     #js/bundle.js: {}
     #https://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.js: { type: external}
     #https://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.2.min.js: { type: external}
     #https://cdn.pydata.org/bokeh/release/bokeh-tables-2.0.2.min.js: { type: external}
-    /libraries/openlayers6/build/ol.js: {}
-    /libraries/openlayers6/apidoc/scripts/bootstrap.min.js: {}
-    https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js: { type: external }
-    js/metsis_search_map_block.js: {}
+    #/libraries/openlayers6/build/ol.js: {}
+    #/libraries/openlayers6/apidoc/scripts/bootstrap.min.js: {}
+    /libraries/proj4js-2.6.3/dist/proj4.js: {}
+    /libraries/openlayers-6.5.0/ol.js: {}
+    /libraries/ol-layerswitcher-3.8.3/dist/ol-layerswitcher.js: {}
+    #https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js: { type: external }
+    #js/metsis_search_map_block.js: {}
+    js/metsis_res_map.js: {}
   dependencies:
     - core/jquery
     - core/jquery.ui
@@ -75,6 +81,7 @@ search_map_block:
     - core/drupal.ajax
     - core/drupal.dialog
     - core/drupal.dialog.ajax
+#    - bootstrap_library/bootstrap
 
 children_count:
   version: 1.0
