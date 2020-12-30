@@ -1466,7 +1466,10 @@ console.log("Start of metsis search map script:");
           console.log('Creating bbox filter with projection: ' + proj);
           console.log(featureLayers);
           // clear pins and polygons
-          layers = map.getLayers();
+          //layers = map.getLayers();
+          featureLayers['pins'].setVisible(false);
+          featureLayers['polygons'].setVisible(false);
+/*
           map.getLayers().forEach(function(element, index, array) {
             if (element.get('title') === 'pins') {
               element.setVisible(false);
@@ -1476,9 +1479,9 @@ console.log("Start of metsis search map script:");
             }
           })
           map.getLayers().remove(wmsLayers);
-
+*/
           //Unset the current product overlays and mouse position control
-          map.un('click', getProductInfo);
+          map.un('singleclick', getProductInfo);
 
           //remove mouse position control
           map.removeControl(mousePositionControl);

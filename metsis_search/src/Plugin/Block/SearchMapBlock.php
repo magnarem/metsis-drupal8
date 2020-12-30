@@ -147,7 +147,7 @@ $build['search-map']['panel']['projection'] = [
 
 
       $build['search-map']['map'] = [
-        '#prefix' => '<div>',
+        '#prefix' => '<div class="w3-border">',
         '#type' => 'markup',
         '#markup' => '<div id="map-res" class="map-res"></div>',
         '#suffix' => '</div>',
