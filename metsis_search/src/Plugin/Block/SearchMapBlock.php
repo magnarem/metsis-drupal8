@@ -165,7 +165,7 @@ $build['search-map']['panel']['projection'] = [
     ];
     $build['search-map']['map']['popup']['content'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="popup-content"></div>',
+      '#markup' => '<div id="popup-content" class="popup-content w3-small"></div>',
       '#allowed_tags' => ['div'],
     ];
 

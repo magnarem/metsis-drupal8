@@ -985,87 +985,8 @@ console.log("Start of metsis search map script:");
 
                   })),
                 }));
-      /*        var wmsLayer = new ol.layer.Tile({
-                title: feature_ids[id].title,
-                //extent: projObjectforCode[proj].extent,
-                crossOrigin: 'anonymous',
-                source: new ol.source.TileWMS({
-                  url: wmsResource,
-                  projection: selected_proj,
-                  //projection: projObjectforCode[proj].projection,
-                  reprojectionErrorThreshold: 0.1,
-                  params: {
-                    'LAYERS': 'Composites',
-                    //'LAYERS': 'WMS',
-                    //'FORMAT': 'image/png',
-                    //'VERSION': '1.3.0',
-                    //'CRS': 'EPSG:4326',
-                    'TILE': true,
-                    'TRANSPARENT': true,
-                  },
-                  crossOrigin: 'anonymous',
-                }),
-              });
-*/
-              /*
-              var areaLayer = new ol.layer.Tile({
-                title: 'area-'+feature_ids[id].title,
-                //extent: projObjectforCode[proj].extent,
-                source: new ol.source.TileWMS( {
-                  url: wmsResource,
-                  //url: 'https://thredds.nersc.no/thredds/wms/normap/arctic8km_adt_aggr',
-                  //projection: proj,
-                  //projection: projObjectforCode[proj].projection,
-                  reprojectionErrorThreshold: 0.1,
-                  params: {
-                    'LAYERS': 'area',
-                    //'LAYERS': 'WMS',
-                    //'FORMAT': 'image/png',
-                    //'VERSION': '1.3.0',
-                    //'CRS': 'EPSG:4326',
-                    'TILE': true,
-                    'TRANSPARENT': true,
-                  },
-                  crossOrigin: 'anonymous',
-                }),
-              });
-              */
-              //console.log(wmsLayer);
-              //Fit to feature
-              //wmsLayerGroup.setLayers([wmsLayer]);
-              //map.getLayers().extend(wmsLayerGroup);
-
-              //Hide the style of the selected feature.
-              //var pinFeatures = featureLayers['pins'].getSource().getFeatures();
-              //var polygonFeatures = featureLayers['polygons'].getSource().getFeatures();
-/*
-              for (let pinFeature of pinFeatures) {
-                if (pinFeature.getId() === id) {
-                  pinFeature.setStyle();
-                }
-              }
-              for (let polygonFeature of polygonFeatures) {
-                if (polygonFeature.getId() === id) {
-                  polygonFeature.setStyle();
-                }
-              }
-*/
-              //map.addLayer(areaLayer);
-              //Hide Pins and polygons
               featureLayersGroup.setVisible(false);
-              //featureLayers['pins'].setVisible(false);
-              //featureLayers['polygons'].setVisible(false);
 
-            /*  map.getLayers().forEach(function(element, index, array) {
-
-                if (element.get('title') === 'pins') {
-                  element.setVisible(false);
-                }
-                if (element.get('title') === 'polygons') {
-                  element.setVisible(false);
-                }
-              })
-*/
 
               //Fit to feature geometry
               //console.log(feature_ids[id]);
@@ -1077,11 +998,13 @@ console.log("Start of metsis search map script:");
           }
           if (numberOfFeatures > 1) {
             console.log("Execute action for multiple features: " + numberOfFeatures);
+            $('#popup-content').append('<p class="w3-large"> Select product: </p>');
+            $('#popup-content').append('<ul class="w3-ul w3-hoverable">');
             for (var key in feature_ids) {
               console.log(feature_ids[key].id);
-              $('#popup-content').append(feature_ids[key].title);
+              $('#popup-content').append('<li class="productItem w3-small w3-hover-blue 3-hover-opacity">'+feature_ids[key].title+'</li>');
             }
-
+            $('#popup-content').append('</ul>');
             console.log("Alter the popUpOverlay position.");
             popUpOverlay.setPosition(coordinate);
           } else {

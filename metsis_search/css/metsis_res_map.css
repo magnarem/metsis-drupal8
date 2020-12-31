@@ -42,6 +42,8 @@
   bottom: 12px;
   left: -50px;
   min-width: 280px;
+  max-width: 350px;
+  overflow: scroll;
 }
 
 .ol-popup:after, .ol-popup:before {
@@ -77,8 +79,13 @@
 
 .ol-popup-closer:after {
   content: "✖";
+  position:  fixed;
 }
-
+/*
+.popup-content {
+  overflow: scroll;
+}
+*/
 .ol-scale-line {
   margin-left: 36px;
 }
