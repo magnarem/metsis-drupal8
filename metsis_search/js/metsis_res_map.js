@@ -317,29 +317,9 @@ console.log("Start of metsis search map script:");
 
             //Remove pins ans polygons
             console.log("Remove pins and polygons layers");
-            if (pins) {
-              map.getLayers().remove(featureLayers['pins']);
-            }
-            map.getLayers().remove(featureLayers['polygons']);
+            featureLayersGroup.getLayers().clear();
 
 
-            /** Refresh additonal defined layers */
-            //Adding try catch to aviod errors when layers are not defined
-            /*  try {
-                if (additional_layers) {
-                  console.log("Refreshing additional layers");
-                  layer['europaveg'].getSource().refresh();
-                  layer['fylkesveg'].getSource().refresh();
-                  layer['riksveg'].getSource().refresh();
-                }
-              } catch (e) {
-                console.log('additional layers already removed');
-              }
-              */
-            //rebuild vector source
-            //createOverViewMap(prj)
-            console.log("Rebuild pins and polygons features with projection: " + prj);
-            var featuresExtent = buildFeatures(projObjectforCode[prj].projection);
             console.log("Update view to new selected projection: " + prj);
             console.log("Features extent: " + featuresExtent);
             map.setView(new ol.View({
@@ -348,6 +328,9 @@ console.log("Start of metsis search map script:");
               projection: projObjectforCode[prj].projection,
               //projection: prj,
             }));
+            console.log("Rebuild pins and polygons features with projection: " + prj);
+            featuresExtent = buildFeatures(projObjectforCode[prj].projection);
+            //Zoom to new extent
             map.getView().fit(featuresExtent);
             map.getView().setZoom(map.getView().getZoom() - 0.3);
           }
@@ -527,12 +510,16 @@ console.log("Start of metsis search map script:");
         });
 
         // create layergroup to hold wmsLayers
-        //const wmsLayerGroup = new ol.layer.Group();
+        const wmsLayerGroup = new ol.layer.Group({
+          title: "WMS Layers",
+          layers: [],
+        });
 
         //Create features Layergroup
         var featureLayers = {};
         var featureLayersGroup = new ol.layer.Group({
           title: 'Features',
+          visible: true,
           layers: [],
         });
 
@@ -566,15 +553,27 @@ console.log("Start of metsis search map script:");
 
         //Add scaleline control
         var scaleLineControl = new ol.control.ScaleLine();
-        //Initialize the map
+
+
+        //Mouseposition lat lon
+        var mousePositionControl = new ol.control.MousePosition({
+          coordinateFormat: function(co) {
+            return ol.coordinate.format(co, template = 'lon: {x}, lat: {y}', 2);
+          },
+          projection: 'EPSG:4326',
+        });
+
+
+
+        /***** Initialize the map *****************/
         console.log("Creating the map");
         var map = new ol.Map({
           target: 'map-res',
           pixelRatio: 1,
-          controls: ol.control.defaults().extend([ovMapControl, fullScreenControl, scaleLineControl]),
+          controls: ol.control.defaults().extend([ovMapControl, fullScreenControl, scaleLineControl,mousePositionControl]),
           //controls: ol.control.defaults().extend([fullScreenControl]),
           //layers: [baseLayerGroup,featureLayersGroup],
-          layers: [baseLayerGroup],
+          layers: [baseLayerGroup,wmsLayerGroup, featureLayersGroup],
           overlays: [overlayh, popUpOverlay],
           view: new ol.View({
             zoom: defzoom,
@@ -963,19 +962,16 @@ console.log("Start of metsis search map script:");
               //var wmsLayers = getWmsLayers(wmsResource, title);
               //console.log(wmsLayers);
 
-              var wmsLayerGroup = new ol.layer.Group({
-                title: title,
-                layers: [],
-              });
               wmsLayerGroup.getLayers().push(
                 new ol.layer.Tile({
-                  //title: ls[i].Title,
+                  title: title,
                   visible: true,
-                  keepVisible: false,
+                  //keepVisible: false,
                   //projections: ol.control.Projection.CommonProjections(outerThis.projections, (layerProjections) ? layerProjections : wmsProjs),
                   //dimensions: getTimeDimensions(),
                   //styles: ls[i].Style,
                   source: new ol.source.TileWMS(({
+                    projection: selected_proj,
                     url: wmsResource,
                     params: {
                       'LAYERS': 'Composites',
@@ -1037,12 +1033,12 @@ console.log("Start of metsis search map script:");
               //console.log(wmsLayer);
               //Fit to feature
               //wmsLayerGroup.setLayers([wmsLayer]);
-              map.addLayer(wmsLayerGroup);
+              //map.getLayers().extend(wmsLayerGroup);
 
               //Hide the style of the selected feature.
-              var pinFeatures = featureLayers['pins'].getSource().getFeatures();
-              var polygonFeatures = featureLayers['polygons'].getSource().getFeatures();
-
+              //var pinFeatures = featureLayers['pins'].getSource().getFeatures();
+              //var polygonFeatures = featureLayers['polygons'].getSource().getFeatures();
+/*
               for (let pinFeature of pinFeatures) {
                 if (pinFeature.getId() === id) {
                   pinFeature.setStyle();
@@ -1053,10 +1049,12 @@ console.log("Start of metsis search map script:");
                   polygonFeature.setStyle();
                 }
               }
+*/
               //map.addLayer(areaLayer);
               //Hide Pins and polygons
-              featureLayers['pins'].setVisible(false);
-              featureLayers['polygons'].setVisible(false);
+              featureLayersGroup.setVisible(false);
+              //featureLayers['pins'].setVisible(false);
+              //featureLayers['polygons'].setVisible(false);
 
             /*  map.getLayers().forEach(function(element, index, array) {
 
@@ -1204,13 +1202,14 @@ console.log("Start of metsis search map script:");
           var vectorSourcePol = new ol.source.Vector({
             features: iconFeaturesPol,
             name: 'polygonSource',
-            //projection: proj,
+            projection: prj,
           });
 
           //create a vector layer with all points from the vector source and pins
-          featureLayers['polygons'] = new ol.layer.Vector({
+          var polygonsFeatureLayer = new ol.layer.Vector({
             title: 'Polygons',
             name: 'polygonsLayer',
+            visible: true,
             //projection: prj,
             source: vectorSourcePol,
           });
@@ -1221,17 +1220,20 @@ console.log("Start of metsis search map script:");
           var vectorSourcePin = new ol.source.Vector({
             features: iconFeaturesPin,
             name: 'pinsSource',
+            projection: prj,
           });
-          featureLayers['pins'] = new ol.layer.Vector({
+          var pinsFeatureLayer = new ol.layer.Vector({
             title: 'Pins',
             name: 'pinsLayer',
+            visible: true,
             source: vectorSourcePin,
             //projection: prj,
             //style: iconStyle,
           });
           //create a vector layer with all points from the vector source and pins
 
-
+          featureLayersGroup.getLayers().push(polygonsFeatureLayer);
+          featureLayersGroup.getLayers().push(pinsFeatureLayer);
 
           //Fit to extent of features
           var featuresExtent = new ol.extent.createEmpty();
@@ -1240,8 +1242,8 @@ console.log("Start of metsis search map script:");
           });
           //var maxExt = extent.getExtent();
           console.log("Adding feature layers to map");
-          map.addLayer(featureLayers['polygons']);
-          map.addLayer(featureLayers['pins']);
+          //map.addLayer(featureLayers['polygons']);
+          //map.addLayer(featureLayers['pins']);
 
           return featuresExtent
         }
@@ -1280,6 +1282,19 @@ console.log("Start of metsis search map script:");
           map.getView().setZoom(map.getView().getZoom() - 0.3);
 
 
+        }
+
+        //Function to rebuild features:
+        function rebuildbuildFeatures(prj){
+          console.log("transform features gemetry from: " + init_proj + ' to ' + selected_proj);
+          featureLayersGroup.getLayers().forEach(function (element, index, array) {
+            let features = element.getSource().getFeatures();
+            for(let feature of features) {
+              //console.log(feature);
+              feature.getGeometry().transform(init_proj,prj);
+            }
+            element.getSource().refresh();
+          })
         }
 
 
@@ -1350,14 +1365,14 @@ console.log("Start of metsis search map script:");
 
 
         //Mouseposition lat lon
-        var mousePositionControl = new ol.control.MousePosition({
+        /*var mousePositionControl = new ol.control.MousePosition({
           coordinateFormat: function(co) {
             return ol.coordinate.format(co, template = 'lon: {x}, lat: {y}', 2);
           },
           projection: 'EPSG:4326',
         });
         map.addControl(mousePositionControl);
-
+        */
         //Zoom to extent
         var zoomToExtentControl = new ol.control.ZoomToExtent({
           extent: featuresExtent,
@@ -1385,8 +1400,10 @@ console.log("Start of metsis search map script:");
           }
         }
 
-        // If we have wms datasets in map, show the visualise all button
 
+
+
+        // If we have wms datasets in map, show the visualise all button
         //list of olWMALayers to be added and rendered
         var wmsLayers = [];
         if (wmsProducts.length > 0) {
@@ -1399,7 +1416,10 @@ console.log("Start of metsis search map script:");
             //map.getLayers().remove(layer['polygons']);
             //map.getLayers().remove(layer['pins']);
             //Hide Pins and polygons
-            map.getLayers().forEach(function(element, index, array) {
+            //featureLayers['pins'].setVisible(false);
+            //featureLayers['polygons'].setVisible(false);
+
+          /*  map.getLayers().forEach(function(element, index, array) {
               if (element.get('title') === 'pins') {
                 element.setVisible(false);
               }
@@ -1407,21 +1427,21 @@ console.log("Start of metsis search map script:");
                 element.setVisible(false);
               }
             })
-
+*/
             //Loop over the wmsLayers and render them on map.
             for (let i = 0; i < wmsProductLayers.length; i++) {
               console.log(i + " - " + wmsProducts[i]);
               //alert(wmsProducts[i]);
 
-              wmsLayers.push(
+              wmsLayerGroup.getLayers().push(
                 //map.addLayer(
                 new ol.layer.Tile({
                   title: wmsProducts[i],
                   visible: true,
-                  projections: projObjectforCode[proj].projection,
-                  source: new ol.source.TileWMS( /** @type {olx.source.TileWMSOptions} */ ({
+                  //projection: selected_proj,
+                  source: new ol.source.TileWMS(({
                     url: wmsProductLayers[i],
-                    //projection: projObjectforCode[proj].projection,
+                    projection: selected_proj,
                     params: {
                       'LAYERS': 'Composites',
                       //'LAYERS': 'WMS',
@@ -1432,11 +1452,11 @@ console.log("Start of metsis search map script:");
                     crossOrigin: 'anonymous',
                   })),
                 }),
-                new ol.layer.Tile({
+            /*    new ol.layer.Tile({
                   title: wmsProducts[i],
                   visible: true,
                   projections: projObjectforCode[proj].projection,
-                  source: new ol.source.TileWMS( /** @type {olx.source.TileWMSOptions} */ ({
+                  source: new ol.source.TileWMS(  ({
                     url: wmsProductLayers[i],
                     //projection: projObjectforCode[proj].projection,
                     params: {
@@ -1448,12 +1468,13 @@ console.log("Start of metsis search map script:");
                     },
                     crossOrigin: 'anonymous',
                   })),
-                }),
+                }), */
               );
 
             }
-            map.getLayers().extend(wmsLayers);
-
+            //map.getLayers().extend(wmsLayerGroup);
+            //map.addLayers(wmsLayerGroup);
+            featureLayersGroup.setVisible(false);
 
           });
           //id_tooltip_h()
@@ -1464,11 +1485,13 @@ console.log("Start of metsis search map script:");
         // Search bbox filter
         $('#bboxButton').click(function() {
           console.log('Creating bbox filter with projection: ' + proj);
-          console.log(featureLayers);
+          //console.log(featureLayers);
           // clear pins and polygons
           //layers = map.getLayers();
-          featureLayers['pins'].setVisible(false);
-          featureLayers['polygons'].setVisible(false);
+          //featureLayers['pins'].setVisible(false);
+          //featureLayers['polygons'].setVisible(false);
+          featureLayersGroup.setVisible(false);
+          wmsLayerGroup.setVisible(false);
 /*
           map.getLayers().forEach(function(element, index, array) {
             if (element.get('title') === 'pins') {
