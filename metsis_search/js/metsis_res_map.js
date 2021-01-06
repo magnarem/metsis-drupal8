@@ -1485,9 +1485,9 @@ console.log("Start of metsis search map script:");
         var wmsLayers = [];
         if (wmsProducts.length > 0) {
           $('#vizAllButton').css('display', 'block');
-          $('#vizAllButton').append().text('Viusalise all WMS resources in Map');
+          $('#vizAllButton').append().text('Visualise all WMS resources in Map');
           $('#vizAllButton').on("click", function(e) {
-            console.log("Visialise all wms click event");
+            console.log("Visualize all wms click event");
             console.log("current projection" + selected_proj);
 
             //Loop over the wmsLayers and render them on map.
