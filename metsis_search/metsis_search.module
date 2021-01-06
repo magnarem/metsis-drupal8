@@ -23,6 +23,7 @@ function metsis_search_help($route_name, RouteMatchInterface $route_match)
 {
     switch ($route_name) {
     // Main module help for the metsis_search module.
+    /** TODO: Read help from module's README.md */
     case 'help.page.metsis_search':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
@@ -60,47 +61,6 @@ function metsis_search_views_pre_render(ViewExecutable $view)
           'pywps_service' => $pywps_service,
           'module_path' => $module_path
         ];
-
-/*
-        $results = $view-each ($view->result as $row) {
-
-          // Get the full name value.
-          $name = $row->field_search_api_excerpt;
-          dpm($name);
-        }
-*/
-/*    foreach ($view->result as $index => &$result) {
-      // Alter the title field value
-      var_dump($result->search_api_excerpt);
-    }
-    $view->style_plugin->render_fields($view->result);
-    foreach ($view->style_plugin->rendered_fields as $index => &$rendered_result) {
-      // Add HTML markup icon on rendered title field
-      $rendered_result['search_api_excerpt'] = $result->search_api_excerpt;
-    }*/
-//}
-        /* moved to search map block
-        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/style';
-        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_js';
-        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_widgets';
-        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_tables';
-        $view->element['#attached']['library'][] = 'metsis_ts_bokeh/bokeh_api';
-        */
-        /* For rendering wms in modal dialog
-          $view->element['#attached']['library'][] = 'metsis_wms/replace.css';
-          $view->element['#attached']['library'][] = 'metsis_lib/utils';
-          $view->element['#attached']['library'][] = 'metsis_wms/jquery';
-          $view->element['#attached']['library'][] = 'metsis_wms/jquery.ui';
-          $view->element['#attached']['library'][] = 'metsis_wms/jquery.cycle';
-          $view->element['#attached']['library'][] = 'metsis_wms/dropdown';
-          $view->element['#attached']['library'][] = 'metsis_wms/bundle';
-          $view->element['#attached']['library'][] = 'metsis_wms/wmsmap';
-          */
-
-        //$view->element['#attributes']['id'][] = 'children';
-    /*  foreach($view->result as &$row) {
-        dpm($row);
-      } */
 
     }
     if (isset($view) && ($view->storage->id() == 'metsis_elements')) {

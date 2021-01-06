@@ -5,4 +5,5 @@
 - Replace tempstore with session variables where most logical
 - Make all url-paths using the routing names
 - Clean up unused files and code
-- Document metsis_search
+- Document submodules
+- Render module help from README.md

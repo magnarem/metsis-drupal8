@@ -101,6 +101,14 @@
   margin: 16px;
   display: none;
 }
+
+.map-ts-header {
+  display: none;
+}
+
+.popup-selected-product {
+  display: none;
+}
 /*
 .map-res .ol-viewport {
   height: 800px !important;

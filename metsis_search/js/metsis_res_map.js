@@ -40,6 +40,7 @@ console.log("Start of metsis search map script:");
         var base_layer_wms_north = drupalSettings.metsis_search_map_block.base_layer_wms_north;
         var base_layer_wms_south = drupalSettings.metsis_search_map_block.base_layer_wms_south;
         var pywpsUrl = drupalSettings.metsis_search_map_block.pywps_service;
+        var current_search = drupalSettings.metsis_search_map_block.current_search;
 
         // Some debugging
         var debug = true;
@@ -307,7 +308,13 @@ console.log("Start of metsis search map script:");
         /** Register event listner when Projection is changed.
          * Rebuild pins and polygons and update map view */
         var ch = document.getElementsByName('map-res-projection');
-        document.getElementById(init_proj).checked = true;
+        if(selected_proj != null) {
+            document.getElementById(selected_proj).checked = true;
+        }
+        else {
+            document.getElementById(init_proj).checked = true;
+        }
+        //document.getElementById(init_proj).checked = true;
         for (var i = ch.length; i--;) {
           ch[i].onchange = function change_projection() {
             prj = this.value;
@@ -366,6 +373,7 @@ console.log("Start of metsis search map script:");
         popUpCloser.onclick = function() {
           popUpOverlay.setPosition(undefined);
           popUpCloser.blur();
+          map.addOverlay(overlayh);
           return false;
         };
 
@@ -672,9 +680,10 @@ console.log("Start of metsis search map script:");
 
           //Show ts-bokeh plot:
           $('#bokeh-map-ts-plot').slideDown();
+          $('.map-ts-header').css({display: 'block'});
 
           //Create back to results button:
-          var button = $('#map-ts-back').append(
+          let button = $('#map-ts-back').append(
             $(document.createElement('button')).prop({
               id: 'backToMapButton',
               class: "w3-button w3-small",
@@ -683,6 +692,7 @@ console.log("Start of metsis search map script:");
           // Register action for click button:
           button.on('click', function() {
             $('#bokeh-map-ts-plot').slideUp();
+            $('.map-ts-header').css({display: 'none'});
             $('#search-map').slideDown();
             $('#map-ts-plot').empty();
             $('#map-ts-var-list').unbind('change');
@@ -815,6 +825,8 @@ console.log("Start of metsis search map script:");
                           styles: ls[i].Style,
                           source: new ol.source.TileWMS(({
                             url: wmsUrl,
+                            reprojectionErrorThreshold: 0.1,
+                            projection: selected_proj,
                             params: {
                               'LAYERS': ls[i].Name,
                               'VERSION': result.version,
@@ -840,6 +852,51 @@ console.log("Start of metsis search map script:");
             //console.log(layers);
 
             return wmsLayerGroup;
+          }
+        }
+
+        function visualiseWmsLayer(wmsResource,id,title, geom) {
+          //Check WMS product:
+          if (wmsResource != null && wmsResource != "") {
+            console.log("Got WMS product: " + id);
+
+            //TODO: Do more stuff here with the WMS product
+            //var wmsLayers = getWmsLayers(wmsResource, title);
+            //console.log(wmsLayers);
+            //wmsResource = wmsResource.replace(/(^\w+:|^)\/\//, '//');
+            //console.log("New wmsResource url: " + wmsResource);
+            wmsLayerGroup.getLayers().push(
+              new ol.layer.Tile({
+                title: title,
+                visible: true,
+                //keepVisible: false,
+                //projections: ol.control.Projection.CommonProjections(outerThis.projections, (layerProjections) ? layerProjections : wmsProjs),
+                //dimensions: getTimeDimensions(),
+                //styles: ls[i].Style,
+                source: new ol.source.TileWMS(({
+                  projection: selected_proj,
+                  url: wmsResource,
+                  reprojectionErrorThreshold: 0.1,
+                  params: {
+                    'LAYERS': 'Composites',
+                    'VERSION': '1.3.0',
+                    'FORMAT': 'image/png',
+                    //'STYLES': (typeof ls[i].Style !== "undefined") ? ls[i].Style[0].Name : '',
+                    'TILE': true,
+                    'TRANSPARENT': true,
+                  },
+                  crossOrigin: 'anonymous',
+
+                })),
+              }));
+            featureLayersGroup.setVisible(false);
+
+
+            //Fit to feature geometry
+            //console.log(feature_ids[id]);
+            map.getView().fit(geom.getExtent());
+            //map.getView().fit(wmsLayer.getExtent())
+            map.getView().setZoom(map.getView().getZoom());
           }
         }
 
@@ -918,8 +975,13 @@ console.log("Start of metsis search map script:");
           console.log("Number of selected features: " + numberOfFeatures);
           if (numberOfFeatures === 0) {
             $('.datasets-row').css('display', 'block');
+            //Remove overlay
+            map.removeOverlay(overlayh);
+            map.addOverlay(overlayh);
           }
           if (numberOfFeatures === 1) {
+            //Remove overlay
+            map.removeOverlay(overlayh);
             console.log("Execute action for ONE feature");
             var wmsResource = feature_ids[id].url_w;
             var odResource = feature_ids[id].url_o;
@@ -961,7 +1023,8 @@ console.log("Start of metsis search map script:");
               //TODO: Do more stuff here with the WMS product
               //var wmsLayers = getWmsLayers(wmsResource, title);
               //console.log(wmsLayers);
-
+              //wmsResource = wmsResource.replace(/(^\w+:|^)\/\//, '//');
+              //console.log("New wmsResource url: " + wmsResource);
               wmsLayerGroup.getLayers().push(
                 new ol.layer.Tile({
                   title: title,
@@ -973,6 +1036,7 @@ console.log("Start of metsis search map script:");
                   source: new ol.source.TileWMS(({
                     projection: selected_proj,
                     url: wmsResource,
+                    reprojectionErrorThreshold: 0.1,
                     params: {
                       'LAYERS': 'Composites',
                       'VERSION': '1.3.0',
@@ -998,13 +1062,112 @@ console.log("Start of metsis search map script:");
           }
           if (numberOfFeatures > 1) {
             console.log("Execute action for multiple features: " + numberOfFeatures);
-            $('#popup-content').append('<p class="w3-large"> Select product: </p>');
-            $('#popup-content').append('<ul class="w3-ul w3-hoverable">');
+            //Remove overlay
+            map.removeOverlay(overlayh);
+            //Loop over the selected features, and create EventListener when selecting one product from list
+            let markup = "";
+            markup += '<div id="popup-content-div">';
+            markup += '<p class="w3-large"> Select product: </p>';
+            markup += '<ul class="w3-ul w3-hoverable">';
             for (var key in feature_ids) {
-              console.log(feature_ids[key].id);
-              $('#popup-content').append('<li class="productItem w3-small w3-hover-blue 3-hover-opacity">'+feature_ids[key].title+'</li>');
+            let id = feature_ids[key].id;
+              //$('#popup-content').append('<li id="'+id+ '" class="productItem w3-small w3-hover-blue 3-hover-opacity">'+feature_ids[key].title+'</li>');
+              markup += '<li id="popup-lst-'+id+ '" data-id="'+id+'" class="popupProductItem w3-small w3-hover-blue 3-hover-opacity">'+feature_ids[key].title+'</li>';
             }
-            $('#popup-content').append('</ul>');
+            markup += '</ul>';
+            markup += '</div>';
+            markup += '<div id="popupSelectedProduct" class="popup-selected-product">';
+            markup += '<p><a href="#" id="popupSelectProductBack">&larr; Back</a></p>';
+            markup += '<div id="popupSelectedProductContent"></div></div>';
+            //$('#popup-content').append('</ul>');
+            //$('#popup-content').append('</div>');
+            $('#popup-content').append(markup);
+
+            $('#popupSelectProductBack').on('click', function(){
+                $('#popup-content-div').show();
+                $('#popupSelectedProduct').hide();
+                $('#popupSelectedProductContent').empty();
+                return false;
+            });
+            $('.popupProductItem').on(
+                  'click', function() {
+                    let selected_id = $(this).data('id');
+                    let selected_title = feature_ids[selected_id].title;
+                    let wmsResource = feature_ids[selected_id].url_w;
+                    let odResource = feature_ids[selected_id].url_o;
+                    let featureType = feature_ids[selected_id].featureType;
+                    let title = feature_ids[selected_id].title;
+                    let geom = feature_ids[selected_id].geom;
+
+                    console.log("Selected id: " +selected_id);
+                    console.log("Selected title: " +selected_title);
+
+                    //Hide and show some divs
+                    $('#popup-content-div').hide();
+                    $('#popupSelectedProduct').show();
+
+                    //Add info about the selected dataset
+                    let productMarkup = '<strong>'+selected_title+'</strong>';
+
+                    //Add show metadata details button
+                    productMarkup += '<p><button id="popupShowMetadata" class="w3-button w3-small">Metadata details</button>';
+                    productMarkup += '</p>'
+                    $('#popupSelectedProductContent').append(productMarkup);
+
+                    //Add open drupal dialog event to metadata details button.
+                    var ajaxSettings = {
+                      url: '/metsis/metadata/'+selected_id,
+                      dialogType: 'modal',
+                      dialog: { width: '80%', title: 'Metadata details', topOffset: '100px',  autoResize: true, maxHeight: '95%'},
+                    };
+                    $('#popupShowMetadata').on('click', function() {
+                      var myAjaxObject = Drupal.ajax(ajaxSettings);
+                      myAjaxObject.execute();
+
+                    })
+                    //If we have wmsResource, display visulise wms button
+                    if (wmsResource != null && wmsResource != "") {
+                      $('#popupSelectedProductContent').append(
+                        $(document.createElement('button')).prop({
+                          id: 'popup-wms-button',
+                          class: "w3-button w3-small",
+                        }).html('Visualise WMS')
+                      );
+                      $('#popup-wms-button').on('click', function() {
+                        //$('.ol-popup').hide();
+                        popUpOverlay.setPosition(undefined);
+                        visualiseWmsLayer(wmsResource,id,title, geom)
+                      });
+
+                    }
+
+                    //Check for timeseries product
+                    if (odResource != null && odResource != "") {
+                      if (feature_ids[selected_id].featureType === 'timeSeries' || feature_ids[selected_id].featureType === 'profile') {
+                        console.log("Got timeseries product: " + feature_ids[selected_id].id);
+                        //$('#popupSelectedProductContent').append("<p>" + feature_ids[selected_id].title + "</p>");
+                        $('#popupSelectedProductContent').append(
+                          $(document.createElement('button')).prop({
+                            id: 'popup-ts-button',
+                            class: "w3-button w3-small",
+                          }).html('Visualise timeseries')
+
+                        );
+
+                        console.log("Alter the popUpOverlay position.");
+                        $('#popup-ts-button').on('click', function() {
+                            popUpOverlay.setPosition(undefined);
+                          plotTimeseries(odResource)
+                        });
+                      }
+                    }
+
+
+                    //alert($(this).data('id'));
+                  }
+                );
+
+
             console.log("Alter the popUpOverlay position.");
             popUpOverlay.setPosition(coordinate);
           } else {
@@ -1287,15 +1450,6 @@ console.log("Start of metsis search map script:");
         }
 
 
-        //Mouseposition lat lon
-        /*var mousePositionControl = new ol.control.MousePosition({
-          coordinateFormat: function(co) {
-            return ol.coordinate.format(co, template = 'lon: {x}, lat: {y}', 2);
-          },
-          projection: 'EPSG:4326',
-        });
-        map.addControl(mousePositionControl);
-        */
         //Zoom to extent
         var zoomToExtentControl = new ol.control.ZoomToExtent({
           extent: featuresExtent,
@@ -1335,22 +1489,7 @@ console.log("Start of metsis search map script:");
           $('#vizAllButton').on("click", function(e) {
             console.log("Visialise all wms click event");
             console.log("current projection" + selected_proj);
-            // clear pins and polygons
-            //map.getLayers().remove(layer['polygons']);
-            //map.getLayers().remove(layer['pins']);
-            //Hide Pins and polygons
-            //featureLayers['pins'].setVisible(false);
-            //featureLayers['polygons'].setVisible(false);
 
-          /*  map.getLayers().forEach(function(element, index, array) {
-              if (element.get('title') === 'pins') {
-                element.setVisible(false);
-              }
-              if (element.get('title') === 'polygons') {
-                element.setVisible(false);
-              }
-            })
-*/
             //Loop over the wmsLayers and render them on map.
             for (let i = 0; i < wmsProductLayers.length; i++) {
               console.log(i + " - " + wmsProducts[i]);
@@ -1365,6 +1504,7 @@ console.log("Start of metsis search map script:");
                   source: new ol.source.TileWMS(({
                     url: wmsProductLayers[i],
                     projection: selected_proj,
+                    reprojectionErrorThreshold: 0.1,
                     params: {
                       'LAYERS': 'Composites',
                       //'LAYERS': 'WMS',
@@ -1375,23 +1515,6 @@ console.log("Start of metsis search map script:");
                     crossOrigin: 'anonymous',
                   })),
                 }),
-            /*    new ol.layer.Tile({
-                  title: wmsProducts[i],
-                  visible: true,
-                  projections: projObjectforCode[proj].projection,
-                  source: new ol.source.TileWMS(  ({
-                    url: wmsProductLayers[i],
-                    //projection: projObjectforCode[proj].projection,
-                    params: {
-                      'LAYERS': 'area',
-                      //'LAYERS': 'WMS',
-                      //'FORMAT': 'image/jpeg',
-                      'TILE': true,
-                      'TRANSPARENT': true,
-                    },
-                    crossOrigin: 'anonymous',
-                  })),
-                }), */
               );
 
             }
@@ -1408,24 +1531,11 @@ console.log("Start of metsis search map script:");
         // Search bbox filter
         $('#bboxButton').click(function() {
           console.log('Creating bbox filter with projection: ' + proj);
-          //console.log(featureLayers);
-          // clear pins and polygons
-          //layers = map.getLayers();
-          //featureLayers['pins'].setVisible(false);
-          //featureLayers['polygons'].setVisible(false);
+
+          //hide layers
           featureLayersGroup.setVisible(false);
           wmsLayerGroup.setVisible(false);
-/*
-          map.getLayers().forEach(function(element, index, array) {
-            if (element.get('title') === 'pins') {
-              element.setVisible(false);
-            }
-            if (element.get('title') === 'polygons') {
-              element.setVisible(false);
-            }
-          })
-          map.getLayers().remove(wmsLayers);
-*/
+
           //Unset the current product overlays and mouse position control
           map.un('singleclick', getProductInfo);
 
@@ -1446,6 +1556,7 @@ console.log("Start of metsis search map script:");
 
           // Build the draw of bbox
           build_draw(selected_proj)
+
 
         });
 
@@ -1555,12 +1666,30 @@ console.log("Start of metsis search map script:");
               var brlon = drupalSettings.metsis_search_map_block.brlon;
 
             });
+            //Create popup with search button
+            //$('#popup-content').append("<p>" + feature_ids[id].title + "</p>");
+/*            console.log("Creating search button in popup content");
+            var button = $('#popup-content').append(
+              $(document.createElement('button')).prop({
+                class: "w3-button w3-small",
+              }).html('Search with current boundingbox')
 
+            );
 
+            console.log("Setting popup position after draw|.");
+            popUpOverlay.setPosition(coords);
+            button.on('click', function() {
+              window.location.replace(current_search);
+              return false;
+            });
 
+*/
           });
           console.log('Adding draw bbox interaction');
           map.addInteraction(draw);
+
+
+
           /*
           tllat = drupalSettings.metsis_search_map_block.tllat;
           tllon = drupalSettings.metsis_search_map_block.tllon;
@@ -1570,6 +1699,9 @@ console.log("Start of metsis search map script:");
           console.log('tllat before draw existing filter' + tllat);
 
           // two proj
+
+
+
         }
 
         //Add extra layers function

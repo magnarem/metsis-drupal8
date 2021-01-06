@@ -42,6 +42,11 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         $bboxFilter = $session->get('bboxFilter');
         $proj = $session->get('proj');
 
+        //Extract info from request object:
+        $request = \Drupal::request();
+        $searchUri = $request->getRequestUri();
+        \Drupal::logger('metsis_search:metsis_search_map')->debug('Current search uri: @url', ['@url' => $searchUri]);
+
         //if ($bboxFilter != null) {
           $tllat = $session->get('tllat');
           $tllon = $session->get('tllon');
@@ -182,6 +187,12 @@ $build['search-map']['panel']['projection'] = [
     '#allowed_tags' => ['div'],
   ];
 
+  $build['map-ts-plot']['header'] = [
+    '#type' => 'markup',
+    '#markup' => '<div class="map-ts-header"><h3>Visualize timeseries</h3></div>',
+    '#allowed_tags' => ['div','h','h3'],
+  ];
+
   $build['map-ts-plot']['loader'] = [
     '#type' => 'markup',
     '#markup' => '<div class="map-ts-loader"></div>',
@@ -253,7 +264,8 @@ $build['search-map']['panel']['projection'] = [
       'pins' => $map_pins,
       'path' => $module_path,
       'extracted_info' => $extracted_info,
-      'pywps_service' => $pywps_service
+      'pywps_service' => $pywps_service,
+      'current_search' => $searchUri,
     ],
     ],
     ];
