@@ -12,6 +12,9 @@ use Drupal\Core\Ajax\SettingsCommand;
 
 class MapSearchController extends ControllerBase {
 
+
+    /* Callback from openlayers when boundingbox filter are drawed on map.
+    Add current drawed boundingbox to solr search query */
     public function ajaxCallback() {
       $query_from_request = \Drupal::request()->query->all();
       $params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
@@ -24,6 +27,7 @@ class MapSearchController extends ControllerBase {
       \Drupal::logger('metsis_search_map_search_controller')->debug("Got boundingbox with ENVELOPE(" .  $tllon . ',' . $brlon . ',' . $tllat . ',' . $brlat . ')');
       $bboxFilter = 'ENVELOPE(' . $tllon . ',' . $brlon . ',' . $tllat . ',' . $brlat . ')';
 
+      //Get current session variables
       $session = \Drupal::request()->getSession();
       $session->set('bboxFilter', $bboxFilter);
       $session->set('tllat', $tllat);
@@ -31,15 +35,7 @@ class MapSearchController extends ControllerBase {
       $session->set('brlat', $brlat);
       $session->set('brlon', $brlon);
       $session->set('proj', $proj);
-      /*
-      $tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
-      $tempstore->set('bboxFilter', $bboxFilter);
-      $tempstore->set('tllat', $tllat);
-      $tempstore->set('tllon', $tllon);
-      $tempstore->set('brlat', $brlat);
-      $tempstore->set('brlon', $brlon);
-      */
-        //\Drupal::cache()->invalidate('metsis_search_map');
+
         //Get saved configuration
         $config = \Drupal::config('metsis_search.settings');
         $map_location = $config->get('map_selected_location');

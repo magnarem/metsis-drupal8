@@ -1,14 +1,372 @@
-.map-res {
-  /*  background-color: white; */
-  /*  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-  width: 100%;
-  height: 600px !important;
+/* The main block for the result map */
+#block-metsissearchmap {
+  padding: 0 !important;
 }
 
-.map {
+/* Define the main search map div. This can be toggeled
+in fullscreen by openlayers fullScreenControl */
+.search-map {
+  clear: both;
+  margin-top: 0px;
   width: 100%;
-  height: 400px;
 }
+
+.map-res:-webkit-full-screen {
+  height: 100%;
+  margin: 0;
+}
+
+.map-res:-ms-fullscreen {
+  height: 100%;
+}
+
+.map-res:fullscreen {
+  height: 100%;
+}
+
+.map-res:fullscreen {
+  height: 100%;
+}
+
+/* The top panel styling */
+.map-top-panel {
+  margin-top: 0px;
+  width: 100%;
+}
+
+/* The main div to put the openlayers map canvas */
+.map-res {
+  width: 100%;
+  float: left;
+  height: 450px; /* 450px */
+  border-top: 1px;
+  border-bottom: 1px;
+  border-left: 0;
+  border-right: 0;
+  border-style: dotted;
+  border-color: #BEBEBE;
+  transition: 0.3s;
+  margin-bottom: 10px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0;
+}
+
+/* Sidepanel style and layout */
+.map-sidepanel {
+  width: 30%;
+  height: 100%;
+  float: right;
+  overflow-y: scroll;
+  /* Stay on top */
+  background: #98C6CC;
+  /* Disable horizontal scroll */
+  /* Place content 60px from the top */
+  transition: 0.3s;
+
+  /*display: none; */
+  /* 0.5 second transition effect to slide in the sidepanel */
+}
+
+.sidepanel-closed {
+  width: 30%;
+}
+
+.sidepanel-open {
+  width: 30%
+}
+
+.sidepanel-open:fullscreen {
+  width: 20%
+}
+
+/* Sidepanel title */
+.map-sidepanel-title {
+  width: 100%;
+  font-size: 1.2em;
+  color: #ffffff;
+  display: block;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+/* The sidepanel links */
+.map-sidepanel a {
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: inline;
+  transition: 0.3s;
+}
+
+.map-sidepanel:-webkit-full-screen {
+  height: 100%;
+  width: 20%;
+  margin: 0;
+}
+
+.map-sidepanel:-ms-fullscreen {
+  height: 100%;
+  width: 20%;
+}
+
+.map-sidepanel:fullscreen {
+  height: 100%;
+  width: 20%;
+}
+
+/* When you mouse over the navigation links, change their color */
+.map-sidepanel a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.map-sidepanel .map-closebtn {
+  color: #FFFFFF;
+}
+
+.map-closebtn-wrapper {
+  float left;
+  padding: 5px;
+}
+
+/* The bottom panel for text and other information */
+.bottom-map-panel {
+  clear: both;
+  width: 100%;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/* Style the button that is used to open the sidepanel */
+.map-openbtn-wrapper {
+  left: 0.5em;
+  top: 11.8em;
+  position: absolute;
+  z-index: 2;
+}
+
+.map-openbtn-wrapper:fullscreen {
+  left: 0.5em;
+  top: 8.8em;
+  position: absolute;
+  z-index: 1000;
+}
+
+.map-openbtn-wrapper:-webkit-full-screen {
+  left: 0.5em;
+  top: 8.8em;
+  position: absolute;
+  z-index: 1000;
+}
+
+.map-openbtn-wrapper:-moz-full-screen {
+  left: 0.5em;
+  top: 8.8em;
+  position: absolute;
+  z-index: 1000;
+}
+
+.map-openbtn-wrapper:-ms-full-screen {
+  left: 0.5em;
+  top: 8.8em;
+  position: absolute;
+  z-index: 1000;
+}
+
+/* OL Specfic styling */
+.map-res .ol-rotate {
+  top: 3em;
+}
+
+/* Opacity sliders */
+.hideOpacity .layerswitcher-opacity {
+  display: none;
+}
+
+.hideOpacity .ol-layerswitcher .layerup {
+  height: 1.5em;
+}
+
+.showPercent .layerSwitcher .ol-layerswitcher .layerswitcher-opacity-label {
+  display: block;
+}
+
+.ol-header>div {
+  width: 100%;
+}
+
+.toggleVisibility {
+  padding-left: 1.6em;
+  cursor: pointer;
+  border-bottom: 2px solid #369;
+  margin-bottom: 0.5em;
+}
+
+.toggleVisibility:before {
+  background-color: #fff;
+  border: 2px solid #369;
+  box-sizing: border-box;
+  content: "";
+  display: block;
+  height: 1.2em;
+  left: 0.1em;
+  margin: 0;
+  position: absolute;
+  width: 1.2em;
+}
+
+.toggleVisibility.show:before {
+  background: #369;
+}
+
+.ol-layerswitcher .panel {
+  font-size: 0.8em;
+}
+
+.layerSwitcher {
+  margin-left: 5px;
+}
+
+/* Fullscreen control */
+/*.ol-full-screen {
+  background-color: rgba(255, 255, 255, 0.4);
+border-bottom-left-radius: 4px;
+border-bottom-right-radius: 4px;
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+box-sizing: border-box;
+color: rgb(63, 81, 81);
+font-family: Helvetica, Arial, sans-serif;
+font-size: 15px;
+line-height: 18px;
+overflow-wrap: break-word;
+padding-bottom: 2px;
+padding-left: 2px;
+padding-right: 2px;
+padding-top: 2px;
+position: absolute;
+right: unset !important;
+top: 0.5em;
+left: unset !important;
+user-select: none
+}
+*/
+/** Timeslider controls */
+#animatedWmsControls {
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+}
+#map-timeslider-id {
+  margin-left: 16px;
+  margin-right: 26px;
+
+}
+
+.controls {
+  margin-top: 10px;
+  text-align: center;
+}
+
+/*
+i.icon.backward {
+  content: &#xf100;
+}
+i.icon.forward {
+  content: &#xf101;
+}
+
+i.icon.backward:before{
+  content: &#xf100;
+}
+i.icon.fast.backward:before {
+  content: &#xf100;
+}
+
+i.icon.step.backward:before {
+  content: &#xf100;
+}
+i.icon.step.forward:before {
+  content: &#xf101;
+}
+i.icon.fast.forward:before {
+  content: &#xf101;
+}
+
+i.icon.forward:before {
+  content: &#xf101;
+}
+*/
+.controls button, .ui.label {
+  font-weight: bolder;
+  text-decoration: none;
+  text-align: center
+}
+
+.timeButton {
+  background-color: #008CBA;
+  /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.2em;
+
+
+}
+#time {
+  text-align: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  color: black;
+  border-radius: 1em;
+
+}
+.timeControlWrapper {
+}
+
+
+.controls {
+  margin-top: 10px;
+  text-align: center
+}
+
+.controls button span {
+  padding: .6rem .2rem .5rem .6rem
+}
+
+.controls button:focus {
+  outline: 0
+}
+
+div.ui-slider span.ui-slider-handle {
+  background: #eee;
+  height: 26px;
+  width: 13.8em;
+  margin-top: 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  line-height: 26px;
+  text-align: center;
+  color: #848282;
+  font-size: 13px;
+  cursor: pointer
+}
+
+.ui.label {
+  background-color: #008CBA;
+  color: #fff;
+
+}
+
 /*
 .ol-overviewmap .ol-overviewmap-map {
   border: 1px solid #7b98bc;
@@ -20,14 +378,6 @@
 
 .ol-overviewmap .ol-overviewmap-map, .ol-overviewmap button {}
 */
-.search-map {
-  margin-bottom: 16px !important;
-}
-
-.bottom-map-panel {
-  margin-top: 5px !important;
-}
-
 .ol-mouse-position {
   margin-right: 36px;
 }
@@ -79,8 +429,9 @@
 
 .ol-popup-closer:after {
   content: "✖";
-  position:  fixed;
+  position: fixed;
 }
+
 /*
 .popup-content {
   overflow: scroll;
@@ -93,6 +444,7 @@
 .ol-overviewmap-map {
   margin-bottom: 24px !important;
 }
+
 .layer-switcher.shown {
   max-height: 250px;
 }
@@ -109,12 +461,16 @@
 .popup-selected-product {
   display: none;
 }
-/*
-.map-res .ol-viewport {
-  height: 800px !important;
-  width: 100%;
+
+#map-slider-id {
+  width: 200px;
+  margin: 5px;
 }
-*/
+
+.current-bbox-select {
+  margin-left: 2px;
+}
+
 #map-res-popup {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   height: 200px;
@@ -286,4 +642,43 @@
 
 button#vizAllButton {
   display: none;
+}
+
+/** Additional layers styling **/
+#droplayers {
+  position: absolute;
+  right: .5em;
+  top: 2em;
+}
+
+.dropdown-lrs-content {
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 0 1em 0 0;
+  margin: 0;
+  border: 4px solid #eee;
+  border-radius: 4px;
+  background-color: white;
+  display: none;
+  max-height: 100%;
+  overflow-y: auto;
+  opacity: 80%;
+}
+
+.show {
+  display: block;
+}
+
+.layers-button {
+  background-color: rgba(0, 60, 136, .5);
+  border: none;
+  color: black;
+  padding: 3px 16px;
+  text-align: left;
+  text-decoration: none;
+  font-size: 11px;
+  margin: 2px 1px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; //Safari
+  transition-duration: 0.4s;
+  border-radius: 6px;
 }

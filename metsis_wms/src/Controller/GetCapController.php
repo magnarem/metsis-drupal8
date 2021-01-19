@@ -66,8 +66,10 @@ class GetCapController extends ControllerBase {
      $query_from_request = \Drupal::request()->query->all();
      $query = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
      $url = $query['url'];
+
+     $host = \Drupal::request()->getSchemeAndHttpHost();
     //$getCapString = '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
-    $getCapString = '?VERSION=1.3.0&REQUEST=GetCapabilities&SERVICE=WMS&';
+    $getCapString = '?VERSION=1.3.0&REQUEST=GetCapabilities&SERVICE=WMS';
     $getCapUrl = $url . $getCapString;
     \Drupal::logger('metsis_wms::getCapDocFromUrl')->debug($getCapUrl);
     //$getCapUrl = 'https://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?version=1.3.0&request=GetCapabilities&service=WMS';
@@ -79,6 +81,7 @@ class GetCapController extends ControllerBase {
           'Accept' => 'application/xml',
           //'Content-Type' => 'application/xml',
           'Content-Type' => 'application/xml',
+          'Origin' => $host,
           //'Accept-Encoding' => 'gzip, deflate',
         ]
     //    'body' => $xml,

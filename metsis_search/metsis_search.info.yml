@@ -27,3 +27,4 @@ dependencies:
   - metsis_csv_bokeh
   - back_to_top
   - extlink
+  - fontawesome

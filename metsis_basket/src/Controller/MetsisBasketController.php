@@ -64,6 +64,12 @@ class MetsisBasketController extends ControllerBase  {
       'max-age' => 0,
     ];
 
+    $build['#attached'] = [
+'library' => [
+'metsis_basket/basket_view',
+],
+];
+
     return $build;
   }
 
