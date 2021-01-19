@@ -158,6 +158,14 @@ class DashboardBokehController extends ControllerBase {
           ],
         ],
       ];
+
+      $build['content']['dashboard-wrapper']['endpoint'] = [
+        '#type' => 'markup',
+        '#markup' => '<p>Using endpoint : ' .   'https://pybasket.epinux.com/post_baskettable' . '</p>',
+
+
+      ];
+
       $build['content']['dashboard-wrapper']['status'] = [
         '#type' => 'markup',
         '#markup' => '<p>Got statusCode: ' . $responseStatus . '</p>',
