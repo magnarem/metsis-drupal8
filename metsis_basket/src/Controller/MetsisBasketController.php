@@ -67,6 +67,7 @@ class MetsisBasketController extends ControllerBase  {
       'tags' => [
         'view',
       ],
+      'max-age' => 0,
     ];
 
     return $build;

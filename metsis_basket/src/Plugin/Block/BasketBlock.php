@@ -40,7 +40,7 @@ class BasketBlock extends BlockBase implements BlockPluginInterface {
     //Build  render array
     $build['basket-wrapper'] = [
       '#prefix' => '<div id="basket-block" class="basket-block w3-container w3-leftbar">',
-      '#postfix' => '</div>'
+      '#suffix' => '</div>'
     ];
     $build['basket-wrapper']['link-button'] = [
      '#markup' => '<a id="myBasket" class="w3-btn basket-link" href="/metsis/mybasket">My Basket</a>',
