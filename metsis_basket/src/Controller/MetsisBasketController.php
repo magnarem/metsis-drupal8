@@ -60,13 +60,7 @@ class MetsisBasketController extends ControllerBase  {
     $build['content']['view'] = views_embed_view('basket_view', 'embed_1');
 
     $build['#cache'] = [
-      'contexts' => [
-        'url.path',
-        'url.query_args',
-      ],
-      'tags' => [
-        'view',
-      ],
+
       'max-age' => 0,
     ];
 
