@@ -527,7 +527,7 @@ console.log("Start of metsis search map script:");
         });
 
         //Variable to hold timeDimensions for wms timeSeries
-        var timedimensions = null;
+        var timeDimensions =  [];
         //Create features Layergroup
         var featureLayers = {};
         var featureLayersGroup = new ol.layer.Group({
@@ -564,24 +564,35 @@ console.log("Start of metsis search map script:");
 
         //Add fullScreenControl
         var fullScreenControl = new ol.control.FullScreen({
-          //source: 'search-map',
+          source: 'mapcontainer',
           //className: 'fullscreen',
         });
 
         fullScreenControl.on('enterfullscreen', function() {
           console.log("Entered fullscreen");
           //Update the mapsize
+          if(timeDimensions.length > 0) {
+            $('#map-res').height($('.mapcontainer:fullscreen').height()-$('.bottom-map-panel').height()-30);
+              $('.map-sidepanel').height($('.mapcontainer:fullscreen').height()-$('.bottom-map-panel').height()-30);
+          }
+          else {
+            $('#map-res').height($('.mapcontainer:fullscreen').height());
+            $('.map-sidepanel').height($('.mapcontainer:fullscreen').height());
+          }
           setTimeout(function() {
+
             map.updateSize();
             map.getView().setCenter(ol.extent.getCenter(featuresExtent));
             //map.getView().fit(featuresExtent, { size: map.getSize() });
             map.getView().fit(featuresExtent);
-            map.getView().setZoom(map.getView().getZoom() - 0.3);
+            map.getView().setZoom(map.getView().getZoom() - 0.1);
 
-            //Update the position of the layer control button
-            $('.map-openbtn-wrapper').css("top", "8.8em");
-          }, 600);
 
+          }, 200);
+
+
+          //Update the position of the layer control button
+          $('.map-openbtn-wrapper').css("top", "8.8em");
           //map.getView().fit(featuresExtent, { size: map.getSize() });
           /*         baseLayerGroup.getLayers().forEach( function(element, index, array) {
                      if(element.getVisible()) {
@@ -589,10 +600,13 @@ console.log("Start of metsis search map script:");
                      }
                    });
           */
+        //  map.updateSize();
         });
         fullScreenControl.on('leavefullscreen', function() {
           console.log("Leaved fullscreen");
           //Update the mapsize
+          $('#map-res').height("450px");
+          $('#map-sidepanel').height("450px");
           setTimeout(function() {
             map.updateSize();
             map.getView().setCenter(ol.extent.getCenter(featuresExtent));
@@ -600,7 +614,8 @@ console.log("Start of metsis search map script:");
             map.getView().fit(featuresExtent);
             map.getView().setZoom(map.getView().getZoom() - 0.3);
             $('.map-openbtn-wrapper').css("top", "11.8em");
-          }, 600);
+
+          }, 200);
 
           //map.getView().fit(featuresExtent, { size: map.getSize() });
           /*         baseLayerGroup.getLayers().forEach( function(element, index, array) {
@@ -610,6 +625,7 @@ console.log("Start of metsis search map script:");
                    });
                    //map.getView().changed();
           */
+
         });
         //Add scaleline control
         var scaleLineControl = new ol.control.ScaleLine();
@@ -650,6 +666,7 @@ console.log("Start of metsis search map script:");
           });
         }
 
+        //Display message instead of empty map when search results are empty
         if (extracted_info.length === 0) {
           console.log("No extracted info");
           $('.map-res').empty();
@@ -680,51 +697,67 @@ console.log("Start of metsis search map script:");
           if (full_screen_element !== null) {
             console.log("Opening sidebar: fullscreen");
             $('#map-sidepanel').width("20%");
-            $('.ol-viewport').width("80%"); //.trigger($.Event('resize'));
+            //$('.ol-viewport').width("80%"); //.trigger($.Event('resize'));
+            $('.map-res').width("80%");
+            //$('map-sidepanel').height($('.mapcontainer:fullscreen').height()-$('.bottom-map-panel').height()-30);
+            //$('#map-sidepanel').height($('.ol-layer > canvas').height());
           } else {
             console.log("Opening sidebar: normal");
+
             $('#map-sidepanel').width("30%");
-            $('.ol-viewport').width("70%"); //.trigger($.Event('resize'));
+            //$('.ol-viewport').width("70%"); //.trigger($.Event('resize'));
+            $('.map-res').width("70%");
+
+//$('.ol-viewport').width("70%");
             //$('.ol-layer').width("70%");
           }
 
           //Open the sidebar
-          $('#map-sidepanel').show(); //.trigger($.Event('resize'));
+          //('#map-sidepanel').show(); //.trigger($.Event('resize'));
 
 
           //Update the mapsize
           setTimeout(function() {
             map.updateSize();
+            //$('map-sidepanel').height($('.mapcontainer:fullscreen').height()-$('.bottom-map-panel').height()-30);
+            //$('map-sidepanel').css("min-height", $('.map-res').height()-$('.bottom-map-panel').height()-30);
+            //$('map-sidepanel').height($('.map-res').height()-$('.bottom-map-panel').height()-30);
 
-          }, 600);
-          $(window).trigger('resize');
-          map.setTarget("map-res");
+
+          }, 250);
+          setTimeout(function (){
+
+            $('#map-sidepanel').show();
+            //$('#map-sidepanel').toggle("slide", { direction: "left" }, 500);
+          }, 300);
+          //$(window).trigger('resize');
+          //map.setTarget("map-res");
           map.getView().setCenter(ol.extent.getCenter(featuresExtent));
           map.getView().fit(featuresExtent, { size: map.getSize() });
           //map.getView().fit(featuresExtent);
           map.getView().setZoom(map.getView().getZoom() - 0.2);
-          map.renderSync();
+          //map.renderSync();
 
         }
 
         /* Set the width of the sidebar to 0 (hide it) */
         function closeSideBar() {
           console.log("Closing the sidebar");
+            $('#map-sidepanel').hide();
           //Change map width
-          $(".ol-viewport").width("100%"); //.trigger($.Event('resize'));
-
+          //$(".ol-viewport").width("100%"); //.trigger($.Event('resize'));
+          $('.map-res').width("100%");
           //Closing the sidebar
-          $('#map-sidepanel').hide(); //.trigger($.Event('resize'));
+          //.trigger($.Event('resize'));
 
           //Update the mapsize
           setTimeout(function() {
             map.updateSize();
-            map.getView().setCenter(ol.extent.getCenter(featuresExtent));
-            //map.getView().fit(featuresExtent, { size: map.getSize() });
-            map.getView().fit(featuresExtent);
-            map.getView().setZoom(map.getView().getZoom() - 0.2);
-          }, 600);
-
+          }, 350);
+          map.getView().setCenter(ol.extent.getCenter(featuresExtent));
+          //map.getView().fit(featuresExtent, { size: map.getSize() });
+          map.getView().fit(featuresExtent);
+          map.getView().setZoom(map.getView().getZoom() - 0.2);
 
         }
 
@@ -1101,6 +1134,7 @@ console.log("Start of metsis search map script:");
             //      mode: 'cors',
             //    }).then(function(response) {
             wmsUrl = wmsUrl.replace(/(^\w+:|^)\/\//, '//');
+            wmsUrl = wmsUrl.split("?")[0];
             $.ajax({
               type: 'GET',
               url: wmsUrl + getCapString,
@@ -1155,22 +1189,28 @@ console.log("Start of metsis search map script:");
                         }
                         return bboxs[0].extent;
                       };
-                      if (getTimeDimensions().length > 0) {
+                      let timedim = getTimeDimensions()
+                      if (timedim.length > 0) {
+                        //console.log(timedim);
                         hasTimeDimension = true;
                       }
 
                       var layerProjections = ls[i].CRS;
-                      var visible = true;
+                      var visible = false;
                       var title = ls[i].Title;
                       var layerName = ls[i].Name;
                       if (layerName === 'lon' || layerName === 'lat') {
                         visible = false;
+                      }
+                      if(i === 0 || i === 1)  {
+                        visible = true;
                       }
                       wmsLayerGroup.getLayers().push(
                         new ol.layer.Tile({
                           title: title,
                           visible: visible,
                           keepVisible: false,
+                          //preload: 5,
                           //projections: ol.control.Projection.CommonProjections(outerThis.projections, (layerProjections) ? layerProjections : wmsProjs),
                           dimensions: getTimeDimensions(),
                           styles: ls[i].Style,
@@ -1191,13 +1231,15 @@ console.log("Start of metsis search map script:");
                           })),
                         }));
                         var test =  ls.length-1;
-                      if (i === test) {
-                        timeDimensions = getTimeDimensions();
-                        //console.log(timeDimensions);
+                      if (hasTimeDimension) {
+                        let newTimeDim = getTimeDimensions();
+                        if(newTimeDim.length > timeDimensions.length) {
+                          timeDimensions = newTimeDim;
+                        }
                       }
                     }
                     //Update timedimension variables for animation
-
+                    //hasTimeDimension = false;
 
                   }
 
@@ -1208,6 +1250,7 @@ console.log("Start of metsis search map script:");
 
                 //Add timeDimension controls if we have timeDimension
                 if (hasTimeDimension) {
+                  console.log("Processing wms with timedimensons");
                   $('#animatedWmsControls').show();
                   console.log(timeDimensions);
                   var maxValue = timeDimensions.length - 1;

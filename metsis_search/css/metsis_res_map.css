@@ -34,6 +34,19 @@ in fullscreen by openlayers fullScreenControl */
   width: 100%;
 }
 
+.mapcontainer {
+/*  clear: both; */
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+
+.mapcontainer:fullscreen {
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
 /* The main div to put the openlayers map canvas */
 .map-res {
   width: 100%;
@@ -46,7 +59,7 @@ in fullscreen by openlayers fullScreenControl */
   border-style: dotted;
   border-color: #BEBEBE;
   transition: 0.3s;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
   top: 0;
   left: 0;
   right: 0;
@@ -56,15 +69,18 @@ in fullscreen by openlayers fullScreenControl */
 
 /* Sidepanel style and layout */
 .map-sidepanel {
-  width: 30%;
-  height: 100%;
+  width: 0;
+  height: 450px;
+/*  min-height: 100%; */
   float: right;
+
   overflow-y: scroll;
   /* Stay on top */
   background: #98C6CC;
   /* Disable horizontal scroll */
   /* Place content 60px from the top */
   transition: 0.3s;
+  margin-bottom: 5px;
 
   /*display: none; */
   /* 0.5 second transition effect to slide in the sidepanel */
@@ -137,11 +153,21 @@ in fullscreen by openlayers fullScreenControl */
   clear: both;
   width: 100%;
   margin-bottom: 5px;
-  margin-top: 5px;
+  margin-top: 0px;
   margin-left: 10px;
   margin-right: 10px;
+  background-color: white;
+  color: black;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
+.bottom-map-panel:fullscreen {
+  background-color: white;
+  color: black;
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
 /* Style the button that is used to open the sidepanel */
 .map-openbtn-wrapper {
   left: 0.5em;

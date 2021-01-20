@@ -115,7 +115,7 @@ class DashboardBokehController extends ControllerBase {
           //$client->setOptions(['debug' => TRUE]);
           $request = $client->request(
             'POST',
-            'https://pybasket.epinux.com/post_baskettable',
+            'https://pybasket.epinux.com/post_baskettable0',
             [
               'json' => $json_data,
             ],
@@ -124,18 +124,35 @@ class DashboardBokehController extends ControllerBase {
         $responseStatus = $request->getStatusCode();
         \Drupal::logger('metsis_dashboard_bokeh_json_testpost')->debug("response status: @string", ['@string' => $responseStatus ]);
         $data = $request->getBody();
+        \Drupal::logger('metsis_dashboard_bokeh_testpost')->debug(t("Got original response: @markup", ['@markup' => $data] ) );
+
 
         //$markup = \Drupal\Component\Serialization\Json::decode($data);
-        $markup = $data;
+        //$data = str_replace("\n", "", $data);
+        //$data = str_replace("\r", "", $data);
+        //$data = preg_replace(‘\/\s+\/’, ‘ ‘, trim($data)).”\n”;
+
+        //$markup = $data;
         //return ($json_response);
       }
       catch (Exception $e){
         \Drupal::messenger()->addError("Could not contact bokeh dashboard api at @uri .", [ '@uri' => $backend_uri]);
         \Drupal::messenger()->addError($e);
       }
+      //$markup = preg_replace("/\n/"," ",$data);
+      //$markup = trim(preg_replace('/\s\s+/', ' ', $data));
+      //$markup = str_replace("/\n", " " , $data);
+    /*  $data = str_replace("\\n"," ", $data);
+      $data = str_replace("\n"," ", $data);
+      $data = str_replace("\r", " ", $data);
+      $data = ltrim($data, '"');
+      $data = rtrim($data, '"');
+*/
+      $markup = $data;
 
+      //$markup = str_replace(array("\n","\r\n","\r"), '', $data);
       //$markup = $this->getDashboard($backend_uri, $resources);
-      \Drupal::logger('metsis_dashboard_bokeh')->debug(t("Got markup response: @markup", ['@markup' => $markup ] ) );
+      \Drupal::logger('metsis_dashboard_bokeh_testpost')->debug(t("Got markup response: @markup", ['@markup' => $markup ] ) );
 
       // Build page
       //Create content wrapper
@@ -161,7 +178,7 @@ class DashboardBokehController extends ControllerBase {
 
       $build['content']['dashboard-wrapper']['endpoint'] = [
         '#type' => 'markup',
-        '#markup' => '<p>Using endpoint : ' .   'https://pybasket.epinux.com/post_baskettable' . '</p>',
+        '#markup' => '<p>Using endpoint : ' .   'https://pybasket.epinux.com/post_baskettable0' . '</p>',
 
 
       ];

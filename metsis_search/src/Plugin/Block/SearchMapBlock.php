@@ -158,7 +158,12 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         /**
          * Openlayers map viewport container
          */
-        $build['search-map']['map'] = [
+         $build['search-map']['map-fullscreen-wrapper'] = [
+           '#prefix' => '<div id="mapcontainer" class="mapcontainer">',
+           '#suffix' => '</div>',
+           '#allowed_tags' => ['div'],
+         ];
+        $build['search-map']['map-fullscreen-wrapper']['map'] = [
           //'#prefix' => '<div id="mapcontainer" class="w3-border map-container clearfix">',
           '#type' => 'markup',
           '#markup' => '<div id="map-res" class="map-res">',
@@ -167,7 +172,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         ];
 
         //toggle sidebare/layerswitcher button control inside map
-        $build['search-map']['map']['toggle-sidebar'] = [
+        $build['search-map']['map-fullscreen-wrapper']['map']['toggle-sidebar'] = [
           '#type' => 'markup',
           '#markup' => '<div class="map-openbtn-wrapper ol-control ol-unselectable"></div>',
           //'#suffix' => '</div>',
@@ -176,7 +181,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
 
 
         //Side panel collapseable
-        $build['search-map']['map']['side-panel'] = [
+        $build['search-map']['map-fullscreen-wrapper']['side-panel'] = [
           '#prefix' => '<div id="map-sidepanel" class="map-sidepanel">',
           '#markup' => '<span class="map-closebtn-wrapper"></span><span class="map-sidepanel-title">Side Panel</span>',
           '#suffix' => '</div>',
@@ -184,30 +189,32 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         ];
 
         //Date controls wrapper
-         $build['search-map']['map']['side-panel']['animated-controls'] = [
+/*         $build['search-map']['map-fullscreen-wrapper']['side-panel']['animated-controls'] = [
             '#type' => 'markup',
             '#prefix' => '<div id="animatedWmsControls">',
             '#suffix' => '</div>',
             '#allowed_tags' => ['div','span', 'i', 'button'],
 
           ];
+*/
           //Timeslider wrapper
-          $build['search-map']['map']['side-panel']['animated-controls']['time-slider'] = [
+/*          $build['search-map']['map-fullscreen-wrapper']['side-panel']['animated-controls']['time-slider'] = [
              '#type' => 'markup',
              '#markup' => '<div id="map-timeslider-side-id"><div class="ui-slider-handle"></div></div>',
            ];
-
+*/
            //Timeslider wrapper
-           $build['search-map']['map']['side-panel']['animated-controls']['time-controls'] = [
+/*           $build['search-map']['map-fullscreen-wrapper']['side-panel']['animated-controls']['time-controls'] = [
               '#type' => 'markup',
               '#markup' => '<div class="timeControlWrapper controls"><button id="timeBack" class="timeButton"><i class="fas fa-angle-double-left"></i></button><span id="time">11.11.2022</span><button id="timeForward" class="timeButton"><i class="fas fa-angle-double-right"></i></button></div>',
               '#allowed_tags' => ['div','span', 'i', 'button'],
 
             ];
+*/
         //Wms legend placeholder
-        $build['search-map']['map']['side-panel']['legend'] = [
+        $build['search-map']['map-fullscreen-wrapper']['side-panel']['legend'] = [
           '#type' => 'markup',
-          '#prefix' => '<div class="w3-container legend-placeholder">',
+          '#prefix' => '<div class="w3-container w3-margin-left legend-placeholder">',
           '#markup' => '<img id="map-wms-legend"/>',
           '#suffix' => '</div>',
           '#allowed_tags' => ['div','img'],
@@ -222,7 +229,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         ];
 */
         //Placeholder for the ol-ext layerswitcher inside side-panel
-        $build['search-map']['map']['side-panel']['layerswitcher'] = [
+        $build['search-map']['map-fullscreen-wrapper']['side-panel']['layerswitcher'] = [
             '#markup' => '<div class="external layerSwitcher"><b>Layer switcher</b></div>',
             '#allowed_tags' => ['div', 'b'],
         ];
@@ -231,7 +238,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
 
 
     //Bottom -panel
-    $build['search-map']['bottom-panel'] = [
+    $build['search-map']['map-fullscreen-wrapper']['bottom-panel'] = [
       '#type' => 'markup',
       '#markup' => '<div id="bottomMapPanel" class="bottom-map-panel">',
       '#suffix' => '</div>',
@@ -239,7 +246,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
   ];
 
   //Date controls wrapper
-   $build['search-map']['bottom-panel']['animated-controls'] = [
+   $build['search-map']['map-fullscreen-wrapper']['bottom-panel']['animated-controls'] = [
       '#type' => 'markup',
       '#prefix' => '<div id="animatedWmsControls">',
       '#suffix' => '</div>',
@@ -247,13 +254,13 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
 
     ];
     //Timeslider wrapper
-    $build['search-map']['bottom-panel']['animated-controls']['time-slider'] = [
+    $build['search-map']['map-fullscreen-wrapper']['bottom-panel']['animated-controls']['time-slider'] = [
        '#type' => 'markup',
        '#markup' => '<div id="map-timeslider-id"><div class="ui-slider-handle"></div></div>',
      ];
 
      //Timeslider wrapper
-     $build['search-map']['bottom-panel']['animated-controls']['time-controls'] = [
+     $build['search-map']['map-fullscreen-wrapper']['bottom-panel']['animated-controls']['time-controls'] = [
         '#type' => 'markup',
         '#markup' => '<div class="timeControlWrapper controls"><button id="timeBack" class="timeButton"><i class="fas fa-angle-double-left"></i></button><span id="time">11.11.2022</span><button id="timeForward" class="timeButton"><i class="fas fa-angle-double-right"></i></button></div>',
         '#allowed_tags' => ['div','span', 'i', 'button'],
