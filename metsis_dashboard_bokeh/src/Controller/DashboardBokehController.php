@@ -118,7 +118,13 @@ class DashboardBokehController extends ControllerBase {
             'https://pybasket.epinux.com/post_baskettable0',
             [
               'json' => $json_data,
+              'Accept' => 'text/html',
+              'Content-Type' => 'application/json',
+              'debug' => TRUE,
             ],
+
+
+
         );
 
         $responseStatus = $request->getStatusCode();
@@ -157,7 +163,7 @@ class DashboardBokehController extends ControllerBase {
       // Build page
       //Create content wrapper
       $build['content'] = [
-        '#prefix' => '<div class="w3-container">',
+        '#prefix' => '<div class="w3-container clearfix">',
         '#suffix' => '</div>'
       ];
 
@@ -166,37 +172,45 @@ class DashboardBokehController extends ControllerBase {
         '#markup' => '<a class="w3-btn" href="'. $referer . '">Go back to search </a>',
       ];
 
-      $build['content']['dashboard-wrapper'] = [
-        '#type' => 'markup',
-        '#markup' => '<div id="bokeh-dashboard" class="w3-card">',
-        '#attached' => [
-          'library' => [
-            'metsis_dashboard_bokeh/dashboard',
-          ],
-        ],
-      ];
 
-      $build['content']['dashboard-wrapper']['endpoint'] = [
+      $build['content']['endpoint'] = [
         '#type' => 'markup',
         '#markup' => '<p>Using endpoint : ' .   'https://pybasket.epinux.com/post_baskettable0' . '</p>',
 
 
       ];
 
-      $build['content']['dashboard-wrapper']['status'] = [
+      $build['content']['status'] = [
         '#type' => 'markup',
         '#markup' => '<p>Got statusCode: ' . $responseStatus . '</p>',
 
 
       ];
+
+            $build['content']['dashboard-wrapper'] = [
+              '#type' => 'markup',
+              '#markup' => '<div id="bokeh-dashboard" class="dashboard">',
+              '#attached' => [
+                'library' => [
+                  'metsis_dashboard_bokeh/dashboard',
+                ],
+              ],
+            ];
       $build['content']['dashboard-wrapper']['dashboard'] = [
         '#type' => 'markup',
         '#markup' => $markup,
         '#suffix' => '</div>',
-        '#allowed_tags' => ['script'],
+        '#allowed_tags' => ['script','div'],
 
       ];
 
+
+      //Add bokeh libraries
+      $build['#attached'] = [
+        'library' => [
+        //  'metsis_dashboard_bokeh/dashboard',
+        ],
+      ];
       return $build;
     }
     function getDashboard($backend_uri, $resources) {

@@ -1223,14 +1223,14 @@ console.log("Start of metsis search map script:");
                               'VERSION': result.version,
                               'FORMAT': 'image/png',
                               'STYLES': (typeof ls[i].Style !== "undefined") ? ls[i].Style[0].Name : '',
-                              'TILE': true,
-                              'TRANSPARENT': true,
+                              //'TILE': true,
+                              'TRANSPARENT': True,
                             },
                             crossOrigin: 'anonymous',
 
                           })),
                         }));
-                        var test =  ls.length-1;
+
                       if (hasTimeDimension) {
                         let newTimeDim = getTimeDimensions();
                         if(newTimeDim.length > timeDimensions.length) {
@@ -1253,7 +1253,7 @@ console.log("Start of metsis search map script:");
                   console.log("Processing wms with timedimensons");
                   $('#animatedWmsControls').show();
                   console.log(timeDimensions);
-                  var maxValue = timeDimensions.length - 1;
+                  var maxValue = timeDimensions.length-1;
                   console.log('MAXVALUE=' + maxValue);
                   //Add timeSlider
                   $("#map-timeslider-id").slider({

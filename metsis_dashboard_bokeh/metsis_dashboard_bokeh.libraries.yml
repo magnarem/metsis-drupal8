@@ -9,6 +9,6 @@ dashboard:
     - core/jquery
     - core/jquery.ui
     - core/jquery.once
-#    - core/drupal
+    - core/drupal
 #    - core/drupalSettings
 #    - core/drupal.ajax
