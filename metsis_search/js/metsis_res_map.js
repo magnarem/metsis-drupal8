@@ -1209,7 +1209,7 @@ console.log("Start of metsis search map script:");
                         new ol.layer.Tile({
                           title: title,
                           visible: visible,
-                          keepVisible: false,
+                          //keepVisible: false,
                           //preload: 5,
                           //projections: ol.control.Projection.CommonProjections(outerThis.projections, (layerProjections) ? layerProjections : wmsProjs),
                           dimensions: getTimeDimensions(),
@@ -1224,7 +1224,7 @@ console.log("Start of metsis search map script:");
                               'FORMAT': 'image/png',
                               'STYLES': (typeof ls[i].Style !== "undefined") ? ls[i].Style[0].Name : '',
                               //'TILE': true,
-                              'TRANSPARENT': True,
+                              'TRANSPARENT': true,
                             },
                             crossOrigin: 'anonymous',
 
