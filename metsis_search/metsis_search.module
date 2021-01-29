@@ -312,8 +312,8 @@ function metsis_search_search_api_solr_search_results_alter(
     //Extract some info for the search map from the solr result
     $request = \Drupal::request();
     $referer = $request->headers->get('referer');
-  \Drupal::logger('metsis_search-hook_search_results_alter')->debug("before extracted info - basepath: " . $request->getBasePath());
-    \Drupal::logger('metsis_search-hook_search_results_alter')->debug("before extracted info - referer: " . $referer);
+  \Drupal::logger('metsis_search-hook_search_results_alter')->debug("before extracted info - basepath @path: ", ['@path' => $request->getPathInfo()]);
+    \Drupal::logger('metsis_search-hook_search_results_alter')->debug("before extracted info - referer: @path", ['@path' => $referer]);
     $extracted_info = SearchUtils::getExtractedInfo($result);
 
     //$gcmd_facet = SearchUtils::processGcmdFacet($result);

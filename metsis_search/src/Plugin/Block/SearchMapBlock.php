@@ -133,6 +133,11 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
           '#markup' => '<span id="resetButtonID"><a id="resetButton" class="w3-center adc-button adc-sbutton" href="/metsis/search?op=Reset">Reset search</a></span>',
           '#allowed_tags' => ['div','label','button','br','a', 'span'],
         ];
+        $build['search-map']['top-panel']['buttons-container']['reset-map'] = [
+          '#type' => 'markup',
+          '#markup' => '<span id="resetMapButtonID"><button id="resetMapButton" class="w3-center adc-button adc-sbutton" >Reset map</button></span>',
+          '#allowed_tags' => ['div','label','button','br','a', 'span'],
+        ];
 
         //Top panel current bbox filter text markup
         $build['search-map']['top-panel']['filter'] = [
@@ -172,13 +177,13 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         ];
 
         //toggle sidebare/layerswitcher button control inside map
-        $build['search-map']['map-fullscreen-wrapper']['map']['toggle-sidebar'] = [
+/*        $build['search-map']['map-fullscreen-wrapper']['map']['toggle-sidebar'] = [
           '#type' => 'markup',
           '#markup' => '<div class="map-openbtn-wrapper ol-control ol-unselectable"></div>',
           //'#suffix' => '</div>',
           '#allowed_tags' => ['div', 'button', 'span'],
         ];
-
+*/
 
         //Side panel collapseable
         $build['search-map']['map-fullscreen-wrapper']['side-panel'] = [

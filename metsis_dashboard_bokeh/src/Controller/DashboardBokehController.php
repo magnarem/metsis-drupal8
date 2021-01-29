@@ -105,7 +105,7 @@ class DashboardBokehController extends ControllerBase {
 
       $json_body =  \Drupal\Component\Serialization\Json::encode($json_data);
         \Drupal::logger('metsis_dashboard_bokeh_json_testpost')->debug("json_body: @string", ['@string' => $json_body ]);
-        //\Drupal::logger('metsis_dashboard_bokeh_json_testpost')->debug("json_data: @string", ['@string' => $json_data ]);
+        \Drupal::logger('metsis_dashboard_bokeh_json_testpost')->debug("json_data: @string", ['@string' => $json_data ]);
 
       //Get markup from bokeh dashboard endpoint. post json_data.
       $markup = "<h2> Ooops Something went wrong!!</h2> Contact Administraor or see logs";
@@ -300,8 +300,6 @@ class DashboardBokehController extends ControllerBase {
             'title' => (string) $record->title,
             'feature_type' => (string) $record->feature_type,
             'resources' => unserialize($record->dar),
-
-
         ];
 
     }

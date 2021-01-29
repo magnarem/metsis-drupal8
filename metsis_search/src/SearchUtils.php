@@ -325,6 +325,7 @@ class SearchUtils
 
             //Do something with the fields
         }
+        \Drupal::logger('metsis_search:SearchUtils::extractedInfo:')->debug('Creaded extractded info with elements: ' . $metadata_div_counter);
         return $extracted_info;
     }
 

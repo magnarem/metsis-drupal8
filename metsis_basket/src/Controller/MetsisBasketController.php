@@ -184,6 +184,7 @@ class MetsisBasketController extends ControllerBase  {
       //$solarium_query->setRows(2);
       $solarium_query->setFields([
         'data_access_url_http',
+        'data_access_url_ftp',
         'data_access_url_odata',
         'data_access_url_opendap',
         'data_access_url_ogc_wms',
@@ -212,6 +213,10 @@ class MetsisBasketController extends ControllerBase  {
       if(isset($fields['data_access_url_http'])) {
         // An array of documents. Can also iterate directly on $result.
         $dar['http'] = $fields['data_access_url_http'];
+      }
+      if(isset($fields['data_access_url_ftp'])) {
+        // An array of documents. Can also iterate directly on $result.
+        $dar['http'] = $fields['data_access_url_ftp'];
       }
       if(isset($fields['data_access_url_odata'])) {
         // An array of documents. Can also iterate directly on $result.

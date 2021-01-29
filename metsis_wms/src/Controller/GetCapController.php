@@ -105,7 +105,7 @@ class GetCapController extends ControllerBase {
       $responseCustom = new Response(
         $responseXml->getBody(),
         Response::HTTP_OK,
-        array('Content-Type' => ', application/xml')
+        array('Content-Type' => 'application/xml')
       );
       //$body = (string) $responseCustom;
       $body = (string) $response->getBody();
@@ -122,7 +122,7 @@ class GetCapController extends ControllerBase {
       $jsonResponse->setJson($json);
       //return $jsonResponse;
       //return  new AjaxResponse();
-      return $response;
+      return $responseCustom;
     }
 
 

@@ -41,6 +41,19 @@ in fullscreen by openlayers fullScreenControl */
   width: 100%;
 }
 
+.ol-viewport {
+  box-sizing: border-box;
+  color: rgb(63, 81, 81);
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 18px;
+  outline-color: rgb(63, 81, 81);
+  outline-style: none;
+  outline-width: 0px;
+  overflow-wrap: break-word;
+  position: relative;
+  user-select: none
+}
 
 .mapcontainer:fullscreen {
   padding: 0;
@@ -171,8 +184,7 @@ in fullscreen by openlayers fullScreenControl */
 /* Style the button that is used to open the sidepanel */
 .map-openbtn-wrapper {
   left: 0.5em;
-  top: 11.8em;
-  position: absolute;
+  top: 6.8em;
   z-index: 2;
 }
 
