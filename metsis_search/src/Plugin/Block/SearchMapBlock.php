@@ -77,12 +77,13 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         $map_pins = $config->get('map_pins_b');
         $map_filter = $config->get('map_bbox_filter');
         $pywps_service = $config->get('pywps_service');
+        $map_wms_layers_skip = explode(',', $config->get('map_wms_layers_skip'));
 
         //Get the extracted info from tempstore
         //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
         $extracted_info = $session->get('extracted_info');
         //dpm($proj);
-        if($proj != null) { $map_init_proj = $proj; }
+        //if($proj === null) { $map_init_proj = $proj; }
         /**
          * Create the render array
          */
@@ -267,10 +268,26 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
      //Timeslider wrapper
      $build['search-map']['map-fullscreen-wrapper']['bottom-panel']['animated-controls']['time-controls'] = [
         '#type' => 'markup',
-        '#markup' => '<div class="timeControlWrapper controls"><button id="timeBack" class="timeButton"><i class="fas fa-angle-double-left"></i></button><span id="time">11.11.2022</span><button id="timeForward" class="timeButton"><i class="fas fa-angle-double-right"></i></button></div>',
+        '#markup' => '<div class="timeControlWrapper controls"><span>Time dimensions: </span><button id="timeBack" class="timeButton"><i class="fas fa-angle-double-left"></i></button><span id="time">11.11.2022</span><button id="timeForward" class="timeButton"><i class="fas fa-angle-double-right"></i></button></div>',
         '#allowed_tags' => ['div','span', 'i', 'button'],
 
       ];
+
+      //Date controls wrapper
+       $build['search-map']['map-fullscreen-wrapper']['bottom-panel']['elevation-controls'] = [
+          '#type' => 'markup',
+          '#prefix' => '<div id="elevationWmsControls">',
+          '#suffix' => '</div>',
+          '#allowed_tags' => ['div','span', 'i', 'button'],
+
+        ];
+         //Timeslider wrapper
+         $build['search-map']['map-fullscreen-wrapper']['bottom-panel']['elevation-controls']['elevation-buttons'] = [
+            '#type' => 'markup',
+            '#markup' => '<div class="elevationControlWrapper controls"><span>Elevation dimensions: </span> <button id="elevationUp" class="elevationButton"><i class="fas fa-angle-double-up"></i></button><span id="elevation" data-current=0>0</span><button id="elevationDown" class="elevationButton"><i class="fas fa-angle-double-down"></i></button></div>',
+            '#allowed_tags' => ['div','span', 'i', 'button'],
+
+          ];
 
       //Define popup markup
       $build['search-map']['popup'] = [
@@ -377,6 +394,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
       'extracted_info' => $extracted_info,
       'pywps_service' => $pywps_service,
       'current_search' => $searchUri,
+      'wms_layers_skip' => $map_wms_layers_skip,
     ],
     ],
     ];

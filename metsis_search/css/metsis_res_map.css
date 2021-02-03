@@ -368,6 +368,27 @@ i.icon.forward:before {
   border-radius: 1em;
 
 }
+.elevationButton {
+  background-color: #008CBA;
+  /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.2em;
+
+
+}
+#elevation {
+  text-align: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  color: black;
+  border-radius: 1em;
+
+}
 .timeControlWrapper {
 }
 

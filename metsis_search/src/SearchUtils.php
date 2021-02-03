@@ -257,7 +257,8 @@ class SearchUtils
             /**
              * time series{
              */
-            $feature_type = "NA";
+             $feature_type = isset($fields['feature_type']) ? $fields['feature_type'] : 'NA';
+            
             $server_type = $config->get('ts_server_type');
             if (isset($fields['feature_type']) && isset($fields['data_access_url_opendap'])) {
                 $feature_type = $fields['feature_type'];
@@ -286,6 +287,11 @@ class SearchUtils
              * time series}
              */
 
+            //Get the wms layers
+            $wms_layer = isset($fields['data_access_wms_layers']) ? $fields['data_access_wms_layers'][0] : "None";
+            if($wms_layer === NULL ){
+              $wms_layer = 'None';
+            }
             //Create extracted_info array from collected data
             $extracted_info[$metadata_div_counter] = [
       [
@@ -318,6 +324,7 @@ class SearchUtils
       [$access_const, $use_const],
       'metsis',
       $feature_type,
+      $wms_layer,
     ];
             $metadata_div_counter += 1;
 

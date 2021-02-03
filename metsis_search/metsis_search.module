@@ -268,6 +268,9 @@ function metsis_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInt
     $fields[] = 'metadata_identifier';
     $fields[] = 'collection';
     $fields[] = 'keywords_keyword';
+    $fields[] = 'data_access_url_ftp';
+    $fields[] = 'data_access_url_ogc_wms';
+    $fields[] = 'data_access_wms_layers';
 
     //make sure the fields array contains unique fields
     $uniq_fields = array_unique($fields);

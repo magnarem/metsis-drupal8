@@ -41,6 +41,7 @@ console.log("Start of metsis search map script:");
         var base_layer_wms_south = drupalSettings.metsis_search_map_block.base_layer_wms_south;
         var pywpsUrl = drupalSettings.metsis_search_map_block.pywps_service;
         var current_search = drupalSettings.metsis_search_map_block.current_search;
+        var wms_layers_skip = drupalSettings.metsis_search_map_block.wms_layers_skip;
 
         // Some debugging
         var debug = true;
@@ -56,6 +57,9 @@ console.log("Start of metsis search map script:");
           console.log('current map_filter: ' + mapFilter);
           console.log('current bbox_filter: ' + bboxFilter);
           console.log('initial map zoom: ' + mapZoom);
+          console.log("WMS Layers to skip: ");
+          console.log(wms_layers_skip);
+
         }
 
         //Set the configured zoom level as the same as default:
@@ -322,6 +326,24 @@ console.log("Start of metsis search map script:");
             selected_proj = proj;
             console.log("change projection event: " + prj);
 
+
+            //Update session information with user selected projection
+            /* Send the bboundingbox back to drupal metsis search controller to add the current boundingbox filter to the search query */
+            var myurl = '/metsis/search/map/projection?&proj=' + selected_proj;
+            console.log('calling controller url: ' + myurl);
+            data = Drupal.ajax({
+              url: myurl,
+              async: false
+            }).execute();
+
+            //Do something after ajax call are complete
+            $(document).ajaxComplete(function(event, xhr, settings) {
+              console.log('ajax complete:' + drupalSettings.metsis_search_map_block.proj);
+             selected_proj = drupalSettings.metsis_search_map_block.proj;
+
+            });
+
+
             //Remove pins ans polygons
             console.log("Remove pins and polygons layers");
             featureLayersGroup.getLayers().clear();
@@ -528,6 +550,7 @@ console.log("Start of metsis search map script:");
 
         //Variable to hold timeDimensions for wms timeSeries
         var timeDimensions = [];
+        var elevationDimensions = [];
         //Create features Layergroup
         var featureLayers = {};
         var featureLayersGroup = new ol.layer.Group({
@@ -1005,6 +1028,7 @@ console.log("Start of metsis search map script:");
 
         //Hide the animation controls per default
         $('#animatedWmsControls').hide();
+        $('#elevationWmsControls').hide();
 
 
         //Back in time button function
@@ -1027,6 +1051,58 @@ console.log("Start of metsis search map script:");
           $("#map-timeslider-id").slider('value', newVal);
 
         };
+        //Up in elevation button function
+        var up = function() {
+          var val = parseInt($("#elevation").attr("data-current"));
+          //wmsLayerGroup.setOpacity(ui.value / 100);
+          let newVal = val+1;
+          if(newVal > elevationDimensions.length) {
+            newVal = elevationDimensions.length;
+          }
+          //console.log("Change elevation up: " +newVal+', elevation: '+elevationDimensions[newVal]);
+          var currentElevation = elevationDimensions[newVal];
+          if(debug) {console.log("currentTime: " +timeDimensions[ui.value])}
+          wmsLayerGroup.getLayers().forEach(function(element, index, array) {
+            //    if(element.getVisible())  {
+            element.getLayers().forEach(function(element, index, array) {
+            element.getSource().updateParams({
+              'ELEVATION': currentElevation,
+            });
+            element.getSource().refresh();
+            });
+            //}
+            //element.getSource().refresh();
+          });
+          $("#elevation").attr("data-current",newVal);
+          $("#elevation").text(elevationDimensions[newVal]);
+        };
+
+        //Down in elevation button function
+        var down = function() {
+          var val = parseInt($("#elevation").attr("data-current"));
+
+          //wmsLayerGroup.setOpacity(ui.value / 100);
+          let newVal = val-1;
+          if(newVal < 0) {
+            newVal = 0;
+          }
+          //console.log("Change elevation down: " +newVal+', elevation: '+elevationDimensions[newVal]);
+          var currentElevation = elevationDimensions[newVal];
+          if(debug){console.log("currentTime: " +timeDimensions[ui.value])}
+          wmsLayerGroup.getLayers().forEach(function(element, index, array) {
+            //    if(element.getVisible())  {
+            element.getLayers().forEach(function(element, index, array) {
+            element.getSource().updateParams({
+              'ELEVATION': currentElevation,
+            });
+            element.getSource().refresh();
+            });
+            //}
+            //element.getSource().refresh();
+          });
+          $("#elevation").attr("data-current",newVal);
+          $("#elevation").text(elevationDimensions[newVal]);
+        };
 
         //Register back forward time button function to buttons
         var forwardButton = document.getElementById('timeForward');
@@ -1034,6 +1110,12 @@ console.log("Start of metsis search map script:");
 
         var backButton = document.getElementById('timeBack');
         backButton.addEventListener('click', back, false)
+
+        var upButton = document.getElementById('elevationUp');
+        upButton.addEventListener('click', up, false)
+
+        var downButton = document.getElementById('elevationDown');
+        downButton.addEventListener('click', down, false)
 
         //Check for substrings
         function isSentinelProduct(str, substrings) {
@@ -1168,18 +1250,21 @@ console.log("Start of metsis search map script:");
         }
 
         //Function for retrieving wms capabilities
-        function getWmsLayers2(wmsUrl, title, geom) {
+        function getWmsLayers2(wmsUrl, title, geom, wmsLayerMmd) {
           if (wmsUrl != null && wmsUrl != "") {
+            console.log("Processing wms visualization");
             //console.log("Got wms resource: " +wmsUrl);
             //console.log("Parsing getCapabilties");
             var getCapString = '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
             var parser = new ol.format.WMSCapabilities();
             var hasTimeDimension = false;
+            var hasElevationDimension = false;
             var proxyURL = '/metsis/map/getcapfromurl?url=';
             var wmsUrlOrig = wmsUrl;
             var productTitle = title;
             //initialize result varuable
             var result;
+            console.log("wms_layer from mmd: " + wmsLayerMmd);
             //Do ajax call.
             //   fetch(wmsUrl+getCapString,{
             //      mode: 'cors',
@@ -1204,6 +1289,7 @@ console.log("Start of metsis search map script:");
               console.log("Parent title: " + parentTitle);
               var wmsGroup = new ol.layer.Group({
                 title: productTitle,
+                openInLayerSwitcher: true,
               });
               //console.log(defaultProjection);
               //console.log(layers);
@@ -1211,6 +1297,7 @@ console.log("Start of metsis search map script:");
               for (var idx = 0; idx < layers.length; idx++) {
                 var ls = layers[idx].Layer;
                 if (ls) {
+
                   for (var i = 0; i < ls.length; i++) {
                     var getTimeDimensions = function() {
                       var dimensions = ls[i].Dimension;
@@ -1219,6 +1306,18 @@ console.log("Start of metsis search map script:");
                           if ("time" === dimensions[j].name) {
                             var times = dimensions[j].values.split(",");
                             return times;
+                          }
+                        }
+                      }
+                      return [];
+                    };
+                    var getElevationDimensions = function() {
+                      var dimensions = ls[i].Dimension;
+                      if (ls[i].Dimension) {
+                        for (var j = 0; j < dimensions.length; j++) {
+                          if ("elevation" === dimensions[j].name) {
+                            var elevations = dimensions[j].values.split(",");
+                            return elevations;
                           }
                         }
                       }
@@ -1246,31 +1345,50 @@ console.log("Start of metsis search map script:");
                       //console.log(timedim);
                       hasTimeDimension = true;
                     }
+                    let elevatedim = getElevationDimensions()
+                    if (elevatedim.length > 0) {
+                      //console.log(timedim);
+                      hasElevationDimension = true;
+                    }
 
                     var layerProjections = ls[i].CRS;
                     console.log(layerProjections);
-                    var visible = true;
-                    var extent = ol.proj.transformExtent(makeAxisAwareExtent(), 'EPSG:4326', selected_proj);
+                    var visible = false;
+                    //var extent = ol.proj.transformExtent(makeAxisAwareExtent(), 'EPSG:4326', selected_proj);
+                    //var extent = ol.proj.transformExtent(geom.getExtent(), 'EPSG:4326', selected_proj);
+
                     var title = ls[i].Title;
                     var layerName = ls[i].Name;
                     if (layerName === 'lon' || layerName === 'lat') {
                       visible = false;
                     }
-                    //if (i === 0 || i === 1) {
-                      //visible = true;
-                    //}
+                    if(layerName === wmsLayerMmd || title === wmsLayerMmd) {
+                      visible = true;
+                    }
+                    else {
+                      if (i === 0) {
+                        visible = true;
+                      }
+                    }
                     if (hasTimeDimension) {
                       let newTimeDim = getTimeDimensions();
                       if (newTimeDim.length > timeDimensions.length) {
                         timeDimensions = newTimeDim;
                       }
                     }
-
+                    if (hasElevationDimension) {
+                      let newElevationDim = getElevationDimensions();
+                      if (newElevationDim.length > elevationDimensions.length) {
+                        elevationDimensions = newElevationDim;
+                      }
+                    }
+                    console.log("i="+i+" layer_name: " + layerName);
+                    if ( $.inArray(ls[i].Name, wms_layers_skip) === -1 ) {
                     wmsGroup.getLayers().insertAt(i,
                       new ol.layer.Tile({
                         title: title,
                         visible: visible,
-                        extent: extent,
+                        //extent: extent,
 
                         //keepVisible: false,
                         //preload: 5,
@@ -1294,6 +1412,7 @@ console.log("Start of metsis search map script:");
                         })),
                       }));
                   }
+                }
                   //Update timedimension variables for animation
                   //hasTimeDimension = false;
 
@@ -1301,6 +1420,7 @@ console.log("Start of metsis search map script:");
 
               }
               //})
+              wmsGroup.getLayers().getArray().reverse();
               wmsLayerGroup.getLayers().push(wmsGroup);
               //wmsLayerGroup.set('title', productTitle, false);
               featureLayersGroup.setVisible(false);
@@ -1357,6 +1477,23 @@ console.log("Start of metsis search map script:");
                 $('#bottomMapPanel').show();
                 map.updateSize();
               }
+              if(hasElevationDimension) {
+                console.log("WMS Layer have elevation dimension");
+                console.log(elevationDimensions);
+                var currentElevation = elevationDimensions[0];
+                //console.log("currentTime: " +timeDimensions[ui.value])
+                wmsGroup.getLayers().forEach(function(element, index, array) {
+                  //    if(element.getVisible())  {
+                  element.getSource().updateParams({
+                    'ELEVATION': currentElevation,
+                  });
+                  //}
+                  element.getSource().refresh();
+                });
+                  val = $("#elevation").attr("data-current",0);
+                  $("#elevation").text(elevationDimensions[0]);
+                $('#elevationWmsControls').show();
+              }
               //Fit to feature geometry
               //console.log(feature_ids[id]);
               map.getView().fit(geom.getExtent());
@@ -1406,7 +1543,7 @@ console.log("Start of metsis search map script:");
 
         }
 
-        function visualiseWmsLayer(wmsResource, id, title, geom) {
+        function visualiseWmsLayer(wmsResource, id, title, geom, wms_layers) {
           //Check WMS product:
           if (wmsResource != null && wmsResource != "") {
             console.log("Got WMS product: " + id);
@@ -1419,6 +1556,16 @@ console.log("Start of metsis search map script:");
             var sentinel1Layers = ['Composites'];
             var sentinel2Layers = ['true_color_vegetation', 'false_color_vegetation', 'false_color_glacier', 'false_color_glacier', 'opaque_clouds', 'cirrus_clouds'];
 
+            var layer_name = 'Composites';
+            if (id.includes("S2")) {
+              layer_name = 'true_color_vegetation';
+            }
+            else if (wms_layers[0] == "Amplitude VV polarisation") {
+               layer_name = 'amplitude_vv';
+            }
+            else {
+              layer_name =  'amplitude_hh';
+            }
             wmsLayerGroup.getLayers().push(
               new ol.layer.Tile({
                 title: title,
@@ -1433,7 +1580,7 @@ console.log("Start of metsis search map script:");
                   url: wmsResource,
                   reprojectionErrorThreshold: 0.1,
                   params: {
-                    'LAYERS': 'Composites',
+                    'LAYERS': layer_name,
                     'VERSION': '1.3.0',
                     'FORMAT': 'image/png',
                     //'STYLES': (typeof ls[i].Style !== "undefined") ? ls[i].Style[0].Name : '',
@@ -1567,6 +1714,7 @@ console.log("Start of metsis search map script:");
               timeStart: feature.get('time')[0],
               timeEnd: feature.get('time')[1],
               featureType: feature.get('feature_type'),
+              wms_layer: feature.get('wms_layer'),
               name: feature.get('name'),
               geom: feature.getGeometry(),
             };
@@ -1588,6 +1736,7 @@ console.log("Start of metsis search map script:");
             var odResource = feature_ids[id].url_o;
             var featureType = feature_ids[id].featureType;
             var title = feature_ids[id].title;
+            var wmsLayer = feature_ids[id].wms_layer;
 
             console.log('product_id: ' + id);
             console.log('product title: ' + feature_ids[id].title);
@@ -1663,12 +1812,12 @@ console.log("Start of metsis search map script:");
               /*If we have sentinel prducts, assume no timedimension and standard layer name Composites.
                call the simple visualiseWmsLayer function */
               if (isSentinelProduct(id, sentinelStrings)) {
-                visualiseWmsLayer(wmsResource, id, title, feature_ids[id].geom);
+                visualiseWmsLayer(wmsResource, id, title, feature_ids[id].geom, wmsLayer);
                 //getWmsLayers2(wmsResource, title, feature_ids[id].geom)
               }
               /* Else we call function that add all layers and timedimensions */
               else {
-                getWmsLayers2(wmsResource, title, feature_ids[id].geom)
+                getWmsLayers2(wmsResource, title, feature_ids[id].geom, wmsLayer)
               }
 
             }
@@ -1758,11 +1907,11 @@ console.log("Start of metsis search map script:");
                     popUpOverlay.setPosition(undefined);
                     //visualiseWmsLayer(wmsResource,id,title, geom)
                     if (isSentinelProduct(id, sentinelStrings)) {
-                      visualiseWmsLayer(wmsResource, selected_id, title, feature_ids[selected_id].geom)
+                      visualiseWmsLayer(wmsResource, selected_id, title, feature_ids[selected_id].geom, feature_ids[id].wms_layer)
                     }
                     /* Else we call function that add all layers and timedimensions */
                     else {
-                      getWmsLayers2(wmsResource, title, feature_ids[selected_id].geom)
+                      getWmsLayers2(wmsResource, title, feature_ids[selected_id].geom, feature_ids[id].wms_layer)
                     }
                   });
 
@@ -1863,6 +2012,7 @@ console.log("Start of metsis search map script:");
                 constraints: extracted_info[i12][14],
                 core: extracted_info[i12][15],
                 feature_type: extracted_info[i12][16],
+                wms_layer: extracted_info[i12][17],
                 name: "Polygon Feature",
                 //projection: prj,
               });
@@ -1897,6 +2047,7 @@ console.log("Start of metsis search map script:");
                 constraints: extracted_info[i12][14],
                 core: extracted_info[i12][15],
                 feature_type: extracted_info[i12][16],
+                wms_layer: extracted_info[i12][17],
                 name: "Pin Feature",
               });
               iconFeaturePin.setId(extracted_info[i12][1]);
@@ -2089,7 +2240,8 @@ console.log("Start of metsis search map script:");
           return featuresExtent;
         }
         var zoomToExtentControl = new ol.control.ZoomToExtent({
-          extent: zoomToExtent,
+          //extent: function() { zoomToExtent() },
+          extent: featuresExtent,
         });
         map.addControl(zoomToExtentControl);
 
@@ -2108,6 +2260,8 @@ console.log("Start of metsis search map script:");
           show_progress: true,
           extent: true,
           trash: function (l) {
+            console.log("Trash function");
+            console.log(l);
             if(l.get('baseLayer') === true) {
               return false;
             }
@@ -2151,13 +2305,21 @@ console.log("Start of metsis search map script:");
         //Loop over the extracted info, and check how many wms resources we have
         var wmsProducts = [];
         var wmsProductLayers = [];
+        var wmsLayersFromMmd = []
         for (var i = 0; i < extracted_info.length; i++) {
           id = extracted_info[i][1];
           wms = extracted_info[i][0][1];
+          wmslayer = extracted_info[i][17][0];
           //if(debug) {console.log("id: "+id+ ",wms:" +wms)};
-          if (wms != null && wms != "") {
+          if (wms != null && wms != "" && isSentinelProduct(id, ['S1B', 'S1A', 'S2B', 'S2A'])) {
             wmsProducts.push(id);
             wmsProductLayers.push(wms);
+            if(wmslayer != null) {
+              wmsLayersFromMmd.push(wmslayer);
+            }
+            else {
+              wmsLayersFromMmd.push('NA');
+            }
           }
         }
 
@@ -2169,16 +2331,26 @@ console.log("Start of metsis search map script:");
         var wmsLayers = [];
         if (wmsProducts.length > 0) {
           $('#vizAllButton').css('display', 'block');
-          $('#vizAllButton').append().text('Visualise all WMS resources in Map');
+          $('#vizAllButton').append().text('Visualise all Sentinel products in Map');
           $('#vizAllButton').on("click", function(e) {
             console.log("Visualize all wms click event");
             console.log("current projection" + selected_proj);
 
             //Loop over the wmsLayers and render them on map.
             for (let i = 0; i < wmsProductLayers.length; i++) {
-              console.log(i + " - " + wmsProducts[i]);
+              if(debug){console.log(i + " - " + wmsProducts[i]);}
+              if(debug){console.log("wms_layer_name_from_mmd: " + wmsLayersFromMmd[i]);}
               //alert(wmsProducts[i]);
-
+              var layer_name = 'Composites';
+              if (wmsProducts[i].includes("S2")) {
+                layer_name = 'true_color_vegetation';
+              }
+              else if (wmsLayersFromMmd[i] == "Amplitude VV polarisation") {
+                 layer_name = 'amplitude_vv';
+              }
+              else {
+                layer_name =  'amplitude_hh';
+              }
               wmsLayerGroup.getLayers().push(
                 //map.addLayer(
                 new ol.layer.Tile({
@@ -2190,7 +2362,7 @@ console.log("Start of metsis search map script:");
                     projection: selected_proj,
                     reprojectionErrorThreshold: 0.1,
                     params: {
-                      'LAYERS': 'Composites',
+                      'LAYERS': layer_name,
                       //'LAYERS': 'WMS',
                       //'FORMAT': 'image/jpeg',
                       'TILE': true,

@@ -65,11 +65,7 @@ display:
       style:
         type: table
         options:
-          grouping:
-            -
-              field: title
-              rendered: true
-              rendered_strip: false
+          grouping: {  }
           row_class: ''
           default_row_class: true
           override: true
@@ -197,7 +193,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: ''
+          label: Title
           exclude: false
           alter:
             alter_text: false
@@ -579,6 +575,7 @@ display:
           entity_field: uid
           plugin_id: numeric
       display_extenders: {  }
+      css_class: basketView
     cache_metadata:
       max-age: 0
       contexts:

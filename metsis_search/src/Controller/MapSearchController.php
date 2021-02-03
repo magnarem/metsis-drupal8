@@ -15,7 +15,7 @@ class MapSearchController extends ControllerBase {
 
     /* Callback from openlayers when boundingbox filter are drawed on map.
     Add current drawed boundingbox to solr search query */
-    public function ajaxCallback() {
+    public function setBoundingBox() {
       $query_from_request = \Drupal::request()->query->all();
       $params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
 
@@ -78,6 +78,45 @@ class MapSearchController extends ControllerBase {
       return $response;
 
  }
+
+ /* select projection callback */
+ public function setProjection() {
+   $query_from_request = \Drupal::request()->query->all();
+   $params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
+
+   $proj = $params['proj'];
+   \Drupal::logger('metsis_search_map_search_controller')->debug("Got projection: " . $proj);
+   //Get current session variables
+   $session = \Drupal::request()->getSession();
+   $session->set('proj', $proj);
+
+     //Get saved configuration
+     $config = \Drupal::config('metsis_search.settings');
+     $map_location = $config->get('map_selected_location');
+     $map_lat =  $config->get('map_locations')[$map_location]['lat'];
+     $map_lon = $config->get('map_locations')[$map_location]['lon'];
+     $map_zoom = $config->get('map_zoom');
+     $map_additional_layers = $config->get('map_additional_layers_b');
+     $map_projections = $config->get('map_projections');
+     $map_init_proj =  $config->get('map_init_proj');
+     $map_base_layer_wms_north =  $config->get('map_base_layer_wms_north');
+     $map_base_layer_wms_south =  $config->get('map_base_layer_wms_south');
+     $map_layers_list =  $config->get('map_layers');
+     $map_filter = $config->get('map_bbox_filter');
+
+   $data = [
+     'metsis_search_map_block' => [
+       'proj' => $proj,
+     ],
+   ];
+   $response = new AjaxResponse();
+   //$response->addCommand(new SettingsCommand(['metsis_search_map_block' => []], TRUE));
+   $response->addCommand(new SettingsCommand ($data, TRUE));
+
+
+   return $response;
+
+}
  public function resetCallback() {
      \Drupal::logger('metsis_search')->debug("MapSearchController::resetCallback");
  }

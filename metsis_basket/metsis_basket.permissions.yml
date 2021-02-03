@@ -2,4 +2,4 @@ access metsis basket:
   title: 'Access to Metsis Basket Service'
 access metsis basket items:
   title: 'Access to Metsis Basket Items'
-  description: 'View basket items on url metsis_basket/{iid}. SECURITY RISK'
+  description: 'View Basket Items'

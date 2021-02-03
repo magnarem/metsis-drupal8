@@ -197,6 +197,13 @@ class MetsisSearchConfigurationForm extends ConfigFormBase {
       '#default_value' => $config->get('map_search_text'),
     ];
 
+    $form['searchmap']['wms_layers_skip'] = [
+      '#type' => 'textarea',
+      '#title' => t('Enter commaseperated list of WMS layers to be exluded from WMS Visualization'),
+      '#description' => t("The layer names must be the low case names with underscores from Capabilities XML <Layer><Name>"),
+      '#default_value' => $config->get('map_wms_layers_skip'),
+    ];
+
     $form['dar'] = [
       '#type' => 'fieldset',
       '#title' => 'Configure Data Access',
@@ -279,6 +286,7 @@ class MetsisSearchConfigurationForm extends ConfigFormBase {
           ->set('map_selected_location', $values['searchmap']['location'])
           ->set('map_bbox_filter', $values['searchmap']['bbox_filter'])
           ->set('map_search_text', $values['searchmap']['search_text'])
+          ->set('map_wms_layers_skip', $values['searchmap']['wms_layers_skip'])
           ->set('dar_http', $values['dar']['http'])
           ->set('dar_odata', $values['dar']['odata'])
           ->set('dar_opendap', $values['dar']['opendap'])
