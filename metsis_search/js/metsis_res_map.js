@@ -551,6 +551,7 @@ console.log("Start of metsis search map script:");
         //Variable to hold timeDimensions for wms timeSeries
         var timeDimensions = [];
         var elevationDimensions = [];
+        var elevationUnits = 'NA';
         //Create features Layergroup
         var featureLayers = {};
         var featureLayersGroup = new ol.layer.Group({
@@ -712,8 +713,8 @@ console.log("Start of metsis search map script:");
                 $('#map-sidepanel').show();
               }, 300);
               map.getView().setCenter(ol.extent.getCenter(featuresExtent));
-              map.getView().fit(featuresExtent);
-              map.getView().setZoom(map.getView().getZoom() - 0.2);
+              //map.getView().fit(featuresExtent);
+              map.getView().setZoom(map.getView().getZoom());
 
             }
             if ($('#map-sidepanel').css('display') == 'none') {
@@ -757,7 +758,60 @@ console.log("Start of metsis search map script:");
 
         //Unset overflow on canvas (ol-viewport)
 
+        // create a progress bar to show the loading of tiles
+        function progress_bar() {
+          console.log("Register progress-bar")
+          var tilesLoaded = 0;
+          var tilesPending = 0;
+          //load all S1 and S2 entries
+          map.getLayers().forEach(function(layer, index, array) {
+            if (layer.get('title') === 'WMS Layers') {
+              layer.getLayers().forEach(function(layer,index, array) {
+                //if(layer.getLayers().getArray().length > 0 ) {
+                layer.getLayers().forEach(function(layer,index, array) {
+                //for all tiles that are done loading update the progress bar
+                layer.getSource().on('tileloadend', function() {
+                  tilesLoaded += 1;
+                  var percentage = Math.round(tilesLoaded / tilesPending * 100);
+                  document.getElementById('progress').style.width = percentage + '%';
+                  // fill the bar to the end
+                  if (percentage >= 100) {
+                    document.getElementById('progress').style.width = '100%';
+                    tilesLoaded = 0;
+                    tilesPending = 0;
+                  }
+                });
 
+                //for all tiles that are staring to load update the number of pending tiles
+                layer.getSource().on('tileloadstart', function() {
+                  ++tilesPending;
+                });
+              });
+          /*  }
+            else {
+              layer.getSource().on('tileloadend', function() {
+                tilesLoaded += 1;
+                var percentage = Math.round(tilesLoaded / tilesPending * 100);
+                document.getElementById('progress').style.width = percentage + '%';
+                // fill the bar to the end
+                if (percentage >= 100) {
+                  document.getElementById('progress').style.width = '100%';
+                  tilesLoaded = 0;
+                  tilesPending = 0;
+                }
+              });
+
+              //for all tiles that are staring to load update the number of pending tiles
+              layer.getSource().on('tileloadstart', function() {
+                ++tilesPending;
+              });
+            } */
+            });
+          }
+          });
+          $('#bottomMapPanel').show();
+        
+        }
         //Display message instead of empty map when search results are empty
         if (extracted_info.length === 0) {
           console.log("No extracted info");
@@ -808,10 +862,10 @@ console.log("Start of metsis search map script:");
             $('#map-sidepanel').show();
           }, 300);
           map.getView().setCenter(ol.extent.getCenter(featuresExtent));
-          map.getView().fit(featuresExtent, {
-            size: map.getSize()
-          });
-          map.getView().setZoom(map.getView().getZoom() - 0.2);
+          //map.getView().fit(featuresExtent, {
+          //  size: map.getSize()
+          //});
+          map.getView().setZoom(map.getView().getZoom());
 
         }
 
@@ -826,8 +880,8 @@ console.log("Start of metsis search map script:");
             map.updateSize();
           }, 350);
           map.getView().setCenter(ol.extent.getCenter(featuresExtent));
-          map.getView().fit(featuresExtent);
-          map.getView().setZoom(map.getView().getZoom() - 0.2);
+          //map.getView().fit(featuresExtent);
+          map.getView().setZoom(map.getView().getZoom());
           console.log(map.getLayers()[0]);
         }
 
@@ -1059,9 +1113,8 @@ console.log("Start of metsis search map script:");
           if(newVal > elevationDimensions.length) {
             newVal = elevationDimensions.length;
           }
-          //console.log("Change elevation up: " +newVal+', elevation: '+elevationDimensions[newVal]);
+          if(debug) {console.log("Change elevation up: " +newVal+', elevation: '+elevationDimensions[newVal]);}
           var currentElevation = elevationDimensions[newVal];
-          if(debug) {console.log("currentTime: " +timeDimensions[ui.value])}
           wmsLayerGroup.getLayers().forEach(function(element, index, array) {
             //    if(element.getVisible())  {
             element.getLayers().forEach(function(element, index, array) {
@@ -1074,7 +1127,7 @@ console.log("Start of metsis search map script:");
             //element.getSource().refresh();
           });
           $("#elevation").attr("data-current",newVal);
-          $("#elevation").text(elevationDimensions[newVal]);
+          $("#elevation").text(elevationDimensions[newVal] + " "+elevationUnits);
         };
 
         //Down in elevation button function
@@ -1086,9 +1139,8 @@ console.log("Start of metsis search map script:");
           if(newVal < 0) {
             newVal = 0;
           }
-          //console.log("Change elevation down: " +newVal+', elevation: '+elevationDimensions[newVal]);
+          if(debug){console.log("Change elevation down: " +newVal+', elevation: '+elevationDimensions[newVal]); }
           var currentElevation = elevationDimensions[newVal];
-          if(debug){console.log("currentTime: " +timeDimensions[ui.value])}
           wmsLayerGroup.getLayers().forEach(function(element, index, array) {
             //    if(element.getVisible())  {
             element.getLayers().forEach(function(element, index, array) {
@@ -1101,7 +1153,7 @@ console.log("Start of metsis search map script:");
             //element.getSource().refresh();
           });
           $("#elevation").attr("data-current",newVal);
-          $("#elevation").text(elevationDimensions[newVal]);
+          $("#elevation").text(elevationDimensions[newVal] + " "+elevationUnits);
         };
 
         //Register back forward time button function to buttons
@@ -1253,6 +1305,12 @@ console.log("Start of metsis search map script:");
         function getWmsLayers2(wmsUrl, title, geom, wmsLayerMmd) {
           if (wmsUrl != null && wmsUrl != "") {
             console.log("Processing wms visualization");
+
+
+            //Create a loader for better user experience:
+            var img = document.getElementById('mapLoader');
+            //img.src = "/" + path + "/icons/loader.gif";
+            img.src = '/core/misc/throbber-active.gif';
             //console.log("Got wms resource: " +wmsUrl);
             //console.log("Parsing getCapabilties");
             var getCapString = '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
@@ -1316,6 +1374,7 @@ console.log("Start of metsis search map script:");
                       if (ls[i].Dimension) {
                         for (var j = 0; j < dimensions.length; j++) {
                           if ("elevation" === dimensions[j].name) {
+                            elevationUnits = dimensions[j].units;
                             var elevations = dimensions[j].values.split(",");
                             return elevations;
                           }
@@ -1474,7 +1533,7 @@ console.log("Start of metsis search map script:");
                 var img = document.getElementById('map-wms-legend');
                 img.src = legendUrl;
 
-                $('#bottomMapPanel').show();
+                //$('#bottomMapPanel').show();
                 map.updateSize();
               }
               if(hasElevationDimension) {
@@ -1491,7 +1550,7 @@ console.log("Start of metsis search map script:");
                   element.getSource().refresh();
                 });
                   val = $("#elevation").attr("data-current",0);
-                  $("#elevation").text(elevationDimensions[0]);
+                  $("#elevation").text(elevationDimensions[0] + " "+elevationUnits);
                 $('#elevationWmsControls').show();
               }
               //Fit to feature geometry
@@ -1500,6 +1559,11 @@ console.log("Start of metsis search map script:");
               //map.getView().fit(wmsLayer.getExtent())
               map.getView().setZoom(map.getView().getZoom());
 
+              //Stop the loader:
+              //$('#mapLoader').empty();
+              console.log("Empty loader");
+              document.getElementById('mapLoader').removeAttribute('src');
+              progress_bar()
 
             }
 
@@ -2128,6 +2192,7 @@ console.log("Start of metsis search map script:");
         id_tooltip_new()
         id_tooltip_h()
         init()
+        progress_bar()
         $('#map-sidepanel').hide();
         $('#bottomMapPanel').hide();
 
@@ -2309,7 +2374,7 @@ console.log("Start of metsis search map script:");
         for (var i = 0; i < extracted_info.length; i++) {
           id = extracted_info[i][1];
           wms = extracted_info[i][0][1];
-          wmslayer = extracted_info[i][17][0];
+          wmslayer = extracted_info[i][17];
           //if(debug) {console.log("id: "+id+ ",wms:" +wms)};
           if (wms != null && wms != "" && isSentinelProduct(id, ['S1B', 'S1A', 'S2B', 'S2A'])) {
             wmsProducts.push(id);
@@ -2341,6 +2406,9 @@ console.log("Start of metsis search map script:");
               if(debug){console.log(i + " - " + wmsProducts[i]);}
               if(debug){console.log("wms_layer_name_from_mmd: " + wmsLayersFromMmd[i]);}
               //alert(wmsProducts[i]);
+              var myGroup = new ol.layer.Group({
+                title: wmsProducts[i],
+              });
               var layer_name = 'Composites';
               if (wmsProducts[i].includes("S2")) {
                 layer_name = 'true_color_vegetation';
@@ -2351,10 +2419,10 @@ console.log("Start of metsis search map script:");
               else {
                 layer_name =  'amplitude_hh';
               }
-              wmsLayerGroup.getLayers().push(
+              myGroup.getLayers().push(
                 //map.addLayer(
                 new ol.layer.Tile({
-                  title: wmsProducts[i],
+                  title: layer_name,
                   visible: true,
                   //projection: selected_proj,
                   source: new ol.source.TileWMS(({
@@ -2372,12 +2440,33 @@ console.log("Start of metsis search map script:");
                   })),
                 }),
               );
-
+              myGroup.getLayers().push(
+                //map.addLayer(
+                new ol.layer.Tile({
+                  title: 'Composites',
+                  visible: false,
+                  //projection: selected_proj,
+                  source: new ol.source.TileWMS(({
+                    url: wmsProductLayers[i],
+                    projection: selected_proj,
+                    reprojectionErrorThreshold: 0.1,
+                    params: {
+                      'LAYERS': 'Composites',
+                      //'LAYERS': 'WMS',
+                      //'FORMAT': 'image/jpeg',
+                      'TILE': true,
+                      'TRANSPARENT': true,
+                    },
+                    crossOrigin: 'anonymous',
+                  })),
+                }),
+              );
+              wmsLayerGroup.getLayers().push(myGroup);
             }
             //map.getLayers().extend(wmsLayerGroup);
             //map.addLayers(wmsLayerGroup);
             featureLayersGroup.setVisible(false);
-
+            progress_bar()
           });
           //id_tooltip_h()
         }

@@ -109,9 +109,12 @@ class MetsisBasketController extends ControllerBase  {
     //Get info from solr given metaid that we put in the basket
     $arr  = $this->msb_get_resources($metaid);
 
+
+
     $feature_type = $arr[0];
     $title = $arr[1];
     $dar = $arr[2];
+
 
 
     \Drupal::logger('metsis_basket')->debug("Adding product to basket:");
@@ -142,6 +145,13 @@ class MetsisBasketController extends ControllerBase  {
     //\Drupal::logger('metsis_basket')->debug("dashboard json: " . $dashboard_json);
 
     $basket_count = $this->get_user_item_count($user_id);
+    $ids = $this->get_user_item_ids($user_id);
+    //\Drupal::logger('metsis_basket')->debug(implode(',',$ids));
+
+    $tempstore = \Drupal::service('user.private_tempstore')->get('metsis_basket');
+    $tempstore->set('basket_items', $ids);
+
+
     $selector = '#myBasketCount';
     //$markup = '<a href="/metsis/elements?metadata_identifier="'. $id .'"/>Child data..['. $found .']</a>';
 
@@ -150,7 +160,7 @@ class MetsisBasketController extends ControllerBase  {
     $response = new AjaxResponse();
     $response->addCommand(new HtmlCommand('#addtobasket-' . $metaid ,'Add to Basket &#10004;'));
     $response->addCommand(new HtmlCommand($selector,$markup));
-    $response->addCommand(new MessageCommand("Dataset added to basket:  " . $metaid));
+    //$response->addCommand(new MessageCommand("Dataset added to basket:  " . $metaid));
 
     return $response;
   }
@@ -161,6 +171,14 @@ class MetsisBasketController extends ControllerBase  {
     $query->condition('m.uid', $user_id, '=');
     $results = $query->execute()->fetchAll();
     return count($results);
+  }
+
+  public static  function get_user_item_ids($user_id) {
+    $query = \Drupal::database()->select('metsis_basket', 'm');
+    $query->fields('m', array('metadata_identifier'));
+    $query->condition('m.uid', $user_id, '=');
+    $results = $query->execute()->fetchCol();
+    return $results;
   }
 
 

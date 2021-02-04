@@ -33,8 +33,18 @@ class MetsisBasketDeleteAction extends ViewsBulkOperationsActionBase {
 
     /* TODO: SHould we add more sanity checks here?? Before delete?
      */
-     if($entity->uid->value == $user->id()) {
+     if($entity->uid->value === $user->id()) {
        $entity->delete();
+       $tempstore = \Drupal::service('user.private_tempstore')->get('metsis_basket');
+       $ids = $tempstore->get('basket_items');
+      $new_ids = null;
+       for ($i = 0; $i < count($ids); $i++)  {
+            if($ids[$i] === $entity->metadata_identifier->value) {
+              unset($ids[$i]);
+              $new_ids =  array_values($ids);
+            };
+        }
+       $tempstore->get('basket_items', $new_ids);
        return $this->t('Basket Item Deleted');
      }
     // Don't return anything for a default completion message, otherwise return translatable markup.

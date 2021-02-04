@@ -139,6 +139,11 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
           '#markup' => '<span id="resetMapButtonID"><button id="resetMapButton" class="w3-center adc-button adc-sbutton" >Reset map</button></span>',
           '#allowed_tags' => ['div','label','button','br','a', 'span'],
         ];
+        $build['search-map']['top-panel']['buttons-container']['loader'] = [
+          '#type' => 'markup',
+          '#markup' => '<span id="mapLoaderSpan"><img id="mapLoader"/></span>',
+          '#allowed_tags' => ['div','label','button','br','a', 'span','img'],
+        ];
 
         //Top panel current bbox filter text markup
         $build['search-map']['top-panel']['filter'] = [
@@ -250,7 +255,15 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
       '#suffix' => '</div>',
       '#allowed_tags' => ['div'],
   ];
+  //Progress bar wrapper
+  $build['search-map']['map-fullscreen-wrapper']['bottom-panel']['progress-bar'] = [
+     '#type' => 'markup',
+     '#prefix' => '<div class="progress-container">',
+     '#markup' => '<div id="progress"></div>',
+     '#suffix' => '</div>',
+     '#allowed_tags' => ['div','span', 'i', 'button'],
 
+   ];
   //Date controls wrapper
    $build['search-map']['map-fullscreen-wrapper']['bottom-panel']['animated-controls'] = [
       '#type' => 'markup',
