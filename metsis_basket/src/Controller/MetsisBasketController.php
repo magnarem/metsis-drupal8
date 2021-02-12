@@ -50,11 +50,11 @@ class MetsisBasketController extends ControllerBase  {
     $build['content']['back'] = [
       '#markup' => '<a class="w3-btn" href="'. $referer . '">Go back to search </a>',
     ];
-  /*  $build['content']['dashboard'] = [
-      '#markup' => '<a class="w3-btn" href="/metsis/bokeh/dashboard">Go to Dashboard</a>',
-    ]; */
-    $build['content']['dashboard-testpost'] = [
-      '#markup' => '<a class="w3-btn" href="/metsis/bokeh/dashboard/testpost">Go to Dashboard</a>',
+    //$build['content']['dashboard'] = [
+    //  '#markup' => '<a class="w3-btn" href="/metsis/bokeh/dashboard">Go to Dashboard (GET)</a>',
+    //];
+    $build['content']['dashboard-post'] = [
+      '#markup' => '<a class="w3-btn" href="/metsis/bokeh/dashboard/post">Go to Dashboard</a>',
     ];
 
     $build['content']['view'] = views_embed_view('basket_view', 'embed_1');

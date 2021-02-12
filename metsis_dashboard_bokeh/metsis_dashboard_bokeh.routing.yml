@@ -9,10 +9,10 @@ dashboard:
     _permission: 'access bokeh dashboard'
 
 dashboard.testpost:
-  path: /metsis/bokeh/dashboard/testpost
+  path: /metsis/bokeh/dashboard/post
   defaults:
-    _controller: \Drupal\metsis_dashboard_bokeh\Controller\DashboardBokehController::testpost
-    _title: "Bokeh Dashboard Test Post"
+    _controller: \Drupal\metsis_dashboard_bokeh\Controller\DashboardBokehController::post_datasource
+    _title: "Bokeh Dashboard"
   options:
     query:
   requirements:

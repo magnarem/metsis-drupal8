@@ -1,3 +1,39 @@
+wms_ol6:
+  version: 1.0
+  css:
+    component:
+      /libraries/openlayers-6.5.0/ol.css: {}
+#      /libraries/ol-layerswitcher-3.8.3/dist/ol-layerswitcher.css: {}
+      /libraries/ol-ext-3.1.17/dist/ol-ext.css: {}
+    theme:
+#      css/metsis_qsearch.css: {}
+      css/metsis_wms.css: {}
+  js:
+    #js/bundle.js: {}
+    #https://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.js: { type: external}
+    #https://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.2.min.js: { type: external}
+    #https://cdn.pydata.org/bokeh/release/bokeh-tables-2.0.2.min.js: { type: external}
+    #/libraries/openlayers6/build/ol.js: {}
+    #/libraries/openlayers6/apidoc/scripts/bootstrap.min.js: {}
+    /libraries/proj4js-2.6.3/dist/proj4.js: {}
+    /libraries/openlayers-6.5.0/ol.js: {}
+#    /libraries/ol-layerswitcher-3.8.3/dist/ol-layerswitcher.js: {}
+    /libraries/ol-ext-3.1.17/dist/ol-ext.js: {}
+    #https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js: { type: external }
+    #js/metsis_search_map_block.js: {}
+    js/metsis_wms.js: {}
+  dependencies:
+    - core/jquery
+    - jquery_ui/core
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+    - core/drupal.dialog
+    - core/drupal.dialog.ajax
+    - jquery_ui_slider/slider
+#    - bootstrap_library/bootstrap
+
 replace.css:
   version: 1.x
 #  header: true

@@ -374,16 +374,16 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
 
         // Add CSS and JS libraries and drupalSettings JS variables
         $build['#attached'] = [
-    'library' => [
-    'metsis_lib/adc-button',
-    'metsis_ts_bokeh/style',
-    'metsis_ts_bokeh/bokeh_js',
-    'metsis_ts_bokeh/bokeh_widgets',
-    'metsis_ts_bokeh/bokeh_tables',
-    'metsis_ts_bokeh/bokeh_api',
-    'blazy/load',
-    'metsis_search/search_map_block',
-    ],
+      'library' => [
+      'metsis_lib/adc-button',
+      'metsis_ts_bokeh/style',
+      'metsis_ts_bokeh/bokeh_js',
+      'metsis_ts_bokeh/bokeh_widgets',
+      'metsis_ts_bokeh/bokeh_tables',
+      'metsis_ts_bokeh/bokeh_api',
+      'blazy/load',
+      'metsis_search/search_map_block',
+      ],
     'drupalSettings' => [
     'metsis_search_map_block' => [
       'mapLat' => $map_lat, //to be replaced with configuration variables
