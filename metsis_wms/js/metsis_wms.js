@@ -2164,6 +2164,7 @@ console.log("Start of wms map script:");
         var wmsUrls = [];
         var layers =[];
         var ids = [];
+        var geoms = [];
         Object.keys(wms_data).forEach(key=>{
 
           console.log(`${key} : ${wms_data[key]}`);
@@ -2179,12 +2180,32 @@ console.log("Start of wms map script:");
               var layer = wms_data[key][key2];
               layers.push(layer);
             }
+            if(key2 === 'geom') {
+              console.log(`${key2} : ${wms_data[key][key2]}`);
+              var bbox = wms_data[key][key2];
+              box_tl = ol.proj.transform([bbox[3], bbox[0]], 'EPSG:4326', selected_proj);
+              box_tr = ol.proj.transform([bbox[2], bbox[0]], 'EPSG:4326', selected_proj);
+              box_bl = ol.proj.transform([bbox[3], bbox[1]], 'EPSG:4326', selected_proj);
+              box_br = ol.proj.transform([bbox[2], bbox[1]], 'EPSG:4326', selected_proj);
+              let geom = new ol.geom.Polygon([
+                [box_tl, box_tr, box_br, box_bl, box_tl]
+              ]);
+              geoms.push(geom);
+            }
+
           });
         });
 
         console.log(ids);
         console.log(wmsUrls);
         console.log(layers);
+        for (let i = 0; i < ids.length; i++) {
+          console.log(ids[i]);
+          console.log(wmsUrls[i][0]);
+          console.log(layers[i]);
+          console.log(geoms[i]);
+          getWmsLayers2(wmsUrls[i][0], ids[i], geoms[i], layers[i])
+        }
         // If we have wms datasets in map, show the visualise all button
         //list of olWMALayers to be added and rendered
         var wmsLayers = [];

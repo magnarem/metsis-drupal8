@@ -810,7 +810,7 @@ console.log("Start of metsis search map script:");
           }
           });
           $('#bottomMapPanel').show();
-        
+
         }
         //Display message instead of empty map when search results are empty
         if (extracted_info.length === 0) {
@@ -1311,6 +1311,7 @@ console.log("Start of metsis search map script:");
             var img = document.getElementById('mapLoader');
             //img.src = "/" + path + "/icons/loader.gif";
             img.src = '/core/misc/throbber-active.gif';
+            $('mapLoaderSpan').text('...Loading... Please wait...');
             //console.log("Got wms resource: " +wmsUrl);
             //console.log("Parsing getCapabilties");
             var getCapString = '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
@@ -1563,6 +1564,7 @@ console.log("Start of metsis search map script:");
               //$('#mapLoader').empty();
               console.log("Empty loader");
               document.getElementById('mapLoader').removeAttribute('src');
+              $('mapLoaderSpan').text('');
               progress_bar()
 
             }
@@ -1744,7 +1746,8 @@ console.log("Start of metsis search map script:");
             id = feature.get('id');
             newId = id.replace(/_/g, "-");
             //alert(newId);
-            $('.datasets-' + newId).css('display', 'block');
+            //$('.datasets-' + newId).css('display', 'block');
+            $('.datasets-' + newId).slideDown();
             //$('._'+newId).css('display', 'block');
             //$(document).ready(function() {
             //  $('li.datasets-' + newId).focus();

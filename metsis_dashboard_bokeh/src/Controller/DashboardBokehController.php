@@ -121,7 +121,7 @@ class DashboardBokehController extends ControllerBase {
               'json' => $json_data,
               'Accept' => 'text/html',
               'Content-Type' => 'application/json',
-              'debug' => TRUE,
+              'debug' => FALSE,
             ],
 
 
@@ -160,6 +160,8 @@ class DashboardBokehController extends ControllerBase {
       //$markup = str_replace(array("\n","\r\n","\r"), '', $data);
       //$markup = $this->getDashboard($backend_uri, $resources);
       \Drupal::logger('metsis_dashboard_bokeh_testpost')->debug(t("Got markup response: @markup", ['@markup' => $markup ] ) );
+      \Drupal::logger('metsis_dashboard_bokeh')->debug("Using endpoint: " . $backend_uri);
+      \Drupal::logger('metsis_dashboard_bokeh')->debug("Got status code: " . $responseStatus);
 
       // Build page
       //Create content wrapper
@@ -173,7 +175,7 @@ class DashboardBokehController extends ControllerBase {
         '#markup' => '<a class="w3-btn" href="'. $referer . '">Go back to search </a>',
       ];
 
-
+/*
       $build['content']['endpoint'] = [
         '#type' => 'markup',
         '#markup' => '<p>Using endpoint : ' .   $backend_uri . '</p>',
@@ -187,7 +189,7 @@ class DashboardBokehController extends ControllerBase {
 
 
       ];
-
+*/
             $build['content']['dashboard-wrapper'] = [
               '#type' => 'markup',
               '#markup' => '<div id="bokeh-dashboard" class="dashboard">',

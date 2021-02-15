@@ -71,7 +71,11 @@ class DefaultController extends ControllerBase {
             "id",
             "data_access_url_ogc_wms",
             "data_access_wms_layers",
-            "metadata_identifier"
+            "metadata_identifier",
+            'geographic_extent_rectangle_north',
+            'geographic_extent_rectangle_south',
+            'geographic_extent_rectangle_east',
+            'geographic_extent_rectangle_west'
           ];
           /** @var Index $index  TODO: Change to metsis when prepeare for release */
           $index = Index::load('metsis');
@@ -121,7 +125,17 @@ class DefaultController extends ControllerBase {
                       $wms_data[$mi]['layers'][] = $wms_layer;
                   }
               }
-
+              $geographical_extent_north = $fields['geographic_extent_rectangle_north'];
+              $geographical_extent_south = $fields['geographic_extent_rectangle_south'];
+              $geographical_extent_east = $fields['geographic_extent_rectangle_east'];
+              $geographical_extent_west = $fields['geographic_extent_rectangle_west'];
+              $geographical_extent = [
+                        $geographical_extent_north,
+                        $geographical_extent_south,
+                        $geographical_extent_east,
+                        $geographical_extent_west,
+                      ];
+            $wms_data[$mi]['geom'] = $geographical_extent;
           }
          else {
             \Drupal::messenger()->addError(t("Selected datasets does not contain any WMS resource.<br> Visualization not possible"));
