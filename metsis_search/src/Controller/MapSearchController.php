@@ -117,6 +117,39 @@ class MapSearchController extends ControllerBase {
    return $response;
 
 }
+
+/* Callback from openlayers when boundingbox filter are drawed on map.
+Add current drawed boundingbox to solr search query */
+public function setPlace() {
+  $query_from_request = \Drupal::request()->query->all();
+  $params = \Drupal\Component\Utility\UrlHelper::filterQueryParameters($query_from_request);
+
+  $tllat = $params['tllat'];
+  $tllon = $params['tllon'];
+  $brlat = $params['brlat'];
+  $brlon = $params['brlon'];
+  $proj = $params['proj'];
+  \Drupal::logger('metsis_search_map_search_controller')->debug("Got PLACE boundingbox with ENVELOPE(" .  $tllon . ',' . $brlon . ',' . $tllat . ',' . $brlat . ')');
+  $bboxFilter = 'ENVELOPE(' . $tllon . ',' . $brlon . ',' . $tllat . ',' . $brlat . ')';
+
+  //Get current session variables
+  $session = \Drupal::request()->getSession();
+  $session->set('bboxFilter', $bboxFilter);
+  $session->set('tllat', $tllat);
+  $session->set('tllon', $tllon);
+  $session->set('brlat', $brlat);
+  $session->set('brlon', $brlon);
+  $session->set('proj', $proj);
+  $session->set('place_filter', "Contains");
+
+$response = new AjaxResponse();
+  //$response->addCommand(new SettingsCommand(['metsis_search_map_block' => []], TRUE));
+
+  \Drupal::logger('metsis_search_map_search_controller')->debug(\Drupal::request()->getRequestUri());
+  return $response;
+  //return $this->redirect(\Drupal::request()->getRequestUri());
+}
+
  public function resetCallback() {
      \Drupal::logger('metsis_search')->debug("MapSearchController::resetCallback");
  }

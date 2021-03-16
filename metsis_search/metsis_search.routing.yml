@@ -13,6 +13,21 @@ metsis_search.map:
   requirements:
     _permission: 'access metsis search'
 
+metsis_search.place:
+  path: /metsis/search/place
+  defaults:
+    _controller: \Drupal\metsis_search\Controller\MapSearchController::setPlace
+    _title: "Ajax Callback for SearchMap Place BoundingBox"
+  options:
+    query:
+      tllat: ""
+      tllon: ""
+      brlat: ""
+      brlon: ""
+      proj: ""
+  requirements:
+    _permission: 'access metsis search'
+
 metsis_search.map_proj:
   path: /metsis/search/map/projection
   defaults:

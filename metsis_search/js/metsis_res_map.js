@@ -756,6 +756,9 @@ console.log("Start of metsis search map script:");
           });
         }
 
+
+
+
         //Unset overflow on canvas (ol-viewport)
 
         // create a progress bar to show the loading of tiles
@@ -2199,6 +2202,41 @@ console.log("Start of metsis search map script:");
         $('#map-sidepanel').hide();
         $('#bottomMapPanel').hide();
 
+
+        //Add geocoder search
+        var geocoder = new Geocoder('nominatim', {
+  provider: 'osm',
+  lang: 'no-NO', //en-US, fr-FR
+  placeholder: 'Search for ...',
+  targetType: 'glass-button',
+  limit: 5,
+  keepOpen: true,
+  autoComplete: true,
+});
+
+geocoder.on('addresschosen', function(evt) {
+  // it's up to you
+  console.info(evt);
+  var bbox = evt.place.bbox;
+  /* Send the bboundingbox back to drupal metsis search controller to add the current boundingbox filter to the search query */
+  var myurl = '/metsis/search/place?tllat=' + bbox[1] + '&tllon=' + bbox[2] + '&brlat=' + bbox[0] + '&brlon=' + bbox[3] + '&proj=' + selected_proj;
+  console.log('calling controller url: ' + myurl);
+  data = Drupal.ajax({
+    url: myurl,
+    async: false,
+    success: function(response) {
+
+          //Store place in browser session
+         sessionStorage.setItem("place_lat", evt.place.lat);
+         sessionStorage.setItem("place_lon", evt.place.lon);
+
+         console.log(window.location.href);
+         location.href = window.location.href; //Redirect
+    }
+  }).execute();
+
+});
+map.addControl(geocoder);
         //createOverViewMap(selected_proj)
 
         //Function to zoom to extent of all features:

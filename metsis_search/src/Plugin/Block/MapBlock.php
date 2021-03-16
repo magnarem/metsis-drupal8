@@ -76,6 +76,7 @@ class MapBlock extends BlockBase implements BlockPluginInterface {
     $map_layers_list =  $config->get('map_layers');
     $map_pins = $config->get('map_pins_b');
     $map_filter = $config->get('map_bbox_filter');
+    
 
     //Get the extracted info from tempstore
     //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');

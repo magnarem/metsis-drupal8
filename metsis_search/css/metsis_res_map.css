@@ -502,6 +502,9 @@ div.ui-slider span.ui-slider-handle {
   position: fixed;
 }
 
+.ol-geocoder.gcd-gl-container {
+  top: 10.275em;
+}
 /*
 .popup-content {
   overflow: scroll;
