@@ -28,6 +28,14 @@ metsis_search.place:
   requirements:
     _permission: 'access metsis search'
 
+metsis_search.reset:
+  path: /metsis/search/reset
+  defaults:
+    _controller: \Drupal\metsis_search\Controller\MapSearchController::reset
+    _title: "Callback for SearchMap Reset BoundingBox and search"
+  requirements:
+    _permission: 'access metsis search'
+
 metsis_search.map_proj:
   path: /metsis/search/map/projection
   defaults:

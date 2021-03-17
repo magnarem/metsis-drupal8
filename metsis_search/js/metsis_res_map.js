@@ -243,6 +243,26 @@ console.log("Start of metsis search map script:");
           $('.current-bbox-select').text(bboxFilter);
         }
 
+
+        //Reset search button
+    /*    $('#resetButton').on('click', function() {
+          var myurl = '/metsis/search/reset';
+          console.log('calling controller url: ' + myurl);
+          data = Drupal.ajax({
+            url: myurl,
+            async: false,
+            success: function(response) {
+
+
+
+                 location.href = '/metsis/search?op=Reset'; //Redirect
+            }
+          }).execute();
+
+
+
+        })
+        */
         /**
          * Define the proj4 map_projections
          */
@@ -457,15 +477,13 @@ console.log("Start of metsis search map script:");
             opacity: 1.00,
             src: '/' + path + '/icons/pinGr.png'
           }))
-        });
-
-        var iconStyleBk = new ol.style.Style({
-          image: new ol.style.Icon(({
-            anchor: [0.5, 0.0],
-            anchorOrigin: 'bottom-left',
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            opacity: 1.00,
+        });var iconStyleBk = new ol.style.Style({
+      image: new ol.style.Icon(({
+              anchor: [0.5, 0.0],
+              anchorOrigin: 'bottom-left',
+              anchorXUnits: 'fraction',
+              anchorYUnits: 'fraction',
+              opacity: 1.00,
             src: '/' + path + '/icons/pinBk.png'
           }))
         });
@@ -2202,16 +2220,30 @@ console.log("Start of metsis search map script:");
         $('#map-sidepanel').hide();
         $('#bottomMapPanel').hide();
 
+/*var provider = new OpenStreet({
+  params: {
+    countrycodes: "no,sj,se,dk,is"
+  }
+})*/
+
+//Kartverket provider
+const geonorgeProvider = geoNorgeSearch({
+    url: 'https://ws.geonorge.no/SKWS3Index/ssr/sok?',
+  });
+
+
 
         //Add geocoder search
-        var geocoder = new Geocoder('nominatim', {
+ var geocoder = new Geocoder('nominatim', {
   provider: 'osm',
-  lang: 'no-NO', //en-US, fr-FR
+  //geonorgeProvider,
+  lang: 'nb-NO', //en-US, fr-FR
   placeholder: 'Search for ...',
   targetType: 'glass-button',
   limit: 5,
   keepOpen: true,
   autoComplete: true,
+  countrycodes: 'no,sj,se,dk,is,fo,fi,gb'
 });
 
 geocoder.on('addresschosen', function(evt) {
@@ -2231,6 +2263,7 @@ geocoder.on('addresschosen', function(evt) {
          sessionStorage.setItem("place_lon", evt.place.lon);
 
          console.log(window.location.href);
+
          location.href = window.location.href; //Redirect
     }
   }).execute();
@@ -2651,6 +2684,8 @@ map.addControl(geocoder);
               var brlat = drupalSettings.metsis_search_map_block.brlat;
               var brlon = drupalSettings.metsis_search_map_block.brlon;
 
+              location.href = window.location.href; //Redirect
+
             });
             //Create popup with search button
             //$('#popup-content').append("<p>" + feature_ids[id].title + "</p>");
@@ -2670,6 +2705,7 @@ map.addControl(geocoder);
                         });
 
             */
+
           });
           console.log('Adding draw bbox interaction');
           map.addInteraction(draw);
@@ -2767,6 +2803,66 @@ map.addControl(geocoder);
           }
         }
 
+        //geonorge stedsnavn provider implementation.
+        /**
+  * Custom provider for OS OpenNames search covering Great Britian.
+  * Factory function which returns an object with the methods getParameters
+  * and handleResponse called by the Geocoder
+  */
+ function geoNorgeSearch(options) {
+   const { url } = options;
+
+   return {
+     /**
+      * Get the url, query string parameters and optional JSONP callback
+      * name to be used to perform a search.
+      * @param {object} options Options object with query, key, lang,
+      * countrycodes and limit properties.
+      * @return {object} Parameters for search request
+      */
+     getParameters(opt) {
+       return {
+         url,
+         callbackName: 'callback',
+
+         params: {
+           navn: opt.query,
+           eksakteForst: 'true',
+           json: 'json',
+           antPerSide: 10,
+         },
+       };
+     },
+
+     /**
+      * Given the results of performing a search return an array of results
+      * @param {object} data returned following a search request
+      * @return {Array} Array of search results
+      */
+     handleResponse(results) {
+       // The API returns a GeoJSON FeatureCollection
+       if (results && results.totaltAntallTreff > 0) {
+         return results.stedsnavn.map((feature) => {
+           return {
+             lon: feature.aust,
+             lat: feature.nord,
+
+             address: {
+               // Simply return a name in this case, could also return road,
+               // building, house_number, city, town, village, state,
+               // country
+               name: feature.stedsnavn,
+             },
+
+             //bbox: feature.bbox,
+           };
+         });
+       }
+
+       return [];
+     },
+   };
+ }
       });
     },
   };

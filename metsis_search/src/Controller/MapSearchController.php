@@ -150,6 +150,35 @@ $response = new AjaxResponse();
   //return $this->redirect(\Drupal::request()->getRequestUri());
 }
 
+public function reset() {
+  //Get current session variables
+  $session = \Drupal::request()->getSession();
+  //$tempstore = \Drupal::service('tempstore.private')->get('metsis_search');
+  $session->remove('bboxFilter');
+  $session->remove('tllat');
+  $session->remove('tllon');
+  $session->remove('brlat');
+  $session->remove('brlon');
+  $session->remove('extracted_info');
+  $session->remove('proj');
+  $session->remove('gcmd');
+  $session->remove('keywords_level');
+  $session->remove('back_to_search');
+  $session->remove('place_filter');
+  $session->set('keywords_level', 1);
+  $session->set('back_to_search', '/metsis/search');
+
+  //$session->remove('proj', $proj);
+  $session->remove('place_filter');
+
+//$response = new AjaxResponse();
+  //$response->addCommand(new SettingsCommand(['metsis_search_map_block' => []], TRUE));
+
+  //\Drupal::logger('metsis_search_map_search_controller')->debug(\Drupal::request()->getRequestUri());
+  //return $response;
+  return new \Symfony\Component\HttpFoundation\RedirectResponse('/metsis/search');
+}
+
  public function resetCallback() {
      \Drupal::logger('metsis_search')->debug("MapSearchController::resetCallback");
  }

@@ -135,8 +135,9 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
         ];
         $build['search-map']['top-panel']['buttons-container']['reset'] = [
           '#type' => 'markup',
-          '#markup' => '<span id="resetButtonID"><a id="resetButton" class="w3-center adc-button adc-sbutton" href="/metsis/search?op=Reset">Reset search</a></span>',
-          '#allowed_tags' => ['div','label','button','br','a', 'span'],
+          '#markup' => '<span id="resetButtonID"><a id="resetButton" href="/metsis/search/reset" class="w3-center adc-button adc-sbutton">Reset search</a></span>',
+          //'#markup' => '<input data-drupal-selector="edit-reset" type="submit" id="edit-reset--2" name="op" value="Reset" class="button js-form-submit form-submit adc-button adc-sbutton w3-border w3-theme-border w3-margin-top w3-margin-bottom">',
+          '#allowed_tags' => ['div','label','button','br','a', 'span', 'input'],
         ];
         $build['search-map']['top-panel']['buttons-container']['reset-map'] = [
           '#type' => 'markup',
@@ -421,7 +422,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
           'id' => 'map-search',
         ];
         */
-
+        $session->set("place_filter", null);
         return $build;
     }
     public function getCacheMaxAge() {
