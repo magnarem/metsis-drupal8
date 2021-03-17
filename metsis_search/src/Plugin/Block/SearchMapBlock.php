@@ -422,7 +422,7 @@ class SearchMapBlock extends BlockBase implements BlockPluginInterface
           'id' => 'map-search',
         ];
         */
-        $session->set("place_filter", null);
+        //$session->set("place_filter", null);
         return $build;
     }
     public function getCacheMaxAge() {
